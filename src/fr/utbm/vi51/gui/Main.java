@@ -21,7 +21,15 @@ public class Main {
     	generateMap1();
     	
         Window wind = new Window();
-        wind.repaint();
+        while(true) {
+        	wind.repaint();
+        	try {
+				Thread.sleep(1000/30);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
     }
     // Functions for map génération
     static private boolean generateMap1() {
