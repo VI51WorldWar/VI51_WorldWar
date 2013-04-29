@@ -9,29 +9,31 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import fr.utbm.vi51.environment.Environment;
-import fr.utbm.vi51.environment.LandType;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
 
 public class Panel extends JPanel {
+	private final int displayedTilesX = 20;
+	private final int displayedTilesY = 20;
+	private final int originX = 0;
+	private final int originY = 0;
+	
+	
     public void paintComponent(Graphics g) {
+    	int tileSizeX = this.getWidth() / displayedTilesX;
+    	int tileSizeY = this.getHeight() / displayedTilesY;
     	
-        try {
-            Environment env = Environment.getInstance();
-            Square[][][] map = env.getMap();
-            for (int i = 0; i < 800 / 50; i++) {
-                for (int j = 0; j < 600 / 44; j++) {
-                	// Draw land
-                	g.drawImage(map[i][j][0].getLandType().getTexture(), 50 * i, 44 * j, 50, 50, this);
-                	// Draw World's objects on the square
-                    for (WorldObject obj : map[i][j][0].getObjects()) {
-                        Image img1 = ImageIO.read(new File(obj.getTexture()));
-                        g.drawImage(img1, (int) (50 * obj.getPosition().getX()), (int) (44 * obj.getPosition().getY()), 20, 20, this);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Environment env = Environment.getInstance();
+		Square[][][] map = env.getMap();
+		for (int i = 0; i < displayedTilesX; i++) {
+		    for (int j = 0; j < displayedTilesY; j++) {
+		    	// Draw land
+		    	g.drawImage(map[i+originX][j+originY][0].getLandType().getTexture(), tileSizeX * i, tileSizeY * j, tileSizeX, tileSizeY, this);
+		    	// Draw World's objects on the square
+		        for (WorldObject obj : map[i+originX][j+originY][0].getObjects()) {
+		            g.drawImage(obj.getTexture(), (int) (tileSizeX * obj.getPosition().getX()), (int) (tileSizeY * obj.getPosition().getY()), tileSizeX, tileSizeY, this);
+		        }
+		    }
+		}
     }
 }

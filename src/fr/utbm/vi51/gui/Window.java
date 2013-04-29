@@ -9,7 +9,7 @@ import javax.swing.JFrame;
  */
 public class Window extends JFrame {
 	// Dimensions of the Window
-	private final int WIN_HEIGHT = 600;
+	private final int WIN_HEIGHT = 800;
 	private final int WIN_WIDTH = 800;
 	
     public Window() {
