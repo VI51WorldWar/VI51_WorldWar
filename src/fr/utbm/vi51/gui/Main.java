@@ -4,6 +4,7 @@ import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.LandType;
 import fr.utbm.vi51.environment.Square;
 
+//Comment to test git
 public class Main {
 
     public static void main(String[] args) {
