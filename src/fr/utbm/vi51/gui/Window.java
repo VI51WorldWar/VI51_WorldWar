@@ -1,14 +1,8 @@
 package fr.utbm.vi51.gui;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  * @author valentin
@@ -28,10 +22,6 @@ public class Window extends JFrame {
         this.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        Window wind = new Window();
-        wind.repaint();
-    }
 
 
 
