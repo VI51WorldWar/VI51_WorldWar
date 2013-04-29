@@ -8,9 +8,13 @@ import javax.swing.JFrame;
  * @author valentin
  */
 public class Window extends JFrame {
+	// Dimensions of the Window
+	private final int WIN_HEIGHT = 600;
+	private final int WIN_WIDTH = 800;
+	
     public Window() {
-        this.setTitle("Ma première fenêtre Java");
-        this.setSize(800, 600);
+        this.setTitle("Fenetre de base");
+        this.setSize(this.WIN_WIDTH, this.WIN_HEIGHT);
         this.setLocationRelativeTo(null);
 
         // Instanciation d'un objet JPanel

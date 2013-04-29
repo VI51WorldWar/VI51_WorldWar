@@ -15,7 +15,7 @@ public class Environment {
     private Environment() {
         mapHeight = 500;
         mapWidth = 500;
-        mapDepth = 500;
+        mapDepth = 5;
         map = new Square[mapWidth][mapHeight][mapDepth];
         objects = new LinkedList<WorldObject>();
     }
