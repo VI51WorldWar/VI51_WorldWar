@@ -9,23 +9,26 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import fr.utbm.vi51.environment.Environment;
+import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
 
 public class Panel extends JPanel {
     public void paintComponent(Graphics g) {
         try {
             Environment env = Environment.getInstance();
-            Image img = ImageIO.read(new File("img/grass.png"));
+            Square[][][] map = env.getMap();
             for (int i = 0; i < 800 / 50; i++) {
                 for (int j = 0; j < 600 / 44; j++) {
+                    Image img = ImageIO.read(new File(map[i][j][0].getLandType().getTexturePath()));
                     g.drawImage(img, 50 * i, 44 * j, 50, 50, this);
+                    for (WorldObject obj : map[i][j][0].getObjects()) {
+                        Image img1 = ImageIO.read(new File(obj.getTexture()));
+                        g.drawImage(img1, (int) (50 * obj.getPosition().getX()), (int) (44 * obj.getPosition().getY()), 20, 20, this);
+                    }
 
                 }
             }
-            for (WorldObject obj : env.getObjects()) {
-                Image img1 = ImageIO.read(new File(obj.getTexture()));
-                g.drawImage(img1, (int) (50 * obj.getPosition().getX()), (int) (44 * obj.getPosition().getY()), 20, 20, this);
-            }
+
             // Pour une image de fond
             // g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
         } catch (IOException e) {
