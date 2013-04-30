@@ -59,9 +59,9 @@ public class Panel extends JPanel {
 
                 if (ke.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
                     displayedTilesX--;
-                    displayedTilesX = Math.max(displayedTilesX, 0);
+                    displayedTilesX = Math.max(displayedTilesX, 1);
                     displayedTilesY--;
-                    displayedTilesY = Math.max(displayedTilesY, 0);
+                    displayedTilesY = Math.max(displayedTilesY, 1);
                 }
             }
         });
