@@ -63,6 +63,10 @@ public class Panel extends JPanel {
                     displayedTilesY--;
                     displayedTilesY = Math.max(displayedTilesY, 1);
                 }
+
+                if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    System.exit(0);
+                }
             }
         });
     }
