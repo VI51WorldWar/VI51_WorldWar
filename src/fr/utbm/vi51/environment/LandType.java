@@ -1,10 +1,5 @@
 package fr.utbm.vi51.environment;
 
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 /**
  * @author Top-K
@@ -20,20 +15,13 @@ public enum LandType {
     // Is this type of floor crossable ?
     private final boolean isCrossable;
     // Path of the land's texture
-    private final Image texture;
+    private final String texturePath;
 
     // Enumerator constructor
     LandType(int cost, boolean isCrossable, String texturePath) {
         this.cost = cost;
         this.isCrossable = isCrossable;
-        Image tmp;
-        try {
-            tmp = ImageIO.read(new File(texturePath));
-        } catch (IOException e) {
-            tmp = null;
-            e.printStackTrace();
-        }
-        this.texture = tmp;
+        this.texturePath = texturePath;
 
     }
 
@@ -45,8 +33,8 @@ public enum LandType {
         return isCrossable;
     }
 
-    public Image getTexture() {
-        return texture;
+    public String getTexturePath() {
+        return texturePath;
     }
 
 }

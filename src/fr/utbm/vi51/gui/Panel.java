@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 
+import util.ImageManager;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
@@ -75,15 +76,20 @@ public class Panel extends JPanel {
         for (int i = 0; i < displayedTilesX; i++) {
             for (int j = 0; j < displayedTilesY; j++) {
                 // Draw land
-                g.drawImage(map[i + originX][j + originY][0].getLandType()
-                        .getTexture(), tileSizeX * i, tileSizeY * j, tileSizeX,
-                        tileSizeY, this);
+                g.drawImage(
+                        ImageManager.getInstance().getImage(
+                                map[i + originX][j + originY][0].getLandType()
+                                        .getTexturePath()), tileSizeX * i,
+                        tileSizeY * j, tileSizeX, tileSizeY, this);
                 // Draw World's objects on the square
                 for (WorldObject obj : map[i + originX][j + originY][0]
                         .getObjects()) {
-                    g.drawImage(obj.getTexture(), (int) (tileSizeX * obj
-                            .getPosition().getX()), (int) (tileSizeY * obj
-                            .getPosition().getY()), tileSizeX, tileSizeY, this);
+                    g.drawImage(
+                            ImageManager.getInstance().getImage(
+                                    obj.getTexturePath()),
+                            (int) (tileSizeX * obj.getPosition().getX()),
+                            (int) (tileSizeY * obj.getPosition().getY()),
+                            tileSizeX, tileSizeY, this);
                 }
             }
         }

@@ -1,10 +1,7 @@
 package fr.utbm.vi51.gui;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.vecmath.Point3d;
 
 import fr.utbm.vi51.environment.Body;
@@ -68,17 +65,9 @@ public final class Main {
         }
 
         List<WorldObject> objs = env.getObjects();
-        try {
-            objs.add(new Body(ImageIO.read(new File("img/Ants/worker.png")),
-                    new Point3d(5, 5, 0)));
-            objs.add(new Body(ImageIO.read(new File("img/Ants/queen.png")),
-                    new Point3d(5, 6, 0)));
-            objs.add(new Body(ImageIO.read(new File("img/Ants/warrior.png")),
-                    new Point3d(5, 7, 0)));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        objs.add(new Body("img/Ants/worker.png", new Point3d(5, 5, 0)));
+        objs.add(new Body("img/Ants/warrior.png", new Point3d(5, 6, 0)));
+        objs.add(new Body("img/Ants/queen.png", new Point3d(5, 7, 0)));
         return true;
     }
 }

@@ -1,7 +1,5 @@
 package fr.utbm.vi51.environment;
 
-import java.awt.Image;
-
 import javax.vecmath.Point3d;
 
 /**
@@ -11,24 +9,24 @@ import javax.vecmath.Point3d;
 public abstract class WorldObject {
 
     private Point3d position;
-    private Image texture;
+    private String texturePath;
 
     public WorldObject(Point3d position) {
         super();
         this.position = position;
     }
 
-    public WorldObject(Point3d position, Image texture) {
+    public WorldObject(Point3d position, String texturePath) {
         super();
         this.position = position;
-        this.texture = texture;
+        this.texturePath = texturePath;
         Environment.getInstance().getMap()[(int) position.x][(int) position.y][(int) position.z].addObject(this);
     }
-    public Image getTexture() {
-        return texture;
+    public String getTexturePath() {
+        return texturePath;
     }
-    public void setTexture(Image texture) {
-        this.texture = texture;
+    public void setTexturePath(String texturePath) {
+        this.texturePath = texturePath;
     }
     public Point3d getPosition() {
         return position;
