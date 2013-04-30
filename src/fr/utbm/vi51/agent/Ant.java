@@ -2,8 +2,12 @@ package fr.utbm.vi51.agent;
 
 import fr.utbm.vi51.environment.Body;
 
+/**
+ * @author Top-K
+ *
+ */
 public abstract class Ant extends Insect {
     public Ant(Body bod) {
-        super(bod); 
+        super(bod);
     }
 }

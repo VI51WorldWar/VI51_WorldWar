@@ -4,16 +4,20 @@ import java.awt.Image;
 
 import javax.vecmath.Point3d;
 
+/**
+ * @author Top-K
+ *
+ */
 public abstract class WorldObject {
 
     private Point3d position;
     private Image texture;
 
     public WorldObject(Point3d position) {
-    	super();
-    	this.position = position;
+        super();
+        this.position = position;
     }
-    
+
     public WorldObject(Point3d position, Image texture) {
         super();
         this.position = position;

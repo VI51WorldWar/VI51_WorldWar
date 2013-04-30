@@ -8,13 +8,13 @@ import javax.swing.JFrame;
  * @author valentin
  */
 public class Window extends JFrame {
-	// Dimensions of the Window
-	private final int WIN_HEIGHT = 800;
-	private final int WIN_WIDTH = 800;
-	
+    // Dimensions of the Window
+    private final int winHeight = 800;
+    private final int winWidth = 800;
+
     public Window() {
         this.setTitle("Fenetre de base");
-        this.setSize(this.WIN_WIDTH, this.WIN_HEIGHT);
+        this.setSize(this.winWidth, this.winHeight);
         this.setLocationRelativeTo(null);
 
         // Instanciation d'un objet JPanel

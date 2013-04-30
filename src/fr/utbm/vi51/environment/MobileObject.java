@@ -4,6 +4,10 @@ import java.awt.Image;
 
 import javax.vecmath.Point3d;
 
+/**
+ * @author Top-K
+ *
+ */
 public abstract class MobileObject extends WorldObject {
 
     private int speed; // 100 means 1 to use only integers (faster)

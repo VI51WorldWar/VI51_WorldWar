@@ -3,14 +3,20 @@ package fr.utbm.vi51.environment;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Environment {
+/**
+ * @author Top-K
+ *
+ */
+public final class Environment {
 
-    private static Environment evt = null;
+    private static Environment evt;
 
     private List<WorldObject> objects;
     private Square[][][] map;
     // width = x, height = y, depth = z
-    private final int mapWidth, mapHeight, mapDepth;
+    private final int mapWidth;
+    private final int mapHeight;
+    private final int mapDepth;
 
     private Environment() {
         mapHeight = 500;

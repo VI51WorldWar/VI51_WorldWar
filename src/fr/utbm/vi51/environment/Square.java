@@ -3,6 +3,10 @@ package fr.utbm.vi51.environment;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author Top-K
+ *
+ */
 public class Square {
     private List<WorldObject> objects;
     private final LandType landType;
