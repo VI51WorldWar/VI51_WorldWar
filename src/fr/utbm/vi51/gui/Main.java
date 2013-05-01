@@ -9,6 +9,7 @@ import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.LandType;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
+import fr.utbm.vi51.environment.MobileObject;
 
 /**
  * @author Top-K
@@ -19,12 +20,16 @@ public final class Main {
     private Main() {
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // Generate environment map
         generateMap1();
+        Environment env = Environment.getInstance();
 
         Window wind = new Window();
         while (true) {
+            List<WorldObject> objs = env.getObjects();
+            MobileObject enemy1 = (MobileObject) objs.get(0);
+            enemy1.moveTo(new Point3d(10, 14, 0));
             wind.repaint();
             try {
                 Thread.sleep(1000 / 30);
@@ -35,8 +40,8 @@ public final class Main {
         }
     }
 
-    // Functions for map génération
-    private static boolean generateMap1() {
+    // Functions for map gï¿½nï¿½ration
+    private static boolean generateMap1() throws InterruptedException {
         // Getting the environment from the singleton
         Environment env = Environment.getInstance();
         // Getting environment map
@@ -65,9 +70,10 @@ public final class Main {
         }
 
         List<WorldObject> objs = env.getObjects();
-        objs.add(new Body("img/Ants/worker.png", new Point3d(5, 5, 0)));
-        objs.add(new Body("img/Ants/warrior.png", new Point3d(5, 6, 0)));
-        objs.add(new Body("img/Ants/queen.png", new Point3d(5, 7, 0)));
+        objs.add(new Body("img/Ants/worker.png", new Point3d(5, 5, 0), 15));
+        objs.add(new Body("img/Ants/warrior.png", new Point3d(5, 6, 0), 10));
+        objs.add(new Body("img/Ants/queen.png", new Point3d(5, 7, 0), 1));
+
         return true;
     }
 }

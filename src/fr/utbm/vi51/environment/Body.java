@@ -7,7 +7,7 @@ import javax.vecmath.Point3d;
  *
  */
 public class Body extends MobileObject {
-    public Body(String texture, Point3d position) {
-        super(position, texture);
+    public Body(String texture, Point3d position, int speed) {
+        super(position, texture, speed);
     }
 }
