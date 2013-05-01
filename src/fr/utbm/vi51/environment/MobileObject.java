@@ -22,21 +22,21 @@ public abstract class MobileObject extends WorldObject {
         double xDist = target.getX() - this.getPosition().getX();
         double yDist = target.getY() - this.getPosition().getY();
 
-        if (xDist > 0 && yDist > 0) {
+        if (xDist >= 1 && yDist >= 1) {
             move(1, 1, 0);
-        } else if (xDist < 0 && yDist < 0) {
+        } else if (xDist <= -1 && yDist <= -1) {
             move(-1, -1, 0);
-        } else if (xDist < 0 && yDist > 0) {
+        } else if (xDist <= -1 && yDist >= 1) {
             move(-1, 1, 0);
-        } else if (xDist > 0 && yDist < 0) {
+        } else if (xDist >= 1 && yDist <= -1) {
             move(1, -1, 0);
-        } else if (xDist > 0) {
+        } else if (xDist >= 1) {
             move(1, 0, 0);
-        } else if (xDist < 0) {
+        } else if (xDist <= -1) {
             move(-1, 0, 0);
-        } else if (yDist > 0) {
+        } else if (yDist >= 1) {
             move(0, 1, 0);
-        } else if (yDist < 0) {
+        } else if (yDist <= -1) {
             move(0, -1, 0);
         }
     }
@@ -45,19 +45,19 @@ public abstract class MobileObject extends WorldObject {
         int moveXvalue = 0;
         int moveYvalue = 0;
         int moveZvalue = 0;
-        if (moveX >= 1) {
+        if (moveX == 1) {
             moveXvalue = 1;
-        } else if (moveX <= -1) {
+        } else if (moveX == -1) {
             moveXvalue = -1;
         }
-        if (moveY >= 1) {
+        if (moveY == 1) {
             moveYvalue = 1;
-        } else if (moveY <= -1) {
+        } else if (moveY == -1) {
             moveYvalue = -1;
         }
-        if (moveZ >= 1) {
+        if (moveZ == 1) {
             moveZvalue = 1;
-        } else if (moveZ <= -1) {
+        } else if (moveZ == -1) {
             moveZvalue = -1;
         }
         this.currentMove += this.speed;

@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.vecmath.Point3d;
 
+import org.janusproject.kernel.Kernel;
+import org.janusproject.kernel.agent.Kernels;
+
+import fr.utbm.vi51.agent.Worker;
 import fr.utbm.vi51.environment.Body;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.LandType;
@@ -24,20 +28,26 @@ public final class Main {
         // Generate environment map
         generateMap1();
         Environment env = Environment.getInstance();
-
-        Window wind = new Window();
-        while (true) {
-            List<WorldObject> objs = env.getObjects();
-            MobileObject enemy1 = (MobileObject) objs.get(0);
-            enemy1.moveTo(new Point3d(10, 14, 0));
-            wind.repaint();
-            try {
+        //SenderAgent b = new SenderAgent();
+        Kernel k = Kernels.get();
+        //k.launchLightAgent(b);
+        List<WorldObject> objs = env.getObjects();
+        MobileObject enemy1 = (MobileObject) objs.get(0);
+        Worker test = new Worker((Body) enemy1);
+        k.launchLightAgent(test);
+       // Window wind = new Window();
+        //while (true) {
+            //List<WorldObject> objs = env.getObjects();
+            //MobileObject enemy1 = (MobileObject) objs.get(0);
+            //enemy1.moveTo(new Point3d(10, 14, 0));
+            //wind.repaint();
+            /*try {
                 Thread.sleep(1000 / 30);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            }
-        }
+            }*/
+       //}
     }
 
     // Functions for map g�n�ration
