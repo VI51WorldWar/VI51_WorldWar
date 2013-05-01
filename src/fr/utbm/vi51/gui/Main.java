@@ -1,19 +1,16 @@
 package fr.utbm.vi51.gui;
 
-import java.util.List;
-
 import javax.vecmath.Point3d;
 
 import org.janusproject.kernel.Kernel;
 import org.janusproject.kernel.agent.Kernels;
 
+import fr.utbm.vi51.agent.Queen;
+import fr.utbm.vi51.agent.Warrior;
 import fr.utbm.vi51.agent.Worker;
-import fr.utbm.vi51.environment.Body;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.LandType;
-import fr.utbm.vi51.environment.MobileObject;
 import fr.utbm.vi51.environment.Square;
-import fr.utbm.vi51.environment.WorldObject;
 
 /**
  * @author Top-K
@@ -28,26 +25,26 @@ public final class Main {
         // Generate environment map
         generateMap1();
         Environment env = Environment.getInstance();
-        //SenderAgent b = new SenderAgent();
+        // SenderAgent b = new SenderAgent();
         Kernel k = Kernels.get();
-        //k.launchLightAgent(b);
-        List<WorldObject> objs = env.getObjects();
-        MobileObject enemy1 = (MobileObject) objs.get(0);
-        Worker test = new Worker((Body) enemy1);
-        k.launchLightAgent(test);
-       // Window wind = new Window();
-        //while (true) {
-            //List<WorldObject> objs = env.getObjects();
-            //MobileObject enemy1 = (MobileObject) objs.get(0);
-            //enemy1.moveTo(new Point3d(10, 14, 0));
-            //wind.repaint();
-            /*try {
-                Thread.sleep(1000 / 30);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }*/
-       //}
+        // k.launchLightAgent(b);
+        Queen q = new Queen(new Point3d(5, 6, 0), 1);
+        Warrior war = new Warrior(new Point3d(5, 7, 0), 10);
+        for (int i = 0; i < 10; ++i) {
+            k.launchLightAgent(new Worker(new Point3d(1, 1, 0), 15));
+        }
+
+        // Window wind = new Window();
+        // while (true) {
+        // List<WorldObject> objs = env.getObjects();
+        // MobileObject enemy1 = (MobileObject) objs.get(0);
+        // enemy1.moveTo(new Point3d(10, 14, 0));
+        // wind.repaint();
+        /*
+         * try { Thread.sleep(1000 / 30); } catch (InterruptedException e) { //
+         * TODO Auto-generated catch block e.printStackTrace(); }
+         */
+        // }
     }
 
     // Functions for map g�n�ration
@@ -78,11 +75,6 @@ public final class Main {
             map[0][i][0] = new Square(LandType.WALL);
             map[map.length - 1][i][0] = new Square(LandType.WALL);
         }
-
-        List<WorldObject> objs = env.getObjects();
-        objs.add(new Body("img/Ants/worker.png", new Point3d(5, 5, 0), 15));
-        objs.add(new Body("img/Ants/warrior.png", new Point3d(5, 6, 0), 10));
-        objs.add(new Body("img/Ants/queen.png", new Point3d(5, 7, 0), 1));
 
         return true;
     }

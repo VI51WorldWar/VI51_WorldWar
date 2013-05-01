@@ -1,13 +1,13 @@
 package fr.utbm.vi51.agent;
 
-import fr.utbm.vi51.environment.Body;
+import javax.vecmath.Point3d;
 
 /**
  * @author Top-K
  *
  */
 public abstract class Ant extends Insect {
-    public Ant(Body bod) {
-        super(bod);
+    public Ant(String texture, Point3d position, int speed) {
+        super(texture, position, speed);
     }
 }

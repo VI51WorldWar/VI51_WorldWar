@@ -3,6 +3,7 @@ package fr.utbm.vi51.gui;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -86,14 +87,17 @@ public class Panel extends JPanel {
                                         .getTexturePath()), tileSizeX * i,
                         tileSizeY * j, tileSizeX, tileSizeY, this);
                 // Draw World's objects on the square
-                for (WorldObject obj : map[i + originX][j + originY][0]
-                        .getObjects()) {
+                List<WorldObject> objs = map[i + originX][j + originY][0]
+                        .getObjects();
+                for (int k = 0; k < objs.size(); ++k) {
+                    WorldObject obj = objs.get(k);
                     g.drawImage(
                             ImageManager.getInstance().getImage(
                                     obj.getTexturePath()),
-                            (int) (tileSizeX * (obj.getPosition().getX() - originX)),
+                            (int) (tileSizeX * (obj.getPosition().getX() - originX))
+                                    + k * tileSizeX / objs.size(),
                             (int) (tileSizeY * (obj.getPosition().getY() - originY)),
-                            tileSizeX, tileSizeY, this);
+                            tileSizeX / 3, tileSizeY / 3, this);
                 }
             }
         }

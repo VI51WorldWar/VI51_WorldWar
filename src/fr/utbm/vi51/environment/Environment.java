@@ -50,4 +50,9 @@ public final class Environment {
         this.map = map;
     }
 
+    public void addWorldObject(WorldObject wo) {
+        objects.add(wo);
+        map[(int) wo.getPosition().x][(int) wo.getPosition().y][(int) wo.getPosition().z].getObjects().add(wo);
+    }
+
 }

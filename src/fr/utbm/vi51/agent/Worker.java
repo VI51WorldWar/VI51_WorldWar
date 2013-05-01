@@ -20,8 +20,8 @@ public class Worker extends Ant {
     private Window wind;
     private Logger log = Logger.getLogger(MobileObject.class.getName());
 
-    public Worker(Body bod) {
-        super(bod);
+    public Worker(Point3d position, int speed) {
+        super("img/Ants/worker.png", position, speed);
     }
 
     @Override

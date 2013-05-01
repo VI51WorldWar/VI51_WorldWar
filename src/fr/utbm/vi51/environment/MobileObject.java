@@ -13,7 +13,7 @@ import fr.utbm.vi51.configs.Consts;
 public abstract class MobileObject extends WorldObject {
 
     private int speed; // 100 means 1 to use only integers (faster)
-    private int currentMove = 0;
+    private int currentMove;
 
     private Logger log = Logger.getLogger(MobileObject.class.getName());
 
