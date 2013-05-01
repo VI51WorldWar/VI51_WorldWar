@@ -4,18 +4,19 @@ import java.awt.Color;
 
 import javax.swing.JFrame;
 
+import fr.utbm.vi51.configs.Consts;
+
 /**
  * @author valentin
  */
 public class Window extends JFrame {
     // Dimensions of the Window
-    private final int winHeight = 800;
-    private final int winWidth = 800;
 
     public Window() {
         this.setTitle("Fenetre de base");
-        this.setSize(this.winWidth, this.winHeight);
+        this.setSize(Consts.WINWIDTH, Consts.WINHEIGHT);
         this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Instanciation d'un objet JPanel
         Panel pan = new Panel();
