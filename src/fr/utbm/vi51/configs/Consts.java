@@ -7,6 +7,6 @@ package fr.utbm.vi51.configs;
  */
 public class Consts {
 
-    public static final int TURBO = 1;
+    public static final int TURBO = 2;
 
 }

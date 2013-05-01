@@ -1,5 +1,7 @@
 package fr.utbm.vi51.environment;
 
+import java.util.logging.Logger;
+
 import javax.vecmath.Point3d;
 
 /**
@@ -10,6 +12,7 @@ public abstract class WorldObject {
 
     private Point3d position;
     private String texturePath;
+    private Logger log = Logger.getLogger(MobileObject.class.getName());
 
     public WorldObject(Point3d position) {
         super();

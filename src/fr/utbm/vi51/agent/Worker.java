@@ -1,11 +1,14 @@
 package fr.utbm.vi51.agent;
 
+import java.util.logging.Logger;
+
 import javax.vecmath.Point3d;
 
 import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
 
 import fr.utbm.vi51.environment.Body;
+import fr.utbm.vi51.environment.MobileObject;
 import fr.utbm.vi51.gui.Window;
 
 /**
@@ -15,6 +18,8 @@ import fr.utbm.vi51.gui.Window;
 public class Worker extends Ant {
     private Point3d lastPoint;
     private Window wind;
+    private Logger log = Logger.getLogger(MobileObject.class.getName());
+
     public Worker(Body bod) {
         super(bod);
     }
@@ -34,7 +39,7 @@ public class Worker extends Ant {
             double pointX = Math.floor((Math.random() * 10) + 1);
             double pointY = Math.floor((Math.random() * 10) + 1);
             lastPoint = new Point3d(pointX, pointY, 0);
-            //System.out.println("new target = " + lastPoint);
+            log.info("new target = " + lastPoint);
         }
 
         bod.moveTo(lastPoint);

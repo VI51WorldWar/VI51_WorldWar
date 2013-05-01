@@ -1,5 +1,7 @@
 package fr.utbm.vi51.environment;
 
+import java.util.logging.Logger;
+
 import javax.vecmath.Point3d;
 
 import fr.utbm.vi51.configs.Consts;
@@ -12,6 +14,9 @@ public abstract class MobileObject extends WorldObject {
 
     private int speed; // 100 means 1 to use only integers (faster)
     private int currentMove = 0;
+
+    private Logger log = Logger.getLogger(MobileObject.class.getName());
+
     public MobileObject(Point3d position, String texture, int speed) {
         super(position, texture);
         this.speed = speed;
@@ -69,6 +74,7 @@ public abstract class MobileObject extends WorldObject {
             env.setMap(map);
             this.setPosition(new Point3d(pos.x + moveXvalue, pos.y + moveYvalue, pos.z + moveZvalue));
             this.currentMove = 0;
+            log.info("Moving");
             return true;
         }
         return false;

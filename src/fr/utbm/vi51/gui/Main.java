@@ -11,9 +11,9 @@ import fr.utbm.vi51.agent.Worker;
 import fr.utbm.vi51.environment.Body;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.LandType;
+import fr.utbm.vi51.environment.MobileObject;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
-import fr.utbm.vi51.environment.MobileObject;
 
 /**
  * @author Top-K
