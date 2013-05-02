@@ -9,7 +9,6 @@ import org.janusproject.kernel.status.StatusFactory;
 
 import fr.utbm.vi51.environment.Body;
 import fr.utbm.vi51.environment.MobileObject;
-import fr.utbm.vi51.gui.Window;
 
 /**
  * @author Top-K
@@ -17,7 +16,7 @@ import fr.utbm.vi51.gui.Window;
  */
 public class Worker extends Ant {
     private Point3d lastPoint;
-    private Window wind;
+
     private Logger log = Logger.getLogger(MobileObject.class.getName());
 
     public Worker(Point3d position, int speed) {
@@ -26,9 +25,6 @@ public class Worker extends Ant {
 
     @Override
     public Status activate(Object... params) {
-        //this.setBody((Body) params[0]);
-        wind = new Window();
-
         return StatusFactory.ok(this);
     }
 
@@ -43,13 +39,6 @@ public class Worker extends Ant {
         }
 
         bod.moveTo(lastPoint);
-        wind.repaint();
-        try {
-            Thread.sleep(1000 / 30);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         return null;
     }
 }

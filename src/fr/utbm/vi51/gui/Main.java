@@ -27,12 +27,15 @@ public final class Main {
         Environment env = Environment.getInstance();
         // SenderAgent b = new SenderAgent();
         Kernel k = Kernels.get();
+
         // k.launchLightAgent(b);
         Queen q = new Queen(new Point3d(5, 6, 0), 1);
+
         Warrior war = new Warrior(new Point3d(5, 7, 0), 10);
         for (int i = 0; i < 10; ++i) {
             k.launchLightAgent(new Worker(new Point3d(1, 1, 0), 15));
         }
+        k.launchLightAgent(new WindowsContainer());
 
         // Window wind = new Window();
         // while (true) {
