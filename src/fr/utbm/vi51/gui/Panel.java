@@ -7,10 +7,10 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import util.ImageManager;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
+import fr.utbm.vi51.util.ImageManager;
 
 /**
  * @author Top-K

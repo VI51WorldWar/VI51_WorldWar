@@ -1,4 +1,4 @@
-package util;
+package fr.utbm.vi51.util;
 
 import java.awt.Image;
 import java.io.File;
