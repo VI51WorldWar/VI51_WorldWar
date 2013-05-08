@@ -7,7 +7,7 @@ package fr.utbm.vi51.environment;
  */
 public enum LandType {
     // Enumeration of different types of land available in the game
-    GRASS(1, true, "img/Tiles/grass.png"), WATER(2, true, "img/Tiles/water.png"), WALL(
+    GRASS(1, true, "img/Tiles/grass.png"), WATER(4, true, "img/Tiles/water.png"), WALL(
             0, false, "img/Tiles/wall.png");
 
     // Cost to pass across this type

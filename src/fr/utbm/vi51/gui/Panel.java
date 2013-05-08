@@ -94,9 +94,9 @@ public class Panel extends JPanel {
                     g.drawImage(
                             ImageManager.getInstance().getImage(
                                     obj.getTexturePath()),
-                            (int) (tileSizeX * (obj.getPosition().getX() - originX))
-                                    + k * tileSizeX / objs.size(),
-                            (int) (tileSizeY * (obj.getPosition().getY() - originY)),
+                            tileSizeX * (obj.getPosition().x - originX) + k
+                                    * tileSizeX / objs.size(),
+                            tileSizeY * (obj.getPosition().y - originY),
                             tileSizeX / 3, tileSizeY / 3, this);
                 }
             }

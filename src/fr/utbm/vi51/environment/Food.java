@@ -1,6 +1,6 @@
 package fr.utbm.vi51.environment;
 
-import javax.vecmath.Point3d;
+import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
@@ -8,7 +8,7 @@ import javax.vecmath.Point3d;
  */
 public class Food extends WorldObject {
 
-    public Food(Point3d position, String texture) {
+    public Food(Point3D position, String texture) {
         super(position, texture);
     }
 
