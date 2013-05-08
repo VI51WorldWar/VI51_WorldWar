@@ -1,6 +1,7 @@
 package fr.utbm.vi51.gui;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.swing.JPanel;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
+import fr.utbm.vi51.gui.minimap.MiniMap;
 import fr.utbm.vi51.util.ImageManager;
 
 /**
@@ -21,8 +23,11 @@ public class Panel extends JPanel {
     private int displayedTilesY = 20;
     private int originX;
     private int originY;
+    
+    private MiniMap minimap = null;
 
     public Panel() {
+    	this.minimap = new MiniMap();
         this.setFocusable(true);
         this.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
@@ -101,5 +106,8 @@ public class Panel extends JPanel {
                 }
             }
         }
+        Rectangle viewRect = new Rectangle(this.originX,this.originY,this.displayedTilesX,this.displayedTilesY);
+        // Draw minimap
+        this.minimap.paint(g, this,viewRect);
     }
 }
