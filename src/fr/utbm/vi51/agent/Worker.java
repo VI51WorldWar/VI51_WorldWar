@@ -14,7 +14,7 @@ import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
- * 
+ *
  */
 public class Worker extends Ant {
     private LinkedList<Point3D> movementPath;
@@ -41,7 +41,6 @@ public class Worker extends Ant {
                 pointY = (int) Math.floor((Math.random() * 15) + 1);
             } while (!Environment.getInstance().getMap()[pointX][pointY][0]
                     .getLandType().isCrossable());
-            System.out.println("New desitination : " + pointX + "," + pointY);
             movementPath = PathFinder.findPath(this.getBody().getPosition(),
                     new Point3D(pointX, pointY, 0), Environment.getInstance()
                             .getMap());
@@ -49,9 +48,6 @@ public class Worker extends Ant {
 
         if (movementPath != null) {
             bod.moveTo(movementPath.removeFirst());
-            if (movementPath.isEmpty()) {
-                System.out.println("Is at destination : " + bod.getPosition());
-            }
         }
         return null;
     }

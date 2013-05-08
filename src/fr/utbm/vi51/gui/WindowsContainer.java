@@ -21,7 +21,7 @@ public class WindowsContainer extends Agent {
     public Status live() {
         wind.repaint();
         try {
-            Thread.sleep((long) (300));
+            Thread.sleep((long) 300);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

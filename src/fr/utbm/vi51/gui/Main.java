@@ -62,18 +62,18 @@ public final class Main {
                 map[i][j][0] = new Square(LandType.GRASS);
             }
         }
-        
+
         for (int i = 3; i < 7; i++) {
             for (int j = 3; j < 10; j++) {
                 map[i][j][0] = new Square(LandType.WATER);
             }
         }
-        
+
         for (int i = 3; i < 21; i++) {
             map[i][10][0] = new Square(LandType.WALL);
             map[10][i][0] = new Square(LandType.WALL);
         }
-        
+
         for (int i = 9; i < 12; i++) {
             for (int j = 9; j < 12; j++) {
                 map[i][j][0] = new Square(LandType.WATER);

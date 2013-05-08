@@ -23,11 +23,11 @@ public class Panel extends JPanel {
     private int displayedTilesY = 20;
     private int originX;
     private int originY;
-    
-    private MiniMap minimap = null;
+
+    private MiniMap minimap;
 
     public Panel() {
-    	this.minimap = new MiniMap();
+        this.minimap = new MiniMap();
         this.setFocusable(true);
         this.addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent ke) {
@@ -106,8 +106,9 @@ public class Panel extends JPanel {
                 }
             }
         }
-        Rectangle viewRect = new Rectangle(this.originX,this.originY,this.displayedTilesX,this.displayedTilesY);
+        Rectangle viewRect = new Rectangle(this.originX, this.originY,
+                this.displayedTilesX, this.displayedTilesY);
         // Draw minimap
-        this.minimap.paint(g, this,viewRect);
+        this.minimap.paint(g, this, viewRect);
     }
 }

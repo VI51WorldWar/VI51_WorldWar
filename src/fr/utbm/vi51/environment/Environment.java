@@ -15,7 +15,7 @@ public final class Environment {
     private Square[][][] map;
     // width = x, height = y, depth = z
     private final int mapWidth;
- 	private final int mapHeight;
+    private final int mapHeight;
     private final int mapDepth;
 
     private Environment() {
@@ -33,18 +33,18 @@ public final class Environment {
 
         return evt;
     }
-    
+
     public int getMapWidth() {
-		return mapWidth;
-	}
+        return mapWidth;
+    }
 
-	public int getMapHeight() {
-		return mapHeight;
-	}
+    public int getMapHeight() {
+        return mapHeight;
+    }
 
-	public int getMapDepth() {
-		return mapDepth;
-	}
+    public int getMapDepth() {
+        return mapDepth;
+    }
 
     public List<WorldObject> getObjects() {
         return objects;
@@ -64,7 +64,8 @@ public final class Environment {
 
     public void addWorldObject(WorldObject wo) {
         objects.add(wo);
-        map[(int) wo.getPosition().x][(int) wo.getPosition().y][(int) wo.getPosition().z].getObjects().add(wo);
+        map[(int) wo.getPosition().x][(int) wo.getPosition().y][(int) wo
+                .getPosition().z].getObjects().add(wo);
     }
 
 }
