@@ -23,7 +23,7 @@ public abstract class WorldObject {
         super();
         this.position = position;
         this.texturePath = texturePath;
-        Environment.getInstance().getMap()[position.x][position.y][position.z].addObject(this);
+        Environment.getInstance().addWorldObject(this);
     }
     public String getTexturePath() {
         return texturePath;

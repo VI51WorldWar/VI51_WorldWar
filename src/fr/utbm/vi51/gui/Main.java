@@ -2,12 +2,18 @@ package fr.utbm.vi51.gui;
 
 import org.janusproject.kernel.Kernel;
 import org.janusproject.kernel.agent.Kernels;
+import org.janusproject.kernel.time.KernelTimeManager;
+import org.janusproject.kernel.time.VMKernelTimeManager;
 
 import fr.utbm.vi51.agent.Queen;
 import fr.utbm.vi51.agent.Warrior;
 import fr.utbm.vi51.agent.Worker;
+import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.Environment;
+import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.LandType;
+import fr.utbm.vi51.environment.Message;
+import fr.utbm.vi51.environment.Pheromone;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.util.Point3D;
 
@@ -24,17 +30,46 @@ public final class Main {
         // Generate environment map
         generateMap1();
         Environment env = Environment.getInstance();
+        Square[][][] map = Environment.getInstance().getMap();
         // SenderAgent b = new SenderAgent();
-        Kernel k = Kernels.get();
-
+        KernelTimeManager tm = new VMKernelTimeManager();
+        Kernel k = Kernels.create(tm);
+        k.launchLightAgent(env);
         // k.launchLightAgent(b);
         Queen q = new Queen(new Point3D(5, 6, 0), 1);
 
         Warrior war = new Warrior(new Point3D(5, 7, 0), 10);
-        for (int i = 0; i < 20; ++i) {
-            k.launchLightAgent(new Worker(new Point3D(1, 1, 0), 15));
+
+        for (int i = 0; i < 10; ++i) {
+            k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15));
         }
+        /*for (int i = 0; i < map.length; ++i) {
+            for (int j = 0; j < map[0].length; ++j) {
+                if (map[i][j][0].getLandType().isCrossable()) {
+                    k.launchLightAgent(new Worker(new Point3D(i, j, 0), 15));
+                }
+            }
+        }*/
         k.launchLightAgent(new WindowsContainer());
+
+        /*new Pheromone(new Point3D(8, 8, 0), Message.HOME, Direction.NORTHWEST,
+                1);
+        new Pheromone(new Point3D(10, 10, 0), Message.HOME,
+                Direction.NORTHWEST, 1);
+        new Pheromone(new Point3D(13, 13, 0), Message.HOME,
+                Direction.NORTHWEST, 1);
+        new Pheromone(new Point3D(18, 18, 0), Message.HOME,
+                Direction.NORTHWEST, 1);
+        new Pheromone(new Point3D(7, 13, 0), Message.HOME, Direction.NORTHEAST,
+                1);
+        new Pheromone(new Point3D(7, 18, 0), Message.HOME, Direction.NORTH, 1);
+        new Pheromone(new Point3D(18, 7, 0), Message.HOME, Direction.SOUTH, 1);*/
+        for (int i = 0; i < 20; ++i) {
+            new Food(new Point3D(10, 10, 0));
+            new Food(new Point3D(19, 19, 0));
+            new Food(new Point3D(3, 17, 0));
+            new Food(new Point3D(17, 6, 0));
+        }
 
         // Window wind = new Window();
         // while (true) {
@@ -69,7 +104,7 @@ public final class Main {
             }
         }
 
-        for (int i = 3; i < 21; i++) {
+        for (int i = 3; i < 19; i++) {
             map[i][10][0] = new Square(LandType.WALL);
             map[10][i][0] = new Square(LandType.WALL);
         }

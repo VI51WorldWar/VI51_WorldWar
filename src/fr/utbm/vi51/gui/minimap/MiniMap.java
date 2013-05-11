@@ -31,8 +31,7 @@ public class MiniMap {
     }
 
     public void paint(Graphics g, JPanel panel, Rectangle viewRect) {
-        assert g == null && panel != null && viewRect != null;
-
+        assert g != null && panel != null && viewRect != null;
         Environment env = Environment.getInstance();
         assert env != null;
         Square[][][] map = env.getMap();

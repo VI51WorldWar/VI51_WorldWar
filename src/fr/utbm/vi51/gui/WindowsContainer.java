@@ -20,12 +20,6 @@ public class WindowsContainer extends Agent {
     @Override
     public Status live() {
         wind.repaint();
-        try {
-            Thread.sleep((long) 300);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         return null;
     }
 

@@ -1,14 +1,21 @@
 package fr.utbm.vi51.gui;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImageOp;
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.Environment;
+import fr.utbm.vi51.environment.Pheromone;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.gui.minimap.MiniMap;
@@ -16,7 +23,7 @@ import fr.utbm.vi51.util.ImageManager;
 
 /**
  * @author Top-K
- *
+ * 
  */
 public class Panel extends JPanel {
     private int displayedTilesX = 20;
@@ -96,6 +103,16 @@ public class Panel extends JPanel {
                         .getObjects();
                 for (int k = 0; k < objs.size(); ++k) {
                     WorldObject obj = objs.get(k);
+                    Composite oldComposite = ((Graphics2D) g).getComposite();
+                    if (obj instanceof Pheromone) {
+                        Pheromone p = (Pheromone) obj;
+                        ((Graphics2D) g)
+                                .setComposite(AlphaComposite.getInstance(
+                                        AlphaComposite.SRC_OVER,
+                                        Math.max(p.getStrength() / Consts.STARTINGPHEROMONEVALUE, 0)));
+                    } else {
+                        g.setColor(new Color(255, 255, 255));
+                    }
                     g.drawImage(
                             ImageManager.getInstance().getImage(
                                     obj.getTexturePath()),
@@ -103,6 +120,8 @@ public class Panel extends JPanel {
                                     * tileSizeX / objs.size(),
                             tileSizeY * (obj.getPosition().y - originY),
                             tileSizeX / 3, tileSizeY / 3, this);
+                    ((Graphics2D) g).setComposite(oldComposite);
+
                 }
             }
         }

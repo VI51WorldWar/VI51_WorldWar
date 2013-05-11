@@ -7,9 +7,8 @@ import fr.utbm.vi51.util.Point3D;
  *
  */
 public class Food extends WorldObject {
-
-    public Food(Point3D position, String texture) {
-        super(position, texture);
+    public Food(Point3D position) {
+        super(position, "img/Objects/food.png");
     }
 
 }

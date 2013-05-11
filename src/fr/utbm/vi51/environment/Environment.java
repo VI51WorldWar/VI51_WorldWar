@@ -3,20 +3,30 @@ package fr.utbm.vi51.environment;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.janusproject.kernel.agent.Agent;
+import org.janusproject.kernel.status.Status;
+
+import fr.utbm.vi51.agent.Action;
+import fr.utbm.vi51.agent.Insect;
+import fr.utbm.vi51.configs.Consts;
+
 /**
  * @author Top-K
- *
+ * 
  */
-public final class Environment {
+public final class Environment extends Agent {
 
     private static Environment evt;
 
     private List<WorldObject> objects;
+    private List<Insect> insects;
     private Square[][][] map;
     // width = x, height = y, depth = z
     private final int mapWidth;
     private final int mapHeight;
     private final int mapDepth;
+
+    private long lastTime;
 
     private Environment() {
         mapHeight = 25;
@@ -24,6 +34,7 @@ public final class Environment {
         mapDepth = 5;
         map = new Square[mapWidth][mapHeight][mapDepth];
         objects = new LinkedList<WorldObject>();
+        insects = new LinkedList<Insect>();
     }
 
     public static Environment getInstance() {
@@ -63,9 +74,41 @@ public final class Environment {
     }
 
     public void addWorldObject(WorldObject wo) {
-        objects.add(wo);
+        synchronized (objects) {
+            objects.add(wo);
+        }
         map[(int) wo.getPosition().x][(int) wo.getPosition().y][(int) wo
                 .getPosition().z].getObjects().add(wo);
+    }
+
+    @Override
+    public Status live() {
+        int diffTime = (int) (this.getTimeManager().getCurrentDate().getTime() - lastTime);
+        LinkedList<WorldObject> toRemove = new LinkedList<WorldObject>();
+        synchronized (objects) {
+            for (WorldObject o : objects) {
+                if (o instanceof Body) {
+                    Body b = (Body) o;
+                    Action a = b.getAction();
+                    if (a != null && a.testAction()) {
+                        a.doAction();
+                        b.setAction(null);
+                    }
+                }
+                if (o instanceof Pheromone) {
+                    ((Pheromone) o).strength -= diffTime;
+                    if (((Pheromone) o).strength < 0) {
+                        toRemove.add(o);
+                    }
+                }
+            }
+        }
+        for (WorldObject wo : toRemove) {
+            objects.remove(wo);
+            map[wo.getPosition().x][wo.getPosition().y][wo.getPosition().z].getObjects().remove(wo);
+        }
+        lastTime = this.getTimeManager().getCurrentDate().getTime();
+        return null;
     }
 
 }

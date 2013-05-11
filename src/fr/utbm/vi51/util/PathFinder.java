@@ -7,11 +7,11 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.Square;
 
 /**
- * @author Top-K
- * 
+ * @author Top-K Static class using A* to find paths
  */
 public final class PathFinder {
     private PathFinder() {
@@ -19,8 +19,7 @@ public final class PathFinder {
     }
 
     /**
-     * @author Top-K
-     * 
+     * @author Top-K Defines a node as used in A*
      */
     private static class Node {
         private Point3D position;
@@ -68,8 +67,7 @@ public final class PathFinder {
     }
 
     /**
-     * @author Top-K
-     *
+     * @author Top-K Used to sort nodes using their total estimated cost
      */
     private static class NodeComparator implements Comparator<Node> {
 
@@ -81,7 +79,17 @@ public final class PathFinder {
 
     }
 
-    public static LinkedList<Point3D> findPath(Point3D start, Point3D goal,
+    /**
+     * @param start
+     *            Starting point of the path
+     * @param goal
+     *            Point you want to reach
+     * @param map
+     *            3D map, currently only 2 dimensions are used
+     * @return A linked list of directions, moving along this list will get the
+     *         object to the goal
+     */
+    public static LinkedList<Direction> findPath(Point3D start, Point3D goal,
             Square[][][] map) {
         ArrayList<Node> closedList = new ArrayList<Node>();
         ArrayList<Node> openList = new ArrayList<Node>();
@@ -92,20 +100,21 @@ public final class PathFinder {
         Node current;
         while (!openList.isEmpty()) {
             Collections.sort(openList, comparator);
-            current = openList.get(0);
+            current = openList.get(0); //Gets the best element of the open list
 
+            //If the current node is the goal, path is found
             if (current.getPosition().equals(goal)) {
                 return buildPath(current);
             }
 
-            for (Node n : getNeighboors(current, goal, map)) {
+            for (Node n : getNeighbors(current, goal, map)) {
                 Node olderNode;
                 if ((olderNode = getNodeWithSamePosition(closedList, n)) != null) {
                     if (n.getCurrentCost() >= olderNode.getCurrentCost()) {
                         continue;
                     }
                     closedList.remove(olderNode);
-                } else  if ((olderNode = getNodeWithSamePosition(openList, n)) != null) {
+                } else if ((olderNode = getNodeWithSamePosition(openList, n)) != null) {
                     olderNode = getNodeWithSamePosition(openList, n);
                     if (n.getCurrentCost() >= olderNode.getCurrentCost()) {
                         continue;
@@ -122,9 +131,22 @@ public final class PathFinder {
 
     }
 
-    private static List<Node> getNeighboors(Node origin, Point3D goal,
+    /**
+     * . Returns all 4 direct neighbors of the origin node
+     * 
+     * @param origin
+     *            Point around which the neighbors will be searched
+     * @param goal
+     *            Goal of the A* algorithm, used to compute the heuristic costs
+     * @param map
+     *            3D map, currently only 2 dimensions are used
+     * @return A list of 4 neighbors as nodes
+     */
+    private static List<Node> getNeighbors(Node origin, Point3D goal,
             Square[][][] map) {
         LinkedList<Node> neighboors = new LinkedList<Node>();
+
+        //West neighbor
         if (origin.getPosition().x > 0) {
             Point3D newPos = new Point3D(origin.getPosition().x - 1,
                     origin.getPosition().y, origin.getPosition().z);
@@ -136,6 +158,7 @@ public final class PathFinder {
             }
         }
 
+        //East neighbor
         if (origin.getPosition().x < map.length - 2) {
             Point3D newPos = new Point3D(origin.getPosition().x + 1,
                     origin.getPosition().y, origin.getPosition().z);
@@ -146,6 +169,8 @@ public final class PathFinder {
                         origin));
             }
         }
+
+        //North neighbor
         if (origin.getPosition().y > 0) {
             Point3D newPos = new Point3D(origin.getPosition().x,
                     origin.getPosition().y - 1, origin.getPosition().z);
@@ -157,6 +182,7 @@ public final class PathFinder {
             }
         }
 
+        //South neighbor
         if (origin.getPosition().y < map[0].length - 2) {
             Point3D newPos = new Point3D(origin.getPosition().x,
                     origin.getPosition().y + 1, origin.getPosition().z);
@@ -167,24 +193,48 @@ public final class PathFinder {
                         origin));
             }
         }
+
         return neighboors;
     }
 
+    /**
+     * Estimate the movement cost between position and goal (currently euclidian
+     * distance)
+     * @param position
+     * @param goal
+     * @return The estimate cost
+     */
     private static int computeHeuristicCost(Point3D position, Point3D goal) {
         return (int) Math.floor(Math.sqrt(Math.pow(goal.x - position.x, 2)
                 + Math.pow(goal.y - position.y, 2)));
     }
 
-    private static LinkedList<Point3D> buildPath(Node goal) {
-        LinkedList<Point3D> path = new LinkedList<Point3D>();
+    /**
+     * Once A* is completed, gives the successive directions to follow to go
+     * from start to goal
+     * @param goal
+     *            The node representing the goal position.
+     * @return An ordered list of directions
+     */
+    private static LinkedList<Direction> buildPath(Node goal) {
+        LinkedList<Direction> path = new LinkedList<Direction>();
         Node current = goal;
-        while (current != null) {
-            path.addFirst(current.getPosition());
+        while (current.getPreviousNode() != null) {
+            path.addFirst(Direction.toDirection(current.getPreviousNode()
+                    .getPosition(), current.getPosition()));
             current = current.getPreviousNode();
         }
         return path;
     }
 
+    /**
+     * Returns the first node in c that has the same postion as a
+     * @param c
+     *            The collection to search
+     * @param a
+     *            The reference node
+     * @return The first found node
+     */
     private static Node getNodeWithSamePosition(Collection<Node> c, Node a) {
         for (Node b : c) {
             if (b.getPosition().equals(a.getPosition())) {
@@ -193,5 +243,5 @@ public final class PathFinder {
         }
         return null;
     }
-    
+
 }
