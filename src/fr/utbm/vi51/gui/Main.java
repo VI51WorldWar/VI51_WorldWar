@@ -40,7 +40,7 @@ public final class Main {
 
         Warrior war = new Warrior(new Point3D(5, 7, 0), 10);
 
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 1; ++i) {
             k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15));
         }
         /*for (int i = 0; i < map.length; ++i) {
@@ -104,10 +104,10 @@ public final class Main {
             }
         }
 
-        for (int i = 3; i < 19; i++) {
+        /*for (int i = 3; i < 19; i++) {
             map[i][10][0] = new Square(LandType.WALL);
             map[10][i][0] = new Square(LandType.WALL);
-        }
+        }*/
 
         for (int i = 9; i < 12; i++) {
             for (int j = 9; j < 12; j++) {

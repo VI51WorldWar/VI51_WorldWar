@@ -104,14 +104,60 @@ public class Panel extends JPanel {
                 for (int k = 0; k < objs.size(); ++k) {
                     WorldObject obj = objs.get(k);
                     Composite oldComposite = ((Graphics2D) g).getComposite();
+                    //Pheromones are printed in the corner corresponding to their direction
                     if (obj instanceof Pheromone) {
                         Pheromone p = (Pheromone) obj;
                         ((Graphics2D) g)
                                 .setComposite(AlphaComposite.getInstance(
                                         AlphaComposite.SRC_OVER,
-                                        Math.max(p.getStrength() / Consts.STARTINGPHEROMONEVALUE, 0)));
-                    } else {
-                        g.setColor(new Color(255, 255, 255));
+                                        Math.max(
+                                                p.getStrength()
+                                                        / Consts.STARTINGPHEROMONEVALUE,
+                                                0)));
+                        int imagePositionX;
+                        switch (p.getDirection().dx) {
+                            case -1:
+                                imagePositionX = tileSizeX
+                                        * (obj.getPosition().x - originX);
+                                break;
+                            case 1:
+                                imagePositionX = tileSizeX
+                                        * (obj.getPosition().x - originX)
+                                        + tileSizeX * 2 / 3;
+                                break;
+                            case 0:
+                            default:
+                                imagePositionX = tileSizeX
+                                        * (obj.getPosition().x - originX)
+                                        + tileSizeX / 2 - (tileSizeX/3)/2;
+                                break;
+                        }
+                        int imagePositionY;
+                        switch (p.getDirection().dy) {
+                            case -1:
+                                imagePositionY = tileSizeY
+                                        * (obj.getPosition().y - originY);
+                                break;
+                            case 1:
+                                imagePositionY = tileSizeY
+                                        * (obj.getPosition().y - originY)
+                                        + tileSizeY * 2 / 3;
+                                break;
+                            case 0:
+                            default:
+                                imagePositionY = tileSizeY
+                                        * (obj.getPosition().y - originY)
+                                        + tileSizeY / 2 - (tileSizeY/3)/2;
+                                break;
+                        }
+                        g.drawImage(
+                                ImageManager.getInstance().getImage(
+                                        p.getTexturePath()), imagePositionX,
+                                imagePositionY, tileSizeX / 3, tileSizeY / 3,
+                                this);
+                        ((Graphics2D) g).setComposite(AlphaComposite
+                                .getInstance(AlphaComposite.SRC_OVER, 1));
+                        continue;
                     }
                     g.drawImage(
                             ImageManager.getInstance().getImage(

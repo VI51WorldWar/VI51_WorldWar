@@ -59,7 +59,7 @@ public enum Direction {
         }
     },
     /** SouthEast. */
-    SOUTHEAST(-1, -1) {
+    SOUTHEAST(+1, +1) {
         @Override
         public Direction opposite() {
             return NORTHWEST;
