@@ -40,7 +40,7 @@ public final class Main {
 
         Warrior war = new Warrior(new Point3D(5, 7, 0), 10);
 
-        for (int i = 0; i < 1; ++i) {
+        for (int i = 0; i < 10; ++i) {
             k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15));
         }
         /*for (int i = 0; i < map.length; ++i) {
@@ -52,36 +52,12 @@ public final class Main {
         }*/
         k.launchLightAgent(new WindowsContainer());
 
-        /*new Pheromone(new Point3D(8, 8, 0), Message.HOME, Direction.NORTHWEST,
-                1);
-        new Pheromone(new Point3D(10, 10, 0), Message.HOME,
-                Direction.NORTHWEST, 1);
-        new Pheromone(new Point3D(13, 13, 0), Message.HOME,
-                Direction.NORTHWEST, 1);
-        new Pheromone(new Point3D(18, 18, 0), Message.HOME,
-                Direction.NORTHWEST, 1);
-        new Pheromone(new Point3D(7, 13, 0), Message.HOME, Direction.NORTHEAST,
-                1);
-        new Pheromone(new Point3D(7, 18, 0), Message.HOME, Direction.NORTH, 1);
-        new Pheromone(new Point3D(18, 7, 0), Message.HOME, Direction.SOUTH, 1);*/
         for (int i = 0; i < 20; ++i) {
-            new Food(new Point3D(10, 10, 0));
+            new Food(new Point3D(12, 12, 0));
             new Food(new Point3D(19, 19, 0));
             new Food(new Point3D(3, 17, 0));
             new Food(new Point3D(17, 6, 0));
         }
-
-        // Window wind = new Window();
-        // while (true) {
-        // List<WorldObject> objs = env.getObjects();
-        // MobileObject enemy1 = (MobileObject) objs.get(0);
-        // enemy1.moveTo(new Point3d(10, 14, 0));
-        // wind.repaint();
-        /*
-         * try { Thread.sleep(1000 / 30); } catch (InterruptedException e) { //
-         * TODO Auto-generated catch block e.printStackTrace(); }
-         */
-        // }
     }
 
     // Functions for map g�n�ration
@@ -104,10 +80,10 @@ public final class Main {
             }
         }
 
-        /*for (int i = 3; i < 19; i++) {
+        for (int i = 3; i < 19; i++) {
             map[i][10][0] = new Square(LandType.WALL);
             map[10][i][0] = new Square(LandType.WALL);
-        }*/
+        }
 
         for (int i = 9; i < 12; i++) {
             for (int j = 9; j < 12; j++) {

@@ -46,19 +46,19 @@ public class Pheromone extends WorldObject {
             case -1:
                 switch (a.direction.dy) {
                     case -1:
-                        if (bPos.x < aPos.x && bPos.y <= aPos.y) {
+                        if (bPos.x <= aPos.x && bPos.y <= aPos.y) {
                             return b;
                         } else {
                             return a;
                         }
                     case 0:
-                        if (bPos.x < aPos.x) {
+                        if (bPos.x <= aPos.x) {
                             return b;
                         } else {
                             return a;
                         }
                     case 1:
-                        if (bPos.x < aPos.x && bPos.y >= aPos.y) {
+                        if (bPos.x <= aPos.x && bPos.y >= aPos.y) {
                             return b;
                         } else {
                             return a;
@@ -69,7 +69,7 @@ public class Pheromone extends WorldObject {
             case 0:
                 switch (a.direction.dy) {
                     case -1:
-                        if (bPos.y < aPos.y) {
+                        if (bPos.y <= aPos.y) {
                             return b;
                         } else {
                             return a;
@@ -77,7 +77,7 @@ public class Pheromone extends WorldObject {
                     case 0:
                         return b;
                     case 1:
-                        if (bPos.y > aPos.y) {
+                        if (bPos.y >= aPos.y) {
                             return b;
                         } else {
                             return a;
@@ -88,19 +88,19 @@ public class Pheromone extends WorldObject {
             case 1:
                 switch (a.direction.dy) {
                     case -1:
-                        if (bPos.x > aPos.x && bPos.y <= aPos.y) {
+                        if (bPos.x >= aPos.x && bPos.y <= aPos.y) {
                             return b;
                         } else {
                             return a;
                         }
                     case 0:
-                        if (bPos.x > aPos.x) {
+                        if (bPos.x >= aPos.x) {
                             return b;
                         } else {
                             return a;
                         }
                     case 1:
-                        if (bPos.x > aPos.x && bPos.y >= aPos.y) {
+                        if (bPos.x >= aPos.x && bPos.y >= aPos.y) {
                             return b;
                         } else {
                             return a;

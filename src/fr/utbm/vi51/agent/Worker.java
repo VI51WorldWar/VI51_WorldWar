@@ -1,6 +1,5 @@
 package fr.utbm.vi51.agent;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -21,7 +20,7 @@ import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
- * 
+ *
  */
 enum WorkerBehaviour {
     GO_HOME, SEARCH_FOOD,
@@ -29,7 +28,7 @@ enum WorkerBehaviour {
 
 /**
  * @author Top-K
- * 
+ *
  */
 public class Worker extends Ant {
     private WorkerBehaviour currentBehaviour;
@@ -72,14 +71,15 @@ public class Worker extends Ant {
         lastPosition = new Point3D(body.getPosition());
 
         currentPerception = body.getPerception();
-        
+
         if (dropPheromoneIfNeeded()) {
             return null;
         }
 
         if (movementPath != null && !movementPath.isEmpty()) {
             lastTime = this.getTimeManager().getCurrentDate().getTime();
-            body.setAction(new Move(body, movementPath.removeFirst()));
+            Move m = new Move(body, movementPath.removeFirst());
+            body.setAction(m);
             return null;
         }
 
@@ -178,19 +178,16 @@ public class Worker extends Ant {
         //If the target position is visible, place a pheromone pointing to it.
         //Else, point the pheromone to the position of the insect a few moves ago.
         if (targetPosition != null) {
-            System.out.println(new Pheromone(this.getBody().getPosition(), m,
+            new Pheromone(this.getBody().getPosition(), m,
                     Direction.toDirection(this.getBody().getPosition(),
                             targetPosition),
-                    (int) Consts.STARTINGPHEROMONEVALUE));
-            System.out.println("My pos was :"+this.getBody().getPosition());
-            System.out.println("Target pos was  :"+targetPosition);
+                    (int) Consts.STARTINGPHEROMONEVALUE);
             return true;
         } else if (relativeStartingPointPosition != null) {
-            System.out.println(new Pheromone(this.getBody().getPosition(), m,
+            new Pheromone(this.getBody().getPosition(), m,
                     Direction.toDirection(new Point3D(0, 0, 0),
                             relativeStartingPointPosition),
-                    (int) Consts.STARTINGPHEROMONEVALUE));
-            System.out.println("Relative pos was : " + relativeStartingPointPosition);
+                    (int) Consts.STARTINGPHEROMONEVALUE);
             return true;
         }
         return false;
@@ -248,8 +245,10 @@ public class Worker extends Ant {
                         if (p.getMessage() == Message.FOOD) {
                             currentBestPheromone = Pheromone.closestToSubject(
                                     p, currentBestPheromone);
-                            currentBestPheromonePositionInPerceivedMap = new Point3D(
-                                    i, j, 0);
+                            if (currentBestPheromone == p) {
+                                currentBestPheromonePositionInPerceivedMap = new Point3D(
+                                        i, j, 0);
+                            }
                         }
                     }
                 }
@@ -314,8 +313,10 @@ public class Worker extends Ant {
                                 currentBestPheromone = Pheromone
                                         .closestToSubject(p,
                                                 currentBestPheromone);
-                                currentBestPheromonePositionInPerceivedMap = new Point3D(
-                                        i, j, 0);
+                                if (currentBestPheromone == p) {
+                                    currentBestPheromonePositionInPerceivedMap = new Point3D(
+                                            i, j, 0);
+                                }
                             }
                         }
                     }

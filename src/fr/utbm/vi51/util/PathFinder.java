@@ -159,7 +159,7 @@ public final class PathFinder {
         }
 
         //East neighbor
-        if (origin.getPosition().x < map.length - 2) {
+        if (origin.getPosition().x < map.length - 1) {
             Point3D newPos = new Point3D(origin.getPosition().x + 1,
                     origin.getPosition().y, origin.getPosition().z);
             if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable()) {
@@ -183,7 +183,7 @@ public final class PathFinder {
         }
 
         //South neighbor
-        if (origin.getPosition().y < map[0].length - 2) {
+        if (origin.getPosition().y < map[0].length - 1) {
             Point3D newPos = new Point3D(origin.getPosition().x,
                     origin.getPosition().y + 1, origin.getPosition().z);
             if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable()) {

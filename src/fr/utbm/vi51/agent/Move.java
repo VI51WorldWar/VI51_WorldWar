@@ -1,11 +1,8 @@
 package fr.utbm.vi51.agent;
 
-import java.util.logging.Logger;
-
 import fr.utbm.vi51.environment.Body;
 import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.Environment;
-import fr.utbm.vi51.environment.MobileObject;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.util.Point3D;
 
@@ -51,5 +48,9 @@ public class Move implements Action {
             return map[newPos.x][newPos.y][newPos.z].getLandType()
                     .isCrossable();
         }
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 }
