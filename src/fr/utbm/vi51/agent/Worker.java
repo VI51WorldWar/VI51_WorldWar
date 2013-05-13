@@ -8,7 +8,6 @@ import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
 
 import fr.utbm.vi51.environment.Body;
-import fr.utbm.vi51.environment.MobileObject;
 
 /**
  * @author Top-K
@@ -17,7 +16,7 @@ import fr.utbm.vi51.environment.MobileObject;
 public class Worker extends Ant {
     private Point3d lastPoint;
 
-    private Logger log = Logger.getLogger(MobileObject.class.getName());
+    private Logger log = Logger.getLogger(Worker.class.getName());
 
     public Worker(Point3d position, int speed) {
         super("img/Ants/worker.png", position, speed);
@@ -35,7 +34,7 @@ public class Worker extends Ant {
             double pointX = Math.floor((Math.random() * 10) + 1);
             double pointY = Math.floor((Math.random() * 10) + 1);
             lastPoint = new Point3d(pointX, pointY, 0);
-            log.info("new target = " + lastPoint);
+            log.info("live");
         }
 
         bod.moveTo(lastPoint);

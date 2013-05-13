@@ -11,6 +11,7 @@ import fr.utbm.vi51.agent.Worker;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.LandType;
 import fr.utbm.vi51.environment.Square;
+import fr.utbm.vi51.util.AgentScheduler;
 
 /**
  * @author Top-K
@@ -25,8 +26,9 @@ public final class Main {
         // Generate environment map
         generateMap1();
         Environment env = Environment.getInstance();
+        AgentScheduler scheduler = new AgentScheduler();
         // SenderAgent b = new SenderAgent();
-        Kernel k = Kernels.get();
+        Kernel k = Kernels.create(scheduler);
 
         // k.launchLightAgent(b);
         Queen q = new Queen(new Point3d(5, 6, 0), 1);
@@ -35,6 +37,7 @@ public final class Main {
         for (int i = 0; i < 10; ++i) {
             k.launchLightAgent(new Worker(new Point3d(1, 1, 0), 15));
         }
+        k.launchLightAgent(new Worker(new Point3d(1, 1, 0), 15));
         k.launchLightAgent(new WindowsContainer());
 
         // Window wind = new Window();

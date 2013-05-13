@@ -2,12 +2,17 @@ package fr.utbm.vi51.environment;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
+
+import org.janusproject.kernel.agent.Agent;
+import org.janusproject.kernel.status.Status;
+import org.janusproject.kernel.status.StatusFactory;
 
 /**
  * @author Top-K
  *
  */
-public final class Environment {
+public final class Environment extends Agent {
 
     private static Environment evt;
 
@@ -17,6 +22,7 @@ public final class Environment {
     private final int mapWidth;
     private final int mapHeight;
     private final int mapDepth;
+    private Logger log = Logger.getLogger(Environment.class.getName());
 
     private Environment() {
         mapHeight = 500;
@@ -32,6 +38,17 @@ public final class Environment {
         }
 
         return evt;
+    }
+
+    @Override
+    public Status activate(Object... params) {
+        return StatusFactory.ok(this);
+    }
+
+    @Override
+    public Status live() {
+        log.severe("live env");
+        return null;
     }
 
     public List<WorldObject> getObjects() {
