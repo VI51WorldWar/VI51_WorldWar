@@ -8,13 +8,11 @@ import org.janusproject.kernel.time.VMKernelTimeManager;
 import fr.utbm.vi51.agent.Queen;
 import fr.utbm.vi51.agent.Warrior;
 import fr.utbm.vi51.agent.Worker;
-import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.LandType;
-import fr.utbm.vi51.environment.Message;
-import fr.utbm.vi51.environment.Pheromone;
 import fr.utbm.vi51.environment.Square;
+import fr.utbm.vi51.util.AgentScheduler;
 import fr.utbm.vi51.util.Point3D;
 
 /**
@@ -32,8 +30,9 @@ public final class Main {
         Environment env = Environment.getInstance();
         Square[][][] map = Environment.getInstance().getMap();
         // SenderAgent b = new SenderAgent();
-        KernelTimeManager tm = new VMKernelTimeManager();
-        Kernel k = Kernels.create(tm);
+        //KernelTimeManager tm = new VMKernelTimeManager();
+        AgentScheduler as = new AgentScheduler();
+        Kernel k = Kernels.create(as);
         k.launchLightAgent(env);
         // k.launchLightAgent(b);
         Queen q = new Queen(new Point3D(5, 6, 0), 1);
@@ -53,10 +52,10 @@ public final class Main {
         k.launchLightAgent(new WindowsContainer());
 
         for (int i = 0; i < 20; ++i) {
-            new Food(new Point3D(12, 12, 0));
+           // new Food(new Point3D(12, 12, 0));
             new Food(new Point3D(19, 19, 0));
-            new Food(new Point3D(3, 17, 0));
-            new Food(new Point3D(17, 6, 0));
+            //new Food(new Point3D(3, 17, 0));
+            //new Food(new Point3D(17, 6, 0));
         }
     }
 
@@ -104,34 +103,3 @@ public final class Main {
         return true;
     }
 }
-import org.janusproject.kernel.time.KernelTimeManager;
-import org.janusproject.kernel.time.VMKernelTimeManager;
-import fr.utbm.vi51.environment.Direction;
-import fr.utbm.vi51.environment.Food;
-import fr.utbm.vi51.environment.Message;
-import fr.utbm.vi51.environment.Pheromone;
-        Warrior war = new Warrior(new Point3D(5, 7, 0), 10);
-            k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15));
-        for (int i = 0; i < 20; ++i) {
-            new Food(new Point3D(12, 12, 0));
-            new Food(new Point3D(19, 19, 0));
-            new Food(new Point3D(3, 17, 0));
-            new Food(new Point3D(17, 6, 0));
-        }
-        for (int i = 3; i < 7; i++) {
-            for (int j = 3; j < 10; j++) {
-                map[i][j][0] = new Square(LandType.WATER);
-            }
-        }
-
-        for (int i = 3; i < 19; i++) {
-            map[i][10][0] = new Square(LandType.WALL);
-            map[10][i][0] = new Square(LandType.WALL);
-        }
-
-        for (int i = 9; i < 12; i++) {
-            for (int j = 9; j < 12; j++) {
-                map[i][j][0] = new Square(LandType.WATER);
-            }
-        }
-

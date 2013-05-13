@@ -73,8 +73,8 @@ public final class PathFinder {
 
         @Override
         public int compare(Node a, Node b) {
-            return Integer.compare(a.getCurrentCost() + a.getHeuristicCost(),
-                    b.getCurrentCost() + b.getHeuristicCost());
+            return Integer.valueOf(a.getCurrentCost() + a.getHeuristicCost()).compareTo(b.getCurrentCost() + b.getHeuristicCost());
+
         }
 
     }

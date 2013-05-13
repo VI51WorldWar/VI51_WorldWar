@@ -68,12 +68,6 @@ public final class Environment extends Agent {
         return StatusFactory.ok(this);
     }
 
-    @Override
-    public Status live() {
-        log.severe("live env");
-        return null;
-    }
-
     public List<WorldObject> getObjects() {
         return objects;
     }

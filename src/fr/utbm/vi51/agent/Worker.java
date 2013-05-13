@@ -118,9 +118,9 @@ public class Worker extends Ant {
     }
 
     /**
-     * Drops a pheromone if the closest pheromone with a strenght/maxStrength >
-     * 0.3 is at a euclidian distance > 3
-     * 
+     * Drops a pheromone if the closest pheromone with a strenght/maxStrength. >
+     * 0.3 is at a euclidian distance > 2
+     *
      * @return true if a pheromone will be dropped, false else.
      */
     private boolean dropPheromoneIfNeeded() {
@@ -152,7 +152,7 @@ public class Worker extends Ant {
                                         .getMessage() == Message.HOME)) {
                             //If the pheromone is valid and close enough to the body's position, no need to create one
                             if (Point3D.euclidianDistance(p.getPosition(), this
-                                    .getBody().getPosition()) <= 3) {
+                                    .getBody().getPosition()) <= 2) {
                                 return false;
                             }
                         }
@@ -275,7 +275,7 @@ public class Worker extends Ant {
         //If the body is carrying food and we are on the queen's square, drop the food
         if (this.getBody().getCarriedObject() != null) {
             for (WorldObject wo : perceivedMap[currentPerception
-                    .getPositionInPerceivedMap().x][currentPerception
+                        .getPositionInPerceivedMap().x][currentPerception
                     .getPositionInPerceivedMap().y][0].getObjects()) {
                 if (wo.getTexturePath().equals("img/Ants/queen.png")) {
                     this.getBody().setAction(new DropFood(this.getBody()));
@@ -286,7 +286,7 @@ public class Worker extends Ant {
             }
         } else {
             for (WorldObject wo : perceivedMap[currentPerception
-                    .getPositionInPerceivedMap().x][currentPerception
+                        .getPositionInPerceivedMap().x][currentPerception
                     .getPositionInPerceivedMap().y][0].getObjects()) {
                 if (wo.getTexturePath().equals("img/Ants/queen.png")) {
                     currentBehaviour = WorkerBehaviour.SEARCH_FOOD;
