@@ -39,7 +39,7 @@ public final class Main {
 
         Warrior war = new Warrior(new Point3D(5, 7, 0), 10);
 
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 100; ++i) {
             k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15));
         }
         /*for (int i = 0; i < map.length; ++i) {
