@@ -1,6 +1,6 @@
 package fr.utbm.vi51.agent;
 
-import javax.vecmath.Point3d;
+import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
@@ -8,7 +8,7 @@ import javax.vecmath.Point3d;
  */
 public class Warrior extends Ant {
 
-    public Warrior(Point3d position, int speed) {
+    public Warrior(Point3D position, int speed) {
         super("img/Ants/warrior.png", position, speed);
     }
 

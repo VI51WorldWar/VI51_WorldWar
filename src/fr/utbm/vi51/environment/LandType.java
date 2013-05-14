@@ -7,8 +7,9 @@ package fr.utbm.vi51.environment;
  */
 public enum LandType {
     // Enumeration of different types of land available in the game
-    GRASS(1, true, "img/Tiles/grass.png"), WATER(2, true, "img/Tiles/water.png"), WALL(
-            0, false, "img/Tiles/wall.png");
+    GRASS("Grass",1, true, "img/Tiles/grass.png"), 
+    WATER("Water",4, true, "img/Tiles/water.png"), 
+    WALL("Wall",0, false, "img/Tiles/wall.png");
 
     // Cost to pass across this type
     private final int cost;
@@ -16,9 +17,11 @@ public enum LandType {
     private final boolean isCrossable;
     // Path of the land's texture
     private final String texturePath;
-
+    // Name of the landType
+    private final String name;
     // Enumerator constructor
-    LandType(int cost, boolean isCrossable, String texturePath) {
+    LandType(String name,int cost, boolean isCrossable, String texturePath) {
+    	this.name = name;
         this.cost = cost;
         this.isCrossable = isCrossable;
         this.texturePath = texturePath;
@@ -26,15 +29,19 @@ public enum LandType {
     }
 
     public int getCost() {
-        return cost;
+        return this.cost;
     }
 
     public boolean isCrossable() {
-        return isCrossable;
+        return this.isCrossable;
     }
 
     public String getTexturePath() {
-        return texturePath;
+        return this.texturePath;
+    }
+    
+    public String getName() {
+    	return this.name;
     }
 
 }

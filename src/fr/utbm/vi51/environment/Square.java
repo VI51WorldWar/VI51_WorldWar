@@ -35,4 +35,8 @@ public class Square {
     public void setObjects(List<WorldObject> objects) {
         this.objects = objects;
     }
+
+    public String toString() {
+        return landType.toString();
+    }
 }
