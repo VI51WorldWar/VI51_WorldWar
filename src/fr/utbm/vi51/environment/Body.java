@@ -1,6 +1,5 @@
 package fr.utbm.vi51.environment;
 
-import fr.utbm.vi51.agent.Action;
 import fr.utbm.vi51.util.Point3D;
 
 /**

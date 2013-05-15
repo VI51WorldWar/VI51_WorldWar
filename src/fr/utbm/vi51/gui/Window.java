@@ -16,7 +16,7 @@ public class Window extends JFrame {
     // Dimensions of the Window
 	GameView 		view = null;
 	MiniMap 	minimap = null;
-	SquareInfos sqInfos = null;
+	//SquareInfos sqInfos = null;
 	
     public Window() {
     	this.setTitle("Fenetre de base");
@@ -31,9 +31,9 @@ public class Window extends JFrame {
     }
     
     public void setSquareForInfos(Square squareReference) {
-    	if(this.sqInfos != null) {
+    	/*if(this.sqInfos != null) {
     		this.sqInfos.setSquare(squareReference);
-    	}
+    	}*/
     }
     
     public void centerCurrentViewOn(Point squarePosition) {
@@ -71,7 +71,7 @@ public class Window extends JFrame {
     
     private void addSquareInfos() {
     	GridBagConstraints c = new GridBagConstraints();
-    	this.sqInfos = new SquareInfos();
+    	//this.sqInfos = new SquareInfos();
     	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 3;
@@ -79,6 +79,6 @@ public class Window extends JFrame {
         c.gridwidth = 2;
         c.weighty = 0.1;
         c.weightx = 0.1;
-        this.add(this.sqInfos, c);
+        //this.add(this.sqInfos, c);
     }
 }

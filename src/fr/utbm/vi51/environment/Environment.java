@@ -8,18 +8,6 @@ import org.janusproject.kernel.agent.Agent;
 import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
 
-import fr.utbm.vi51.agent.Action;
-import fr.utbm.vi51.agent.Insect;
-import java.util.logging.Logger;
-
-import org.janusproject.kernel.agent.Agent;
-import org.janusproject.kernel.status.Status;
-import org.janusproject.kernel.status.StatusFactory;
-
-import org.janusproject.kernel.agent.Agent;
-import org.janusproject.kernel.status.Status;
-
-import fr.utbm.vi51.agent.Action;
 import fr.utbm.vi51.agent.Insect;
 import fr.utbm.vi51.configs.Consts;
 
@@ -112,6 +100,14 @@ public final class Environment extends Agent {
                     if (a != null && a.testAction()) {
                         a.doAction();
                         b.setAction(null);
+                    }
+                    if(b instanceof InsectBody) {
+                        InsectBody ib = ((InsectBody) b);
+                        ib.setHunger(ib.getHunger() + diffTime);
+                        if(ib.getHunger() > Consts.MAXHUNGER) {
+                            toRemove.add(ib);
+                            ib.die();
+                        }
                     }
                 }
                 if (o instanceof Pheromone) {

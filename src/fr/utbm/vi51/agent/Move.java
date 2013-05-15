@@ -1,5 +1,6 @@
 package fr.utbm.vi51.agent;
 
+import fr.utbm.vi51.environment.Action;
 import fr.utbm.vi51.environment.Body;
 import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.Environment;

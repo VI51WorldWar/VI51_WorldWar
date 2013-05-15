@@ -17,7 +17,7 @@ import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
- *
+ * 
  */
 public final class Main {
 
@@ -37,7 +37,7 @@ public final class Main {
         // k.launchLightAgent(b);
         Queen q = new Queen(new Point3D(5, 6, 0), 1);
 
-        Warrior war = new Warrior(new Point3D(5, 7, 0), 10);
+        k.launchLightAgent(new Warrior(new Point3D(5, 7, 0), 10));
 
         for (int i = 0; i < 10; ++i) {
             k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15));
@@ -53,10 +53,10 @@ public final class Main {
         k.launchHeavyAgent(new WindowsContainer());
 
         for (int i = 0; i < 20; ++i) {
-           // new Food(new Point3D(12, 12, 0));
+            new Food(new Point3D(12, 12, 0));
             new Food(new Point3D(19, 19, 0));
-            //new Food(new Point3D(3, 17, 0));
-            //new Food(new Point3D(17, 6, 0));
+            new Food(new Point3D(3, 17, 0));
+            new Food(new Point3D(17, 6, 0));
         }
     }
 

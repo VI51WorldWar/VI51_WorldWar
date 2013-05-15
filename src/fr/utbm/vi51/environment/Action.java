@@ -1,4 +1,4 @@
-package fr.utbm.vi51.agent;
+package fr.utbm.vi51.environment;
 
 /**
  * @author Top-K
@@ -7,5 +7,5 @@ package fr.utbm.vi51.agent;
 public interface Action {
     void doAction();
 
-    boolean testAction();
+    boolean testAction(); 
 }

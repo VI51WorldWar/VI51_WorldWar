@@ -33,7 +33,7 @@ public class MiniMap extends JPanel{
 	int 		currentTileHeight = new Integer(0);
 	
 	public MiniMap(Window rParent,Rectangle currentViewReference) {
-		assert(rCurrentView != null);
+		//assert(rCurrentView != null);
 		assert(rParent != null);
 		Environment env = Environment.getInstance();
 		this.mapView = new Rectangle(0,0,0,0);

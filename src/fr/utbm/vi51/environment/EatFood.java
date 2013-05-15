@@ -1,21 +1,13 @@
-package fr.utbm.vi51.agent;
+package fr.utbm.vi51.environment;
 
 import java.util.List;
 
-import fr.utbm.vi51.environment.Body;
-import fr.utbm.vi51.environment.Environment;
-import fr.utbm.vi51.environment.Food;
-import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.Point3D;
 
-/**
- * @author Top-K
- *
- */
-public class TakeFood implements Action {
-    private Body body;
+public class EatFood implements Action {
+    private InsectBody body;
 
-    public TakeFood(Body body) {
+    public EatFood(InsectBody body) {
         super();
         this.body = body;
     }
@@ -33,6 +25,7 @@ public class TakeFood implements Action {
                 break;
             }
         }
+        body.setHunger(0);
         objects.remove(toRemove);
     }
 

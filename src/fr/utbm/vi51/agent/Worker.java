@@ -7,20 +7,23 @@ import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
 
 import fr.utbm.vi51.configs.Consts;
-import fr.utbm.vi51.environment.Body;
 import fr.utbm.vi51.environment.Direction;
+import fr.utbm.vi51.environment.DropFood;
+import fr.utbm.vi51.environment.EatFood;
 import fr.utbm.vi51.environment.Food;
+import fr.utbm.vi51.environment.InsectBody;
 import fr.utbm.vi51.environment.Message;
 import fr.utbm.vi51.environment.MobileObject;
 import fr.utbm.vi51.environment.Pheromone;
 import fr.utbm.vi51.environment.Square;
+import fr.utbm.vi51.environment.TakeFood;
 import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.PathFinder;
 import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
- * 
+ *   
  */
 enum WorkerBehaviour {
     GO_HOME, SEARCH_FOOD,
@@ -52,7 +55,14 @@ public class Worker extends Ant {
 
     @Override
     public Status live() {
-        Body body = this.getBody();
+        super.live();
+        InsectBody body = this.getBody();
+        
+        //If their is no body, the agent is waiting to die
+        if(body == null) {
+            return null;
+        }
+        
         // If an action is already planned, wait for it to be resolved
         if (body.getAction() != null) {
             return null;
@@ -83,6 +93,10 @@ public class Worker extends Ant {
             Move m = new Move(body, movementPath.removeFirst());
             body.setAction(m);
             return null;
+        }
+        
+        if(body.isHungry()) {
+            currentBehaviour = WorkerBehaviour.GO_HOME;
         }
 
         switch (currentBehaviour) {
@@ -288,10 +302,14 @@ public class Worker extends Ant {
 
         // If the body is carrying food and we are on the queen's square, drop
         // the food
-
+        // If the body is hungry and there is food on the same square, eat it 
         for (WorldObject wo : perceivedMap[currentPerception
                 .getPositionInPerceivedMap().x][currentPerception
                 .getPositionInPerceivedMap().y][0].getObjects()) {
+            if(this.getBody().isHungry() && wo instanceof Food) {
+                this.getBody().setAction(new EatFood(this.getBody()));
+                return;
+            }
             if (wo.getTexturePath().equals("img/Ants/queen.png")) {
                 if (this.getBody().getCarriedObject() != null) {
                     this.getBody().setAction(new DropFood(this.getBody()));
@@ -302,7 +320,7 @@ public class Worker extends Ant {
             }
         }
 
-        // Look for the queen or for home pheromones
+        // Look for the queen, for home pheromones, or if hungry for food
         for (int i = 0; i < perceivedMap.length; ++i) {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
                 List<WorldObject> objects = perceivedMap[i][j][0].getObjects();
@@ -325,6 +343,12 @@ public class Worker extends Ant {
                                             i, j, 0);
                                 }
                             }
+                        } else if (this.getBody().isHungry() && wo instanceof Food) {
+                            movementPath = PathFinder.findPath(
+                                    currentPerception
+                                            .getPositionInPerceivedMap(),
+                                    new Point3D(i, j, 0), perceivedMap);
+                            return;
                         }
                     }
                 }

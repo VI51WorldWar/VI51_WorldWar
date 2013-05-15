@@ -3,9 +3,11 @@ package fr.utbm.vi51.agent;
 import java.util.LinkedList;
 
 import org.janusproject.kernel.agent.Agent;
+import org.janusproject.kernel.status.Status;
 
 import fr.utbm.vi51.environment.Body;
 import fr.utbm.vi51.environment.Direction;
+import fr.utbm.vi51.environment.InsectBody;
 import fr.utbm.vi51.environment.Perception;
 import fr.utbm.vi51.util.Point3D;
 
@@ -17,17 +19,28 @@ public abstract class Insect extends Agent {
     protected long lastTime;
     protected Perception currentPerception;
     protected LinkedList<Direction> movementPath;
-    private Body body;
+    private InsectBody body;
 
     public Insect(String texture, Point3D position, int speed) {
-        this.body = new Body(texture, position, speed);
+        this.body = new InsectBody(texture, position, speed);
     }
 
-    public Body getBody() {
+    public InsectBody getBody() {
         return body;
     }
 
-    public void setBody(Body body) {
+    public void setBody(InsectBody body) {
         this.body = body;
     }
+
+    @Override
+    public Status live() {
+        if(!body.isAlive()) {
+            body = null;
+            this.killMe();
+        }
+        return null;
+    }
+    
+    
 }
