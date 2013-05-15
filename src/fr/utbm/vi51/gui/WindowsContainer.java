@@ -25,6 +25,7 @@ public class WindowsContainer extends Agent {
 
     @Override
     public Status live() {
+
         try {
             wind.repaint();
             Thread.sleep(30);
@@ -32,7 +33,7 @@ public class WindowsContainer extends Agent {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return null;
+return null;
     }
 
 }

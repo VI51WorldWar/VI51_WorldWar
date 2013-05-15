@@ -28,7 +28,8 @@ public class Pheromone extends WorldObject {
         return direction;
     }
 
-    public int getStrength() {
+
+	public int getStrength() {
         return strength;
     }
 
