@@ -8,12 +8,8 @@ import org.janusproject.kernel.agent.Agent;
 import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
 
-import org.janusproject.kernel.agent.Agent;
-import org.janusproject.kernel.status.Status;
-
 import fr.utbm.vi51.agent.Action;
 import fr.utbm.vi51.agent.Insect;
-import fr.utbm.vi51.configs.Consts;
 
 /**
  * @author Top-K
@@ -31,7 +27,6 @@ public final class Environment extends Agent {
     private final int mapHeight;
     private final int mapDepth;
     private Logger log = Logger.getLogger(Environment.class.getName());
-
     private long lastTime;
 
     private Environment() {
@@ -94,6 +89,7 @@ public final class Environment extends Agent {
 
     @Override
     public Status live() {
+
         int diffTime = (int) (this.getTimeManager().getCurrentDate().getTime() - lastTime);
         LinkedList<WorldObject> toRemove = new LinkedList<WorldObject>();
         synchronized (objects) {
@@ -113,12 +109,22 @@ public final class Environment extends Agent {
                     }
                 }
             }
+
         }
         for (WorldObject wo : toRemove) {
             objects.remove(wo);
             map[wo.getPosition().x][wo.getPosition().y][wo.getPosition().z].getObjects().remove(wo);
         }
         lastTime = this.getTimeManager().getCurrentDate().getTime();
+        diffTime = (int) (this.getTimeManager().getCurrentDate().getTime() - lastTime);
+        try {
+            if(30-diffTime > 0){
+                Thread.sleep(30-diffTime);
+            }
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return null;
     }
 

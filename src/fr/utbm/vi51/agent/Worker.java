@@ -20,7 +20,7 @@ import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
- *
+ * 
  */
 enum WorkerBehaviour {
     GO_HOME, SEARCH_FOOD,
@@ -28,12 +28,15 @@ enum WorkerBehaviour {
 
 /**
  * @author Top-K
- *
+ * 
  */
 public class Worker extends Ant {
     private WorkerBehaviour currentBehaviour;
     private Point3D lastPosition;
-    private Point3D relativeStartingPointPosition; //Remembers the position of the starting point (where food was taken, where home was...)
+    private Point3D relativeStartingPointPosition; // Remembers the position of
+                                                   // the starting point (where
+                                                   // food was taken, where home
+                                                   // was...)
     private Logger log = Logger.getLogger(MobileObject.class.getName());
 
     public Worker(Point3D position, int speed) {
@@ -50,7 +53,6 @@ public class Worker extends Ant {
     @Override
     public Status live() {
         Body body = this.getBody();
-
         // If an action is already planned, wait for it to be resolved
         if (body.getAction() != null) {
             return null;
@@ -84,25 +86,24 @@ public class Worker extends Ant {
         }
 
         switch (currentBehaviour) {
-            case GO_HOME:
-                goHome();
-                break;
-            case SEARCH_FOOD:
-                searchFood();
-                break;
-            default:
-                break;
+        case GO_HOME:
+            goHome();
+            break;
+        case SEARCH_FOOD:
+            searchFood();
+            break;
+        default:
+            break;
         }
 
         /*
-         * If after behavior functions,
-         * no action has been defined and movement path is empty,
-         * the worker doesn't know what to do, so move randomly .
+         * If after behavior functions, no action has been defined and movement
+         * path is empty, the worker doesn't know what to do, so move randomly .
          */
         if (body.getAction() == null
                 && (movementPath == null || movementPath.isEmpty())) {
             Square[][][] perceivedMap = currentPerception.getPerceivedMap();
-            //Find a crossable square
+            // Find a crossable square
             int x;
             int y;
             do {
@@ -119,19 +120,26 @@ public class Worker extends Ant {
 
     /**
      * Drops a pheromone if the closest pheromone with a strenght/maxStrength. >
-     * 0.3 is at a euclidian distance > 2
-     *
+     * 0.5 is at a euclidian distance > 2
+     * 
      * @return true if a pheromone will be dropped, false else.
      */
     private boolean dropPheromoneIfNeeded() {
-        //If we are looking for home and the body is not carrying food, no need to create pheromone
+
+        // Variables for a pheromone validity
+        final float acceptedOldPh = 0.5f;
+        final int acceptedDistancePh = 2;
+
+        // If we are looking for home and the body is not carrying food, no need
+        // to create pheromone
         if (currentBehaviour == WorkerBehaviour.GO_HOME
                 && this.getBody().getCarriedObject() == null) {
             return false;
         }
 
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
-        //Represents the targets position, the nature of the target depends on the current behaviour (food for search food...)
+        // Represents the targets position, the nature of the target depends on
+        // the current behaviour (food for search food...)
         Point3D targetPosition = null;
         for (int i = 0; i < perceivedMap.length; ++i) {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
@@ -144,15 +152,17 @@ public class Worker extends Ant {
                     }
                     if (wo instanceof Pheromone) {
                         Pheromone p = (Pheromone) wo;
-                        //Check validity of the pheromone : strength is sufficient and is of correct type
-                        if (p.getStrength() / Consts.STARTINGPHEROMONEVALUE > 0.3
+                        // Check validity of the pheromone : strength is
+                        // sufficient and is of correct type
+                        if (p.getStrength() / Consts.STARTINGPHEROMONEVALUE > acceptedOldPh
                                 && (currentBehaviour == WorkerBehaviour.GO_HOME && p
                                         .getMessage() == Message.FOOD)
                                 || (currentBehaviour == WorkerBehaviour.SEARCH_FOOD && p
                                         .getMessage() == Message.HOME)) {
-                            //If the pheromone is valid and close enough to the body's position, no need to create one
+                            // If the pheromone is valid and close enough to the
+                            // body's position, no need to create one
                             if (Point3D.euclidianDistance(p.getPosition(), this
-                                    .getBody().getPosition()) <= 2) {
+                                    .getBody().getPosition()) <= acceptedDistancePh) {
                                 return false;
                             }
                         }
@@ -161,22 +171,25 @@ public class Worker extends Ant {
             }
         }
 
-        //If no close and valid pheromone has been found, create one
+        // If no close and valid pheromone has been found, create one
         Message m;
+        // System.out.println("nothingfound, working on it" + currentBehaviour);
         switch (currentBehaviour) {
-            case GO_HOME:
-                m = Message.FOOD;
-                break;
-            case SEARCH_FOOD:
-                m = Message.HOME;
-                break;
-            default:
-                m = null;
+        case GO_HOME:
+            m = Message.FOOD;
+            break;
+        case SEARCH_FOOD:
+            m = Message.HOME;
+            break;
+        default:
+            m = null;
         }
         assert m != null;
 
-        //If the target position is visible, place a pheromone pointing to it.
-        //Else, point the pheromone to the position of the insect a few moves ago.
+        // If the target position is visible, place a pheromone pointing to it.
+        // Else, point the pheromone to the position of the insect a few moves
+        // ago.
+        // System.out.println(relativeStartingPointPosition);
         if (targetPosition != null) {
             new Pheromone(this.getBody().getPosition(), m,
                     Direction.toDirection(this.getBody().getPosition(),
@@ -202,14 +215,14 @@ public class Worker extends Ant {
         Pheromone currentBestPheromone = null;
         Point3D currentBestPheromonePositionInPerceivedMap = null;
 
-        //If the body is already carrying an object, go home
+        // If the body is already carrying an object, go home
         if (this.getBody().getCarriedObject() != null) {
             currentBehaviour = WorkerBehaviour.GO_HOME;
             goHome();
             return;
         }
 
-        //If there is food on the same square as the body, take it
+        // If there is food on the same square as the body, take it
         boolean foodOnSameSquare = false;
         for (WorldObject wo : perceivedMap[positionInPerceivedMap.x][positionInPerceivedMap.y][0]
                 .getObjects()) {
@@ -228,11 +241,12 @@ public class Worker extends Ant {
             return;
         }
 
-        //Searching the map for food or food pheromones
+        // Searching the map for food or food pheromones
         for (int i = 0; i < perceivedMap.length; ++i) {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
                 for (WorldObject wo : perceivedMap[i][j][0].getObjects()) {
-                    //Avoid perceiving the food on the queen's square as it is already where it needs to be
+                    // Avoid perceiving the food on the queen's square as it is
+                    // already where it needs to be
                     if (wo.getTexturePath().equals("img/Ants/queen.png")) {
                         foodFound = null;
                         break;
@@ -272,30 +286,23 @@ public class Worker extends Ant {
         Pheromone currentBestPheromone = null;
         Point3D currentBestPheromonePositionInPerceivedMap = null;
 
-        //If the body is carrying food and we are on the queen's square, drop the food
-        if (this.getBody().getCarriedObject() != null) {
-            for (WorldObject wo : perceivedMap[currentPerception
-                        .getPositionInPerceivedMap().x][currentPerception
-                    .getPositionInPerceivedMap().y][0].getObjects()) {
-                if (wo.getTexturePath().equals("img/Ants/queen.png")) {
+        // If the body is carrying food and we are on the queen's square, drop
+        // the food
+
+        for (WorldObject wo : perceivedMap[currentPerception
+                .getPositionInPerceivedMap().x][currentPerception
+                .getPositionInPerceivedMap().y][0].getObjects()) {
+            if (wo.getTexturePath().equals("img/Ants/queen.png")) {
+                if (this.getBody().getCarriedObject() != null) {
                     this.getBody().setAction(new DropFood(this.getBody()));
-                    currentBehaviour = WorkerBehaviour.SEARCH_FOOD;
-                    relativeStartingPointPosition = new Point3D(0, 0, 0);
-                    return;
                 }
-            }
-        } else {
-            for (WorldObject wo : perceivedMap[currentPerception
-                        .getPositionInPerceivedMap().x][currentPerception
-                    .getPositionInPerceivedMap().y][0].getObjects()) {
-                if (wo.getTexturePath().equals("img/Ants/queen.png")) {
-                    currentBehaviour = WorkerBehaviour.SEARCH_FOOD;
-                    return;
-                }
+                currentBehaviour = WorkerBehaviour.SEARCH_FOOD;
+                relativeStartingPointPosition = new Point3D(0, 0, 0);
+                return;
             }
         }
 
-        //Look for the queen or for home pheromones
+        // Look for the queen or for home pheromones
         for (int i = 0; i < perceivedMap.length; ++i) {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
                 List<WorldObject> objects = perceivedMap[i][j][0].getObjects();

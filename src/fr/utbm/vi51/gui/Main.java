@@ -39,9 +39,11 @@ public final class Main {
 
         Warrior war = new Warrior(new Point3D(5, 7, 0), 10);
 
-        for (int i = 0; i < 100; ++i) {
+        for (int i = 0; i < 1; ++i) {
             k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15));
         }
+        k.launchLightAgent(war);
+
         /*for (int i = 0; i < map.length; ++i) {
             for (int j = 0; j < map[0].length; ++j) {
                 if (map[i][j][0].getLandType().isCrossable()) {
@@ -49,7 +51,7 @@ public final class Main {
                 }
             }
         }*/
-        k.launchLightAgent(new WindowsContainer());
+        k.launchHeavyAgent(new WindowsContainer());
 
         for (int i = 0; i < 20; ++i) {
            // new Food(new Point3D(12, 12, 0));

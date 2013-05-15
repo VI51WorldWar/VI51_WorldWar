@@ -1,18 +1,19 @@
 package fr.utbm.vi51.environment;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author Top-K
  *
  */
 public class Square {
-    private List<WorldObject> objects;
+    private  CopyOnWriteArrayList<WorldObject> objects;
+    
     private final LandType landType;
 
     public Square(LandType landType) {
-        this.objects = new LinkedList<WorldObject>();
+        this.objects = new  CopyOnWriteArrayList<WorldObject>();
         this.landType = landType;
     }
 
@@ -29,10 +30,10 @@ public class Square {
     }
 
     public List<WorldObject> getObjects() {
-        return objects;
+            return objects;
     }
 
-    public void setObjects(List<WorldObject> objects) {
+    public void setObjects( CopyOnWriteArrayList<WorldObject> objects) {
         this.objects = objects;
     }
 
