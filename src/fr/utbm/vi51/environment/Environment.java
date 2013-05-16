@@ -101,6 +101,9 @@ public final class Environment extends Agent {
                         a.doAction();
                         b.setAction(null);
                     }
+                    if (a != null && !a.testAction()){
+                        b.setAction(null);
+                    }
                     if(b instanceof InsectBody) {
                         InsectBody ib = ((InsectBody) b);
                         ib.setHunger(ib.getHunger() + diffTime);

@@ -54,7 +54,6 @@ public class Warrior extends Ant {
                 && lastTime != 0) {
             return null;
         }
-
         currentPerception = this.getBody().getPerception();
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
         Point3D positionInPerceivedMap = currentPerception
