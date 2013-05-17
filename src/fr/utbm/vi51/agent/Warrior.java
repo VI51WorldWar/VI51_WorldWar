@@ -7,12 +7,13 @@ import org.janusproject.kernel.status.StatusFactory;
 
 import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.Direction;
-import fr.utbm.vi51.environment.DropFood;
 import fr.utbm.vi51.environment.EatFood;
 import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.InsectBody;
 import fr.utbm.vi51.environment.Message;
+import fr.utbm.vi51.environment.Move;
 import fr.utbm.vi51.environment.Pheromone;
+import fr.utbm.vi51.environment.Side;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.PathFinder;
@@ -31,8 +32,8 @@ public class Warrior extends Ant {
     private Point3D lastPosition;
     private Point3D relativeStartingPointPosition; // Remembers the position of
 
-    public Warrior(Point3D position, int speed) {
-        super("img/Ants/warrior.png", position, speed);
+    public Warrior(Point3D position, int speed, Side side) {
+        super("img/Ants/warrior.png", position, speed, side);
         currentBehaviour = WarriorBehaviour.PATROL;
     }
 
@@ -80,7 +81,7 @@ public class Warrior extends Ant {
         }
         for (WorldObject wo : perceivedMap[positionInPerceivedMap.x][positionInPerceivedMap.y][0]
                 .getObjects()) {
-            if (wo.getTexturePath().equals("img/Ants/queen.png")) {
+            if (wo.getTexturePath().equals("img/Ants/queen.png") && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
                 relativeStartingPointPosition = new Point3D(0, 0, 0);
                 break;
             }
@@ -114,7 +115,7 @@ public class Warrior extends Ant {
                 List<WorldObject> objects = perceivedMap[i][j][0].getObjects();
                 synchronized (objects) {
                     for (WorldObject wo : objects) {
-                        if (wo.getTexturePath().equals("img/Ants/queen.png")) {
+                        if (wo.getTexturePath().equals("img/Ants/queen.png") && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
                             movementPath = PathFinder.findPath(
                                     currentPerception
                                             .getPositionInPerceivedMap(),

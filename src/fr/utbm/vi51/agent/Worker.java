@@ -14,7 +14,9 @@ import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.InsectBody;
 import fr.utbm.vi51.environment.Message;
 import fr.utbm.vi51.environment.MobileObject;
+import fr.utbm.vi51.environment.Move;
 import fr.utbm.vi51.environment.Pheromone;
+import fr.utbm.vi51.environment.Side;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.TakeFood;
 import fr.utbm.vi51.environment.WorldObject;
@@ -42,8 +44,8 @@ public class Worker extends Ant {
                                                    // was...)
     private Logger log = Logger.getLogger(MobileObject.class.getName());
 
-    public Worker(Point3D position, int speed) {
-        super("img/Ants/worker.png", position, speed);
+    public Worker(Point3D position, int speed, Side side) {
+        super("img/Ants/worker.png", position, speed, side);
         currentBehaviour = WorkerBehaviour.GO_HOME;
         lastPosition = new Point3D(position);
     }
@@ -161,7 +163,7 @@ public class Worker extends Ant {
                     if (currentBehaviour == WorkerBehaviour.GO_HOME
                             && wo instanceof Food
                             || currentBehaviour == WorkerBehaviour.SEARCH_FOOD
-                            && wo.getTexturePath().equals("img/Ants/queen.png")) {
+                            && wo.getTexturePath().equals("img/Ants/queen.png") && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
                         targetPosition = new Point3D(wo.getPosition());
                     }
                     if (wo instanceof Pheromone) {
@@ -208,13 +210,13 @@ public class Worker extends Ant {
             new Pheromone(this.getBody().getPosition(), m,
                     Direction.toDirection(this.getBody().getPosition(),
                             targetPosition),
-                    (int) Consts.STARTINGPHEROMONEVALUE);
+                    (int) Consts.STARTINGPHEROMONEVALUE, this.getBody().getSide());
             return true;
         } else if (relativeStartingPointPosition != null) {
             new Pheromone(this.getBody().getPosition(), m,
                     Direction.toDirection(new Point3D(0, 0, 0),
                             relativeStartingPointPosition),
-                    (int) Consts.STARTINGPHEROMONEVALUE);
+                    (int) Consts.STARTINGPHEROMONEVALUE, this.getBody().getSide());
             return true;
         }
         return false;
@@ -240,7 +242,7 @@ public class Worker extends Ant {
         boolean foodOnSameSquare = false;
         for (WorldObject wo : perceivedMap[positionInPerceivedMap.x][positionInPerceivedMap.y][0]
                 .getObjects()) {
-            if (wo.getTexturePath().equals("img/Ants/queen.png")) {
+            if (wo.getTexturePath().equals("img/Ants/queen.png") && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
                 foodOnSameSquare = false;
                 break;
             }
@@ -261,7 +263,7 @@ public class Worker extends Ant {
                 for (WorldObject wo : perceivedMap[i][j][0].getObjects()) {
                     // Avoid perceiving the food on the queen's square as it is
                     // already where it needs to be
-                    if (wo.getTexturePath().equals("img/Ants/queen.png")) {
+                    if (wo.getTexturePath().equals("img/Ants/queen.png") && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
                         foodFound = null;
                         break;
                     }
@@ -273,7 +275,7 @@ public class Worker extends Ant {
                         if (p.getMessage() == Message.FOOD) {
                             currentBestPheromone = Pheromone.closestToSubject(
                                     p, currentBestPheromone);
-                            if (currentBestPheromone == p) {
+                            if (currentBestPheromone == p && p.getSide() == this.getBody().getSide()) {
                                 currentBestPheromonePositionInPerceivedMap = new Point3D(
                                         i, j, 0);
                             }
@@ -288,7 +290,7 @@ public class Worker extends Ant {
                 }
             }
         }
-        if (currentBestPheromone != null) {
+        if (currentBestPheromone != null ) {
             movementPath = PathFinder.findPath(
                     currentPerception.getPositionInPerceivedMap(),
                     currentBestPheromonePositionInPerceivedMap, perceivedMap);
@@ -310,7 +312,7 @@ public class Worker extends Ant {
                 this.getBody().setAction(new EatFood(this.getBody()));
                 return;
             }
-            if (wo.getTexturePath().equals("img/Ants/queen.png")) {
+            if (wo.getTexturePath().equals("img/Ants/queen.png") && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
                 if (this.getBody().getCarriedObject() != null) {
                     this.getBody().setAction(new DropFood(this.getBody()));
                 }
@@ -326,7 +328,7 @@ public class Worker extends Ant {
                 List<WorldObject> objects = perceivedMap[i][j][0].getObjects();
                 synchronized (objects) {
                     for (WorldObject wo : objects) {
-                        if (wo.getTexturePath().equals("img/Ants/queen.png")) {
+                        if (wo.getTexturePath().equals("img/Ants/queen.png") && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
                             movementPath = PathFinder.findPath(
                                     currentPerception
                                             .getPositionInPerceivedMap(),
@@ -338,7 +340,7 @@ public class Worker extends Ant {
                                 currentBestPheromone = Pheromone
                                         .closestToSubject(p,
                                                 currentBestPheromone);
-                                if (currentBestPheromone == p) {
+                                if (currentBestPheromone == p && p.getSide() == this.getBody().getSide()) {
                                     currentBestPheromonePositionInPerceivedMap = new Point3D(
                                             i, j, 0);
                                 }

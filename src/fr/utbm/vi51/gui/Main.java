@@ -2,8 +2,6 @@ package fr.utbm.vi51.gui;
 
 import org.janusproject.kernel.Kernel;
 import org.janusproject.kernel.agent.Kernels;
-import org.janusproject.kernel.time.KernelTimeManager;
-import org.janusproject.kernel.time.VMKernelTimeManager;
 
 import fr.utbm.vi51.agent.Queen;
 import fr.utbm.vi51.agent.Warrior;
@@ -11,6 +9,7 @@ import fr.utbm.vi51.agent.Worker;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.LandType;
+import fr.utbm.vi51.environment.Side;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.util.AgentScheduler;
 import fr.utbm.vi51.util.Point3D;
@@ -35,15 +34,22 @@ public final class Main {
         Kernel k = Kernels.create(as);
         k.launchLightAgent(env);
         // k.launchLightAgent(b);
-        Queen q = new Queen(new Point3D(5, 6, 0), 1);
+        Side a = new Side(1);
+        Side b = new Side(2);
 
-        k.launchLightAgent(new Warrior(new Point3D(5, 7, 0), 10));
+        Queen q1 = new Queen(new Point3D(5, 6, 0), 1, a);
+        Queen q2 = new Queen(new Point3D(35, 35, 0), 1, b);
+        k.launchLightAgent(q1);
+        k.launchLightAgent(q2);
+        k.launchLightAgent(new Warrior(new Point3D(5, 7, 0), 10,a));
 
-        /*for (int i = 0; i < 10; ++i) {
-            k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15));
+        for (int i = 0; i < 10; ++i) {
+            k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
+            k.launchLightAgent(new Worker(new Point3D(34, 34, 0), 15,b));
+
         }
 
-        for (int i = 0; i < map.length; ++i) {
+        /*for (int i = 0; i < map.length; ++i) {
             for (int j = 0; j < map[0].length; ++j) {
                 if (map[i][j][0].getLandType().isCrossable()) {
                     k.launchLightAgent(new Worker(new Point3D(i, j, 0), 15));
@@ -57,6 +63,11 @@ public final class Main {
             new Food(new Point3D(19, 19, 0));
             new Food(new Point3D(3, 17, 0));
             new Food(new Point3D(17, 6, 0));
+            new Food(new Point3D(23, 23, 0));
+            new Food(new Point3D(5, 35, 0));
+            new Food(new Point3D(30, 33, 0));
+            new Food(new Point3D(16, 30, 0));
+
         }
     }
 

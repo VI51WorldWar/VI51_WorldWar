@@ -30,8 +30,8 @@ public final class Environment extends Agent {
     private long lastTime;
 
     private Environment() {
-        mapHeight = 25;
-        mapWidth = 25;
+        mapHeight = 40;
+        mapWidth = 40;
         mapDepth = 5;
         map = new Square[mapWidth][mapHeight][mapDepth];
         objects = new LinkedList<WorldObject>();

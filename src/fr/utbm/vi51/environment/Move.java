@@ -1,10 +1,5 @@
-package fr.utbm.vi51.agent;
+package fr.utbm.vi51.environment;
 
-import fr.utbm.vi51.environment.Action;
-import fr.utbm.vi51.environment.Body;
-import fr.utbm.vi51.environment.Direction;
-import fr.utbm.vi51.environment.Environment;
-import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.util.Point3D;
 
 /**

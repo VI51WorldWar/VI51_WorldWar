@@ -9,6 +9,7 @@ import fr.utbm.vi51.environment.Body;
 import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.InsectBody;
 import fr.utbm.vi51.environment.Perception;
+import fr.utbm.vi51.environment.Side;
 import fr.utbm.vi51.util.Point3D;
 
 /**
@@ -20,9 +21,8 @@ public abstract class Insect extends Agent {
     protected Perception currentPerception;
     protected LinkedList<Direction> movementPath;
     private InsectBody body;
-
-    public Insect(String texture, Point3D position, int speed) {
-        this.body = new InsectBody(texture, position, speed);
+    public Insect(String texture, Point3D position, int speed, Side side) {
+        this.body = new InsectBody(texture, position, speed, side);
     }
 
     public InsectBody getBody() {
