@@ -103,7 +103,7 @@ public final class PathFinder {
             current = openList.get(0); //Gets the best element of the open list
 
             //If the current node is the goal, path is found
-            if (current.getPosition().equals(goal)) {
+            if (goal != null && current.getPosition().equals(goal)) {
                 return buildPath(current);
             }
 
@@ -150,7 +150,7 @@ public final class PathFinder {
         if (origin.getPosition().x > 0) {
             Point3D newPos = new Point3D(origin.getPosition().x - 1,
                     origin.getPosition().y, origin.getPosition().z);
-            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable()) {
+            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable() && goal != null) {
                 neighboors.add(new Node(newPos, origin.getCurrentCost()
                         + map[newPos.x][newPos.y][newPos.z].getLandType()
                                 .getCost(), computeHeuristicCost(newPos, goal),
@@ -162,7 +162,7 @@ public final class PathFinder {
         if (origin.getPosition().x < map.length - 1) {
             Point3D newPos = new Point3D(origin.getPosition().x + 1,
                     origin.getPosition().y, origin.getPosition().z);
-            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable()) {
+            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable() && goal != null) {
                 neighboors.add(new Node(newPos, origin.getCurrentCost()
                         + map[newPos.x][newPos.y][newPos.z].getLandType()
                                 .getCost(), computeHeuristicCost(newPos, goal),
@@ -174,7 +174,7 @@ public final class PathFinder {
         if (origin.getPosition().y > 0) {
             Point3D newPos = new Point3D(origin.getPosition().x,
                     origin.getPosition().y - 1, origin.getPosition().z);
-            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable()) {
+            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable() && goal != null) {
                 neighboors.add(new Node(newPos, origin.getCurrentCost()
                         + map[newPos.x][newPos.y][newPos.z].getLandType()
                                 .getCost(), computeHeuristicCost(newPos, goal),
@@ -186,7 +186,7 @@ public final class PathFinder {
         if (origin.getPosition().y < map[0].length - 1) {
             Point3D newPos = new Point3D(origin.getPosition().x,
                     origin.getPosition().y + 1, origin.getPosition().z);
-            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable()) {
+            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable() && goal != null) {
                 neighboors.add(new Node(newPos, origin.getCurrentCost()
                         + map[newPos.x][newPos.y][newPos.z].getLandType()
                                 .getCost(), computeHeuristicCost(newPos, goal),
@@ -205,9 +205,15 @@ public final class PathFinder {
      * @return The estimate cost
      */
     private static int computeHeuristicCost(Point3D position, Point3D goal) {
-        return (int) Math.floor(Math.sqrt(Math.pow(goal.x - position.x, 2)
-                + Math.pow(goal.y - position.y, 2)));
-    }
+        try {
+            return (int) Math.floor(Math.sqrt(Math.pow(goal.x - position.x, 2)
+                    + Math.pow(goal.y - position.y, 2)));
+        } catch(Exception e){
+            System.out.println(e);
+        }
+        System.out.println("erf");
+            return 1000;
+        }
 
     /**
      * Once A* is completed, gives the successive directions to follow to go
