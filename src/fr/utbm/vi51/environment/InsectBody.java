@@ -8,11 +8,13 @@ public class InsectBody extends Body {
     private boolean isAlive;
     private int hunger;
     private Side side;
+    private int healthPoints;
 
     public InsectBody(String texture, Point3D position, int speed, Side side) {
         super(texture, position, speed);
         this.side = side;
         hunger = 0;
+        healthPoints = 1;
         isAlive = true;
     }
 
@@ -43,5 +45,13 @@ public class InsectBody extends Body {
     public boolean isHungry() {
         return this.hunger > Consts.MAXHUNGER * 0.8;
     }
+
+	public int getHealthPoints() {
+		return healthPoints;
+	}
+
+	public void setHealthPoints(int healthPoints) {
+		this.healthPoints = healthPoints;
+	}
 
 }

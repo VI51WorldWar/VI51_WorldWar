@@ -10,6 +10,7 @@ import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.EatFood;
 import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.InsectBody;
+import fr.utbm.vi51.environment.KillEnemy;
 import fr.utbm.vi51.environment.Message;
 import fr.utbm.vi51.environment.Move;
 import fr.utbm.vi51.environment.Pheromone;
@@ -20,7 +21,7 @@ import fr.utbm.vi51.util.PathFinder;
 import fr.utbm.vi51.util.Point3D;
 
 enum WarriorBehaviour {
-    GO_HOME, PATROL,
+    GO_HOME, PATROL,FIGHT,
 }
 
 /**
@@ -31,10 +32,12 @@ public class Warrior extends Ant {
     private WarriorBehaviour currentBehaviour;
     private Point3D lastPosition;
     private Point3D relativeStartingPointPosition; // Remembers the position of
+    private int attackPoints;
 
     public Warrior(Point3D position, int speed, Side side) {
         super("img/Ants/warrior.png", position, speed, side);
         currentBehaviour = WarriorBehaviour.PATROL;
+        attackPoints = 1;
     }
 
     @Override
@@ -46,6 +49,9 @@ public class Warrior extends Ant {
     @Override
     public Status live() {
         super.live();
+        if (this.getBody() == null) {
+        	return null;
+        }
         InsectBody body = this.getBody();
         // If an action is already planned, wait for it to be resolved
         if (body.getAction() != null) {
@@ -59,6 +65,27 @@ public class Warrior extends Ant {
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
         Point3D positionInPerceivedMap = currentPerception
                 .getPositionInPerceivedMap();
+        
+        // If perceive a warrior not from its side then set the currentBehaviour to FIGHT
+        for (int i = 0; i < perceivedMap.length; ++i) {
+        	for (int j = 0; j < perceivedMap[0].length; ++j) {
+        		List<WorldObject> objects = perceivedMap[i][j][0].getObjects();
+        		synchronized (objects) {
+        			for (WorldObject wo : objects) {
+        				if (wo.getTexturePath().equals("img/Ants/warrior.png") && ((InsectBody) wo).getSide() != body.getSide()) {
+        					currentBehaviour = WarriorBehaviour.FIGHT;
+        				}
+        			}
+        		}
+        	}
+        }
+        
+        if (movementPath != null && !movementPath.isEmpty()) {
+        	lastTime = this.getTimeManager().getCurrentDate().getTime();
+        	Move m = new Move(body, movementPath.removeFirst());
+        	body.setAction(m);
+        	return null;
+        }
 
         if (relativeStartingPointPosition != null) {
             relativeStartingPointPosition.x -= this.getBody().getPosition().x
@@ -75,6 +102,9 @@ public class Warrior extends Ant {
             case GO_HOME:
                 goHome();
                 break;
+            case FIGHT:
+            	fight();
+            	break;
             default:
                 assert false;
                 break;
@@ -93,8 +123,9 @@ public class Warrior extends Ant {
 
         return null;
     }
+    
 
-    private void goHome() {
+	private void goHome() {
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
         Pheromone currentBestPheromone = null;
         Point3D currentBestPheromonePositionInPerceivedMap = null;
@@ -165,5 +196,57 @@ public class Warrior extends Ant {
 
         this.getBody().setAction(m);
     }
+    
+    private void fight() {
+		Square[][][] perceivedMap = currentPerception.getPerceivedMap();
+		Point3D positionInPerceivedMap = currentPerception.getPositionInPerceivedMap();
+		
+		//If on the same square as the enemy, then attack him
+		
+		/*for (WorldObject wo : perceivedMap[positionInPerceivedMap.x][positionInPerceivedMap.y][0].getObjects()) {
+			if (wo.getTexturePath().equals("img/Ants/warrior.png") && ((InsectBody) wo).getSide() != this.getBody().getSide()) {
+				InsectBody enemy = ((InsectBody) wo);
+				enemy.setHealthPoints(enemy.getHealthPoints() - this.attackPoints);
+				//if the enemy has no HP then he dies
+				if (enemy.getHealthPoints() <= 0) {
+					this.getBody().setAction(new KillEnemy(this.getBody()));
+					
+				}
+			}
+		}*/
+		
+		for (int i = 0; i < perceivedMap.length; ++i) {
+			for (int j = 0; j < perceivedMap[0].length; ++j) {
+				List<WorldObject> objectsPerceived = perceivedMap[i][j][0].getObjects();
+				synchronized (objectsPerceived) {
+					for (WorldObject wo : objectsPerceived) {
+						if (wo.getTexturePath().equals("img/Ants/warrior.png") && ((InsectBody) wo).getSide() != this.getBody().getSide()) {
+							//if the enemy is not on the same square then try to reach it
+							if (Point3D.euclidianDistance(this.getBody().getPosition(), wo.getPosition()) != 0) {
+								System.out.println("enemy side :" + ((InsectBody) wo).getSide());
+								System.out.println("side :" + this.getBody().getSide());
+								System.out.println("enemy pos : " + wo.getPosition());
+								System.out.println("pos : " + this.getBody().getPosition());
+								movementPath = PathFinder.findPath(currentPerception.getPositionInPerceivedMap(), new Point3D(i, j, 0), perceivedMap);
+								return;
+							} else {
+								//else fight the enemy
+								System.out.println("FIGHT");
+								InsectBody enemy = ((InsectBody) wo);
+								enemy.setHealthPoints(enemy.getHealthPoints() - this.attackPoints);
+								System.out.println("HP :" + enemy.getHealthPoints());
+								if (enemy.getHealthPoints() <= 0) {
+									//enemy dies !
+									this.getBody().setAction(new KillEnemy(this.getBody()));
+								}
+								
+							}
+						}
+					}
+				}
+			}
+		}
+		
+	}
 
 }
