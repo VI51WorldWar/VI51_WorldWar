@@ -209,9 +209,9 @@ public final class PathFinder {
             return (int) Math.floor(Math.sqrt(Math.pow(goal.x - position.x, 2)
                     + Math.pow(goal.y - position.y, 2)));
         } catch(Exception e){
-            System.out.println(e);
+            e.printStackTrace();
+            
         }
-        System.out.println("erf");
             return 1000;
         }
 

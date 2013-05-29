@@ -103,10 +103,13 @@ public class Worker extends Ant {
 
         switch (currentBehaviour) {
         case GO_HOME:
+            System.out.println("I go home");
             goHome();
             break;
         case SEARCH_FOOD:
+            System.out.println("I look for food");
             searchFood();
+            
             break;
         default:
             break;
@@ -279,6 +282,13 @@ public class Worker extends Ant {
                                 currentBestPheromonePositionInPerceivedMap = new Point3D(
                                         i, j, 0);
                             }
+                        } else if (p.getMessage() == Message.HOME && currentBestPheromone != null && currentBestPheromone.getMessage() == Message.HOME){
+                            currentBestPheromone = Pheromone.closestToSubject(
+                                    p, currentBestPheromone);
+                            if (currentBestPheromone == p && p.getSide() == this.getBody().getSide()) {
+                                currentBestPheromonePositionInPerceivedMap = new Point3D(
+                                        i, j, 0);
+                            }
                         }
                     }
                 }
@@ -290,11 +300,42 @@ public class Worker extends Ant {
                 }
             }
         }
-        if (currentBestPheromone != null ) {
+        if (currentBestPheromone != null && currentBestPheromone.getMessage() == Message.FOOD) {
             movementPath = PathFinder.findPath(
                     currentPerception.getPositionInPerceivedMap(),
                     currentBestPheromonePositionInPerceivedMap, perceivedMap);
+        } else if (currentBestPheromone != null && currentBestPheromone.getMessage() == Message.HOME){
+            //Moves to anywhere but the pheromone direction
+            int randChoice;
+            int x = 0;
+            int y = 0;
+            do {
+                randChoice = (int) Math.floor(Math.random() *  3);
+                int diff = 0;
+                diff = (int) Math.floor(Math.random()*4)-2;
+                if (randChoice == 0){
+                    x = currentBestPheromone.getPosition().x * currentBestPheromone.getDirection().opposite().dx;
+                    y = currentBestPheromone.getPosition().y * currentBestPheromone.getDirection().opposite().dy;
+                } else if (randChoice == 1){
+                    x = currentBestPheromone.getPosition().x * currentBestPheromone.getDirection().dx;
+                    y = currentBestPheromone.getPosition().y * currentBestPheromone.getDirection().opposite().dy;
+                } else if (randChoice == 2){
+                    x = currentBestPheromone.getPosition().x * currentBestPheromone.getDirection().opposite().dx;
+                    y = currentBestPheromone.getPosition().y * currentBestPheromone.getDirection().dy;
+                }
+                x += diff;
+                y += diff;
+                
+            } while (!perceivedMap[x][y][0].getLandType().isCrossable());
+            movementPath = PathFinder.findPath(currentPerception
+                    .getPositionInPerceivedMap(), new Point3D(x, y, 0),
+                    perceivedMap);
+            
+            movementPath = PathFinder.findPath(
+                currentPerception.getPositionInPerceivedMap(),
+                currentBestPheromonePositionInPerceivedMap, perceivedMap);
         }
+
     }
 
     private void goHome() {

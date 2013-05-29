@@ -42,8 +42,8 @@ public final class Main {
         k.launchLightAgent(q1);
         k.launchLightAgent(q2);
         k.launchLightAgent(new Warrior(new Point3D(5, 7, 0), 10,a));
-
-        for (int i = 0; i < 10; ++i) {
+        //k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
+        for (int i = 0; i < 100; ++i) {
             k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
             k.launchLightAgent(new Worker(new Point3D(34, 34, 0), 15,b));
 
