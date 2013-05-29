@@ -211,7 +211,7 @@ public final class PathFinder {
         } catch(Exception e){
             System.out.println(e);
         }
-        System.out.println("erf");
+        //System.out.println("erf");
             return 1000;
         }
 

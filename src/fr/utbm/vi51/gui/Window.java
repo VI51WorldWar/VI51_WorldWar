@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Point;
 
 import javax.swing.JFrame;
+import javax.vecmath.Point3d;
 
 import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.Square;
@@ -30,9 +31,9 @@ public class Window extends JFrame {
         this.setVisible(true);
     }
     
-    public void setSquareForInfos(Square squareReference) {
+    public void setSquareForInfos(Square squareReference,Point3d squarePosition) {
     	if(this.sqInfos != null) {
-    		this.sqInfos.setSquare(squareReference);
+    		this.sqInfos.setSquare(squareReference,squarePosition);
     	}
     }
     
