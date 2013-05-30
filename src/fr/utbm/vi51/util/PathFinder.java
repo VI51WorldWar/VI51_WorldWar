@@ -212,6 +212,8 @@ public final class PathFinder {
             e.printStackTrace();
             
         }
+
+        //System.out.println("erf");
             return 1000;
         }
 

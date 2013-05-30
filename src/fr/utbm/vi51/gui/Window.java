@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.Point;
 
 import javax.swing.JFrame;
+import javax.vecmath.Point3d;
 
 import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.Square;
@@ -15,8 +16,8 @@ import fr.utbm.vi51.environment.Square;
 public class Window extends JFrame {
     // Dimensions of the Window
 	GameView 		view = null;
-	MiniMap 	minimap = null;
-	//SquareInfos sqInfos = null;
+	MiniMap 		minimap = null;
+	SquareInfos 	sqInfos = null;
 	
     public Window() {
     	this.setTitle("Fenetre de base");
@@ -30,10 +31,10 @@ public class Window extends JFrame {
         this.setVisible(true);
     }
     
-    public void setSquareForInfos(Square squareReference) {
-    	/*if(this.sqInfos != null) {
-    		this.sqInfos.setSquare(squareReference);
-    	}*/
+    public void setSquareForInfos(Square squareReference,Point3d squarePosition) {
+    	if(this.sqInfos != null) {
+    		this.sqInfos.setSquare(squareReference,squarePosition);
+    	}
     }
     
     public void centerCurrentViewOn(Point squarePosition) {
@@ -71,7 +72,7 @@ public class Window extends JFrame {
     
     private void addSquareInfos() {
     	GridBagConstraints c = new GridBagConstraints();
-    	//this.sqInfos = new SquareInfos();
+    	this.sqInfos = new SquareInfos();
     	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 3;
@@ -79,6 +80,6 @@ public class Window extends JFrame {
         c.gridwidth = 2;
         c.weighty = 0.1;
         c.weightx = 0.1;
-        //this.add(this.sqInfos, c);
+        this.add(this.sqInfos, c);
     }
 }

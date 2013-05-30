@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.vecmath.Point3d;
 
 import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.Environment;
@@ -121,6 +122,7 @@ public class GameView extends JPanel {
 	    
 	    
 	    protected void printView(Graphics g) {
+	    	
 	    	 this.currentTileWidth = this.getWidth() / this.view.width;
 	         this.currentTileHeight = this.getHeight() / this.view.height;
 
@@ -221,7 +223,7 @@ public class GameView extends JPanel {
 	     */
 	    public void clicAt(Point pointPosition) {
 	    	if(parent != null) {
-				parent.setSquareForInfos(getPointedSquare(pointPosition));
+				parent.setSquareForInfos(getPointedSquare(pointPosition),getSquareCoord(pointPosition));
 			}
 	    }
 	    
@@ -245,12 +247,19 @@ public class GameView extends JPanel {
 	    }
 	    
 	    private Square getPointedSquare(Point pointPosition) {
+	    	Point3d squareCoord = getSquareCoord(pointPosition);
+	    	return Environment.getInstance().getMap()[(int) squareCoord.x][(int) squareCoord.y][(int) squareCoord.z];
+	    }
+	    
+	    private Point3d getSquareCoord(Point pointPosition) {
 	    	// Determine which square is at pointPosition
-	 		Point squareCoord = new Point( 	this.view.x + (int) pointPosition.x / this.currentTileWidth,
-	 										this.view.y + (int) pointPosition.y / this.currentTileHeight );
+	 		Point3d squareCoord = new Point3d( 	this.view.x + (int) pointPosition.x / this.currentTileWidth,
+	 											this.view.y + (int) pointPosition.y / this.currentTileHeight,
+	 											0);
 	 		assert(squareCoord.x > 0 && squareCoord.x < Environment.getInstance().getMapWidth());
 	 		assert(squareCoord.y > 0 && squareCoord.y < Environment.getInstance().getMapHeight());
-	 		
-	 		return Environment.getInstance().getMap()[squareCoord.x][squareCoord.y][0];
+	 		assert(squareCoord.y > 0 && squareCoord.y < Environment.getInstance().getMapDepth());
+	 	
+	 		return squareCoord;
 	    }
 }
