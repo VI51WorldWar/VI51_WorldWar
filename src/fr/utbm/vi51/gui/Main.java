@@ -37,18 +37,19 @@ public final class Main {
         Side a = new Side(1);
         Side b = new Side(2);
 
-        Queen q1 = new Queen(new Point3D(5, 6, 0), 1, a);
-        Queen q2 = new Queen(new Point3D(35, 35, 0), 1, b);
+        Queen q1 = new Queen(new Point3D(5, 6, 0), 1, a, k);
+        //Queen q2 = new Queen(new Point3D(35, 35, 0), 1, b, k);
         k.launchLightAgent(q1);
-        k.launchLightAgent(q2);
+        //k.launchLightAgent(q2);
         k.launchLightAgent(new Warrior(new Point3D(5, 7, 0), 10,a));
-        k.launchLightAgent(new Warrior(new Point3D(35, 34, 0), 1, b));
+        //k.launchLightAgent(new Warrior(new Point3D(35, 34, 0), 1, b));
         //k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
-        for (int i = 0; i < 100; ++i) {
+        k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
+        /*for (int i = 0; i < 100; ++i) {
             k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
             k.launchLightAgent(new Worker(new Point3D(34, 34, 0), 15,b));
 
-        }
+        }*/
 
         /*for (int i = 0; i < map.length; ++i) {
             for (int j = 0; j < map[0].length; ++j) {

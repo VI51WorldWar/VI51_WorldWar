@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.vecmath.Point3d;
 
+import org.janusproject.kernel.Kernel;
 import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
 
@@ -12,6 +13,7 @@ import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.EatFood;
 import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.InsectBody;
+import fr.utbm.vi51.environment.Lay;
 import fr.utbm.vi51.environment.Message;
 import fr.utbm.vi51.environment.Move;
 import fr.utbm.vi51.environment.Pheromone;
@@ -26,9 +28,10 @@ import fr.utbm.vi51.util.Point3D;
  *
  */
 public class Queen extends Ant {
-
-    public Queen(Point3D position, int speed, Side side) {
+    private Kernel k;
+    public Queen(Point3D position, int speed, Side side, Kernel k) {
         super("img/Ants/queen.png", position, speed, side);
+        this.k = k;
     }
     @Override
     public Status activate(Object... params) {
@@ -52,6 +55,12 @@ public class Queen extends Ant {
             }
         }
         this.getBody().getSide().setFoodAmount(foodAmount);
+        if(foodAmount > 100){
+            Lay lay = new Lay(this.getBody().getSide(), this.getBody().getPosition(), this.k);
+            lay.doAction();
+        }
+        
+        
         lastTime = this.getTimeManager().getCurrentDate().getTime();
 
         return null;
