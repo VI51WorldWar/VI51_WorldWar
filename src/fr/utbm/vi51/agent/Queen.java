@@ -32,7 +32,7 @@ public class Queen extends Ant {
     @Override
     public Status live() {
         super.live();
-        if(this.getBody() == null && !this.getBody().isAlive())
+        if(this.getBody() == null || !this.getBody().isAlive())
             return null;
         
         if (this.getTimeManager().getCurrentDate().getTime() - lastTime < Consts.ANTACTIONDELAY
