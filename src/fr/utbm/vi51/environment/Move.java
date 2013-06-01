@@ -17,6 +17,7 @@ public class Move implements Action {
 
     @Override
     public void doAction() {
+        //System.out.println("Moving to direction : " + direction);
         Point3D pos = body.getPosition();
         Point3D newPos = new Point3D(pos.x + direction.dx,
                 pos.y + direction.dy, pos.z);

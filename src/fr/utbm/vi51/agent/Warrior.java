@@ -13,6 +13,7 @@ import fr.utbm.vi51.environment.InsectBody;
 import fr.utbm.vi51.environment.KillEnemy;
 import fr.utbm.vi51.environment.Message;
 import fr.utbm.vi51.environment.Move;
+import fr.utbm.vi51.environment.Perception;
 import fr.utbm.vi51.environment.Pheromone;
 import fr.utbm.vi51.environment.Side;
 import fr.utbm.vi51.environment.Square;
@@ -61,7 +62,7 @@ public class Warrior extends Ant {
                 && lastTime != 0) {
             return null;
         }
-        currentPerception = this.getBody().getPerception();
+        Perception currentPerception = this.getBody().getPerception();
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
         Point3D positionInPerceivedMap = currentPerception
                 .getPositionInPerceivedMap();
@@ -126,6 +127,7 @@ public class Warrior extends Ant {
     
 
 	private void goHome() {
+	    Perception currentPerception = this.getBody().getPerception();
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
         Pheromone currentBestPheromone = null;
         Point3D currentBestPheromonePositionInPerceivedMap = null;
@@ -198,6 +200,7 @@ public class Warrior extends Ant {
     }
     
     private void fight() {
+        Perception currentPerception = this.getBody().getPerception();
 		Square[][][] perceivedMap = currentPerception.getPerceivedMap();
 		Point3D positionInPerceivedMap = currentPerception.getPositionInPerceivedMap();
 		

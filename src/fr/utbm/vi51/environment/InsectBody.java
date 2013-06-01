@@ -44,7 +44,7 @@ public class InsectBody extends Body {
     }
 
     public boolean isHungry() {
-        return this.hunger > Consts.MAXHUNGER * 0.5;
+        return this.hunger > Consts.MAXHUNGER * 0.8;
     }
 
 	public int getHealthPoints() {

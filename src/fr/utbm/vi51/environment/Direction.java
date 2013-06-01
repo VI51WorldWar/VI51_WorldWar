@@ -1,7 +1,6 @@
 package fr.utbm.vi51.environment;
 
-import java.util.Random;
-
+import fr.utbm.vi51.util.CustomRandom;
 import fr.utbm.vi51.util.Point3D;
 
 /**
@@ -15,12 +14,32 @@ public enum Direction {
         public Direction opposite() {
             return SOUTH;
         }
+
+        @Override
+        public Direction west() {
+            return NORTHWEST;
+        }
+
+        @Override
+        public Direction east() {
+            return NORTHEAST;
+        }
     },
     /** West. */
     WEST(-1, 0) {
         @Override
         public Direction opposite() {
             return EAST;
+        }
+
+        @Override
+        public Direction west() {
+            return SOUTHWEST;
+        }
+
+        @Override
+        public Direction east() {
+            return NORTHWEST;
         }
     },
     /** South. */
@@ -29,12 +48,32 @@ public enum Direction {
         public Direction opposite() {
             return NORTH;
         }
+
+        @Override
+        public Direction west() {
+            return SOUTHWEST;
+        }
+
+        @Override
+        public Direction east() {
+            return SOUTHEAST;
+        }
     },
     /** East. */
     EAST(+1, 0) {
         @Override
         public Direction opposite() {
             return WEST;
+        }
+
+        @Override
+        public Direction west() {
+            return SOUTHEAST;
+        }
+
+        @Override
+        public Direction east() {
+            return NORTHEAST;
         }
     },
     /** NorthEast. */
@@ -43,12 +82,32 @@ public enum Direction {
         public Direction opposite() {
             return SOUTHWEST;
         }
+
+        @Override
+        public Direction west() {
+            return EAST;
+        }
+
+        @Override
+        public Direction east() {
+            return NORTH;
+        }
     },
     /** NorthWest. */
     NORTHWEST(-1, -1) {
         @Override
         public Direction opposite() {
             return SOUTHEAST;
+        }
+
+        @Override
+        public Direction west() {
+            return WEST;
+        }
+
+        @Override
+        public Direction east() {
+            return NORTH;
         }
     },
     /** NorthEast. */
@@ -57,6 +116,16 @@ public enum Direction {
         public Direction opposite() {
             return NORTHEAST;
         }
+
+        @Override
+        public Direction west() {
+            return SOUTH;
+        }
+
+        @Override
+        public Direction east() {
+            return WEST;
+        }
     },
     /** SouthEast. */
     SOUTHEAST(+1, +1) {
@@ -64,11 +133,31 @@ public enum Direction {
         public Direction opposite() {
             return NORTHWEST;
         }
+
+        @Override
+        public Direction west() {
+            return EAST;
+        }
+
+        @Override
+        public Direction east() {
+            return SOUTH;
+        }
     },
     /** None. */
     NONE(0, 0) {
         @Override
         public Direction opposite() {
+            return NONE;
+        }
+
+        @Override
+        public Direction west() {
+            return NONE;
+        }
+
+        @Override
+        public Direction east() {
             return NONE;
         }
     };
@@ -98,8 +187,7 @@ public enum Direction {
      * @return a random direction.
      */
     public static Direction random() {
-        Random rnd = new Random();
-        return values()[rnd.nextInt(values().length)];
+        return values()[CustomRandom.getNextInt(values().length)];
     }
 
     /**
@@ -108,6 +196,10 @@ public enum Direction {
      * @return the opposite direction.
      */
     public abstract Direction opposite();
+
+    public abstract Direction west();
+
+    public abstract Direction east();
 
     public static Direction toDirection(Point3D start, Point3D target) {
         if (target.x - start.x >= 1) {
