@@ -9,6 +9,7 @@ public class InsectBody extends Body {
     private int hunger;
     private Side side;
     private int healthPoints;
+    private WorldObject carriedObject;
 
     public InsectBody(String texture, Point3D position, int speed, Side side) {
         super(texture, position, speed);
@@ -53,5 +54,14 @@ public class InsectBody extends Body {
 	public void setHealthPoints(int healthPoints) {
 		this.healthPoints = healthPoints;
 	}
+	
+
+    public WorldObject getCarriedObject() {
+        return carriedObject;
+    }
+
+    protected void setCarriedObject(WorldObject carriedObject) {
+        this.carriedObject = carriedObject;
+    }
 
 }

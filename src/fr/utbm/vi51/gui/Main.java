@@ -60,7 +60,7 @@ public final class Main {
         }*/
         k.launchHeavyAgent(new WindowsContainer());
 
-        for (int i = 0; i < 20; ++i) {
+        /*for (int i = 0; i < 20; ++i) {
             new Food(new Point3D(12, 12, 0));
             new Food(new Point3D(19, 19, 0));
             new Food(new Point3D(3, 17, 0));
@@ -70,7 +70,7 @@ public final class Main {
             new Food(new Point3D(30, 33, 0));
             new Food(new Point3D(16, 30, 0));
 
-        }
+        }*/
     }
 
     // Functions for map g�n�ration

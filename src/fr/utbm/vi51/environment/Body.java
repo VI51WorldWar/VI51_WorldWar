@@ -8,7 +8,6 @@ import fr.utbm.vi51.util.Point3D;
  */
 public class Body extends MobileObject {
     private Action action;
-    private WorldObject carriedObject;
 
     public Body(String texture, Point3D position, int speed) {
         super(position, texture, speed);
@@ -24,13 +23,5 @@ public class Body extends MobileObject {
 
     public Perception getPerception() {
         return new Perception(this);
-    }
-
-    public WorldObject getCarriedObject() {
-        return carriedObject;
-    }
-
-    public void setCarriedObject(WorldObject carriedObject) {
-        this.carriedObject = carriedObject;
     }
 }

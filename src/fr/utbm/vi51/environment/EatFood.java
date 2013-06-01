@@ -14,13 +14,19 @@ public class EatFood implements Action {
 
     @Override
     public void doAction() {
+        if(body.getCarriedObject() instanceof Food) {
+            body.setCarriedObject(null);
+            body.setHunger(0);
+            return;
+        }
+        
         Point3D pos = body.getPosition();
         List<WorldObject> objects = Environment.getInstance().getMap()[pos.x][pos.y][pos.z]
                 .getObjects();
         WorldObject toRemove = null;
         for (WorldObject wo : objects) {
             if (wo instanceof Food) {
-                toRemove = wo;
+                toRemove = wo;   
                 break;
             }
         }
@@ -31,6 +37,12 @@ public class EatFood implements Action {
 
     @Override
     public boolean testAction() {
+        //If the body is carrying food, it can eat it
+        if (body.getCarriedObject() instanceof Food) {
+            return true;
+        }
+        
+        //Else we must check if there is food on the same square
         Point3D pos = body.getPosition();
         for (WorldObject wo : Environment.getInstance().getMap()[pos.x][pos.y][pos.z]
                 .getObjects()) {

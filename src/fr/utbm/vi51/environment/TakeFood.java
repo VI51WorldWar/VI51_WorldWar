@@ -9,9 +9,9 @@ import fr.utbm.vi51.util.Point3D;
  *
  */
 public class TakeFood implements Action {
-    private Body body;
+    private InsectBody body;
 
-    public TakeFood(Body body) {
+    public TakeFood(InsectBody body) {
         super();
         this.body = body;
     }
