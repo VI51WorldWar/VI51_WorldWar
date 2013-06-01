@@ -20,6 +20,7 @@ public class Move implements Action {
         Point3D pos = body.getPosition();
         Point3D newPos = new Point3D(pos.x + direction.dx,
                 pos.y + direction.dy, pos.z);
+        //System.out.println(newPos);
         Environment env = Environment.getInstance();
         Square[][][] map = env.getMap();
         map[pos.x][pos.y][pos.z].getObjects().remove(body);

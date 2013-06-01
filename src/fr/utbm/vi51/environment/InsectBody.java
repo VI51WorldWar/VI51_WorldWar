@@ -13,9 +13,9 @@ public class InsectBody extends Body {
     public InsectBody(String texture, Point3D position, int speed, Side side) {
         super(texture, position, speed);
         this.side = side;
-        hunger = 0;
-        healthPoints = 1;
-        isAlive = true;
+        this.hunger = 0;
+        this.healthPoints = 1;
+        this.isAlive = true;
     }
 
     public Side getSide() {

@@ -59,9 +59,13 @@ public class Worker extends Ant {
     public Status live() {
         super.live();
         InsectBody body = this.getBody();
+        if(body != null){
+            System.out.println(body.getHunger());
+        }
         
         //If their is no body, the agent is waiting to die
         if(body == null) {
+            System.out.println("dying");
             return null;
         }
         
@@ -103,11 +107,11 @@ public class Worker extends Ant {
 
         switch (currentBehaviour) {
         case GO_HOME:
-            System.out.println("I go home");
+            //System.out.println("I go home");
             goHome();
             break;
         case SEARCH_FOOD:
-            System.out.println("I look for food");
+            //System.out.println("I look for food");
             searchFood();
             
             break;
@@ -174,10 +178,10 @@ public class Worker extends Ant {
                         // Check validity of the pheromone : strength is
                         // sufficient and is of correct type
                         if (p.getStrength() / Consts.STARTINGPHEROMONEVALUE > acceptedOldPh
-                                && (currentBehaviour == WorkerBehaviour.GO_HOME && p
+                                && ((currentBehaviour == WorkerBehaviour.GO_HOME && p
                                         .getMessage() == Message.FOOD)
                                 || (currentBehaviour == WorkerBehaviour.SEARCH_FOOD && p
-                                        .getMessage() == Message.HOME)) {
+                                        .getMessage() == Message.HOME))) {
                             // If the pheromone is valid and close enough to the
                             // body's position, no need to create one
                             if (Point3D.euclidianDistance(p.getPosition(), this
@@ -227,6 +231,7 @@ public class Worker extends Ant {
     }
 
     private void searchFood() {
+        System.out.println("I look for food");
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
         Point3D positionInPerceivedMap = currentPerception
                 .getPositionInPerceivedMap();
@@ -259,6 +264,8 @@ public class Worker extends Ant {
             relativeStartingPointPosition = new Point3D(0, 0, 0);
             return;
         }
+        Point3D currentBestFoodPheromonePositionInPerceivedMap = null;
+        Pheromone currentBestFoodPheromone = null;
 
         // Searching the map for food or food pheromones
         for (int i = 0; i < perceivedMap.length; ++i) {
@@ -270,7 +277,6 @@ public class Worker extends Ant {
                         foodFound = null;
                         break;
                     }
-
                     if (foodFound == null && wo instanceof Food) {
                         foodFound = (Food) wo;
                     } else if (wo instanceof Pheromone) {
@@ -282,13 +288,15 @@ public class Worker extends Ant {
                                 currentBestPheromonePositionInPerceivedMap = new Point3D(
                                         i, j, 0);
                             }
-                        } else if (p.getMessage() == Message.HOME && currentBestPheromone != null && currentBestPheromone.getMessage() == Message.HOME){
-                            currentBestPheromone = Pheromone.closestToSubject(
+                        } else if (p.getMessage() == Message.HOME){
+                            currentBestFoodPheromone = Pheromone.closestToSubject(
                                     p, currentBestPheromone);
-                            if (currentBestPheromone == p && p.getSide() == this.getBody().getSide()) {
-                                currentBestPheromonePositionInPerceivedMap = new Point3D(
+                            if (currentBestFoodPheromone == p && p.getSide() == this.getBody().getSide()) {
+                                currentBestFoodPheromonePositionInPerceivedMap = new Point3D(
                                         i, j, 0);
                             }
+                        } else {
+                            System.out.println("ceci n'est pas une phéromone");
                         }
                     }
                 }
@@ -300,7 +308,12 @@ public class Worker extends Ant {
                 }
             }
         }
-        if (currentBestPheromone != null && currentBestPheromone.getMessage() == Message.FOOD) {
+        if (currentBestPheromone == null && currentBestFoodPheromone != null){
+            currentBestPheromone = currentBestFoodPheromone;
+            currentBestPheromonePositionInPerceivedMap = currentBestFoodPheromonePositionInPerceivedMap;
+        }
+        
+        if (currentBestPheromone != null && currentBestPheromonePositionInPerceivedMap != null && currentBestPheromone.getMessage() == Message.FOOD) {
             movementPath = PathFinder.findPath(
                     currentPerception.getPositionInPerceivedMap(),
                     currentBestPheromonePositionInPerceivedMap, perceivedMap);
@@ -312,33 +325,45 @@ public class Worker extends Ant {
             do {
                 randChoice = (int) Math.floor(Math.random() *  3);
                 int diff = 0;
-                diff = (int) Math.floor(Math.random()*4)-2;
+                //diff = (int) Math.floor(Math.random()*4)-2;
                 if (randChoice == 0){
-                    x = currentBestPheromone.getPosition().x * currentBestPheromone.getDirection().opposite().dx;
-                    y = currentBestPheromone.getPosition().y * currentBestPheromone.getDirection().opposite().dy;
+                    x = currentBestPheromonePositionInPerceivedMap.x * currentBestPheromone.getDirection().opposite().dx;
+                    y = currentBestPheromonePositionInPerceivedMap.y * currentBestPheromone.getDirection().opposite().dy;
                 } else if (randChoice == 1){
-                    x = currentBestPheromone.getPosition().x * currentBestPheromone.getDirection().dx;
-                    y = currentBestPheromone.getPosition().y * currentBestPheromone.getDirection().opposite().dy;
+                    x = currentBestPheromonePositionInPerceivedMap.x * currentBestPheromone.getDirection().dx;
+                    y = currentBestPheromonePositionInPerceivedMap.y * currentBestPheromone.getDirection().opposite().dy;
                 } else if (randChoice == 2){
-                    x = currentBestPheromone.getPosition().x * currentBestPheromone.getDirection().opposite().dx;
-                    y = currentBestPheromone.getPosition().y * currentBestPheromone.getDirection().dy;
+                    x = currentBestPheromonePositionInPerceivedMap.x * currentBestPheromone.getDirection().opposite().dx;
+                    y = currentBestPheromonePositionInPerceivedMap.y * currentBestPheromone.getDirection().dy;
                 }
-                x += diff;
-                y += diff;
+                //x += diff;
+                //y += diff;
+                if(x < 0){
+                    x = 0 + (Math.abs(diff));
+                } else if (x > Consts.WINWIDTH){
+                    x = Consts.WINWIDTH - (Math.abs(diff));
+                }
+                if(y < 0){
+                    y = 0 + (Math.abs(diff));
+                } else if (y > Consts.WINHEIGHT){
+                    y = Consts.WINHEIGHT -(Math.abs(diff));
+                }
                 
             } while (!perceivedMap[x][y][0].getLandType().isCrossable());
             movementPath = PathFinder.findPath(currentPerception
                     .getPositionInPerceivedMap(), new Point3D(x, y, 0),
                     perceivedMap);
-            
+            if(currentBestPheromonePositionInPerceivedMap != null){
             movementPath = PathFinder.findPath(
                 currentPerception.getPositionInPerceivedMap(),
                 currentBestPheromonePositionInPerceivedMap, perceivedMap);
+            }
         }
 
     }
 
     private void goHome() {
+        System.out.println("I'm going home motherfucker");
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
         Pheromone currentBestPheromone = null;
         Point3D currentBestPheromonePositionInPerceivedMap = null;
@@ -397,8 +422,8 @@ public class Worker extends Ant {
                 }
             }
         }
-        if (currentBestPheromone != null) {
-            movementPath = PathFinder.findPath(
+        if (currentBestPheromone != null && currentBestPheromonePositionInPerceivedMap != null) {
+            movementPath = PathFinder.findPath(//TODO c'était ici que currentBestPheromoneblbla était null
                     currentPerception.getPositionInPerceivedMap(),
                     currentBestPheromonePositionInPerceivedMap, perceivedMap);
         }

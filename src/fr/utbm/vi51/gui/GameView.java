@@ -256,9 +256,9 @@ public class GameView extends JPanel {
 	 		Point3d squareCoord = new Point3d( 	this.view.x + (int) pointPosition.x / this.currentTileWidth,
 	 											this.view.y + (int) pointPosition.y / this.currentTileHeight,
 	 											0);
-	 		assert(squareCoord.x > 0 && squareCoord.x < Environment.getInstance().getMapWidth());
-	 		assert(squareCoord.y > 0 && squareCoord.y < Environment.getInstance().getMapHeight());
-	 		assert(squareCoord.y > 0 && squareCoord.y < Environment.getInstance().getMapDepth());
+	 		assert(squareCoord.x >= 0 && squareCoord.x <= Environment.getInstance().getMapWidth());
+	 		assert(squareCoord.y >= 0 && squareCoord.y <= Environment.getInstance().getMapHeight());
+	 		assert(squareCoord.z >= 0 && squareCoord.z <= Environment.getInstance().getMapDepth());
 	 	
 	 		return squareCoord;
 	    }

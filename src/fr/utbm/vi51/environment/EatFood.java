@@ -21,12 +21,12 @@ public class EatFood implements Action {
         for (WorldObject wo : objects) {
             if (wo instanceof Food) {
                 toRemove = wo;
-                body.setCarriedObject(wo);
                 break;
             }
         }
         body.setHunger(0);
         objects.remove(toRemove);
+        Environment.getInstance().getObjects().remove(toRemove);
     }
 
     @Override

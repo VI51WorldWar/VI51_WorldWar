@@ -21,6 +21,7 @@ public abstract class Insect extends Agent {
     protected Perception currentPerception;
     protected LinkedList<Direction> movementPath;
     private InsectBody body;
+    
     public Insect(String texture, Point3D position, int speed, Side side) {
         this.body = new InsectBody(texture, position, speed, side);
     }

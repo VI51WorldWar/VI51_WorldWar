@@ -2,6 +2,7 @@ package fr.utbm.vi51.environment;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import org.janusproject.kernel.agent.Agent;
@@ -19,7 +20,7 @@ public final class Environment extends Agent {
 
     private static Environment evt;
 
-    private List<WorldObject> objects;
+    private CopyOnWriteArrayList<WorldObject> objects;
     private List<Insect> insects;
     private Square[][][] map;
     // width = x, height = y, depth = z
@@ -34,7 +35,7 @@ public final class Environment extends Agent {
         mapWidth = 40;
         mapDepth = 5;
         map = new Square[mapWidth][mapHeight][mapDepth];
-        objects = new LinkedList<WorldObject>();
+        objects = new CopyOnWriteArrayList<WorldObject>();
         insects = new LinkedList<Insect>();
     }
 
@@ -67,7 +68,7 @@ public final class Environment extends Agent {
         return objects;
     }
 
-    public void setObjects(List<WorldObject> objects) {
+    public void setObjects(CopyOnWriteArrayList<WorldObject> objects) {
         this.objects = objects;
     }
 
@@ -91,6 +92,9 @@ public final class Environment extends Agent {
     public Status live() {
 
         int diffTime = (int) (this.getTimeManager().getCurrentDate().getTime() - lastTime);
+        if(diffTime > 100000){
+            diffTime = 30;
+        }
         LinkedList<WorldObject> toRemove = new LinkedList<WorldObject>();
         synchronized (objects) {
             for (WorldObject o : objects) {

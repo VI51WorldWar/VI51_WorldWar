@@ -30,6 +30,7 @@ public class Lay implements Action{
         }
         for(int j = 0; j<i;j++){
             objects.remove(toRemove[j]);
+            Environment.getInstance().getObjects().remove(toRemove[j]);
         }
         this.side.setFoodAmount(this.side.getFoodAmount()-10);
     }
