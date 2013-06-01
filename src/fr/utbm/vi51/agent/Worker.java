@@ -402,11 +402,11 @@ public class Worker extends Ant {
                             return;
                         } else if (wo instanceof Pheromone) {
                             Pheromone p = (Pheromone) wo;
-                            if (p.getMessage() == Message.HOME) {
+                            if (p.getMessage() == Message.HOME && p.getSide() == this.getBody().getSide()) {
                                 currentBestPheromone = Pheromone
                                         .closestToSubject(p,
                                                 currentBestPheromone);
-                                if (currentBestPheromone == p && p.getSide() == this.getBody().getSide()) {
+                                if (currentBestPheromone == p) {
                                     currentBestPheromonePositionInPerceivedMap = new Point3D(
                                             i, j, 0);
                                 }
