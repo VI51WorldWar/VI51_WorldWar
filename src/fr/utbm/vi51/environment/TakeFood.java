@@ -26,6 +26,7 @@ public class TakeFood implements Action {
             if (wo instanceof Food) {
                 toRemove = wo;
                 body.setCarriedObject(wo);
+                wo.setPosition(body.getPosition());
                 break;
             }
         }

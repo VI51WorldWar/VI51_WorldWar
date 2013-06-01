@@ -5,6 +5,7 @@ import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
 
 import fr.utbm.vi51.configs.Consts;
+import fr.utbm.vi51.environment.EatFood;
 import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.Lay;
 import fr.utbm.vi51.environment.Side;
@@ -31,10 +32,18 @@ public class Queen extends Ant {
     @Override
     public Status live() {
         super.live();
+        if(this.getBody() == null && !this.getBody().isAlive())
+            return null;
+        
         if (this.getTimeManager().getCurrentDate().getTime() - lastTime < Consts.ANTACTIONDELAY
                 && lastTime != 0) {
             return null;
         }
+        
+        if(this.getBody().isHungry() && this.getBody().getAction() == null) {
+            this.getBody().setAction(new EatFood(this.getBody()));
+        }
+        
         Point3D relativePos = this.getBody().getPerception().getPositionInPerceivedMap();
         Square sq = this.getBody().getPerception().getPerceivedMap()[relativePos.x][relativePos.y][relativePos.z];
         int foodAmount = 0;

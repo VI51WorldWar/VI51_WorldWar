@@ -57,7 +57,6 @@ public class Worker extends Ant {
 
     @Override
     public Status live() {
-        System.out.println(currentBehaviour);
         super.live();
         InsectBody body = this.getBody();
 
@@ -327,7 +326,7 @@ public class Worker extends Ant {
             int randChoice;
             int x = 0;
             int y = 0;
-            do {
+           /* do {
                 randChoice = (int) Math.floor(Math.random() * 3);
                 int diff = 0;
                 //diff = (int) Math.floor(Math.random()*4)-2;
@@ -359,11 +358,10 @@ public class Worker extends Ant {
                 } else if (y > Consts.WINHEIGHT) {
                     y = Consts.WINHEIGHT - (Math.abs(diff));
                 }
-
             } while (!perceivedMap[x][y][0].getLandType().isCrossable());
             movementPath = PathFinder.findPath(currentPerception
                     .getPositionInPerceivedMap(), new Point3D(x, y, 0),
-                    perceivedMap);
+                    perceivedMap);*/
             if (currentBestPheromonePositionInPerceivedMap != null) {
                 movementPath = PathFinder.findPath(
                         currentPerception.getPositionInPerceivedMap(),
