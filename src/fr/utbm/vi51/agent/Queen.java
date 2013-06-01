@@ -20,7 +20,7 @@ import fr.utbm.vi51.util.Point3D;
 public class Queen extends Ant {
     private Kernel k;
     public Queen(Point3D position, int speed, Side side, Kernel k) {
-        super("img/Ants/queen.png", position, speed, side);
+        super(side.getQueenTexture(), position, speed, side);
         this.k = k;
     }
     @Override

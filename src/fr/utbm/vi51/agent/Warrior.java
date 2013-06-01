@@ -36,7 +36,7 @@ public class Warrior extends Ant {
     private int attackPoints;
 
     public Warrior(Point3D position, int speed, Side side) {
-        super("img/Ants/warrior.png", position, speed, side);
+        super(side.getWarriorTexture(), position, speed, side);
         currentBehaviour = WarriorBehaviour.PATROL;
         attackPoints = 1;
     }
