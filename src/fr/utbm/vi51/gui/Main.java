@@ -34,8 +34,8 @@ public final class Main {
         Kernel k = Kernels.create(as);
         k.launchLightAgent(env);
         // k.launchLightAgent(b);
-        Side a = new Side(1,"img/Ants/worker.png","img/Ants/warrior.png","img/Ants/queen.png");
-        Side b = new Side(2,"img/Ants/worker.png","img/Ants/warrior.png","img/Ants/queen.png");
+        Side a = new Side(1,"img/Ants/worker1.png","img/Ants/warrior1.png","img/Ants/queen1.png");
+        Side b = new Side(2,"img/Ants/worker2.png","img/Ants/warrior2.png","img/Ants/queen2.png");
 
         Queen q1 = new Queen(new Point3D(5, 6, 0), 1, a, k);
         Queen q2 = new Queen(new Point3D(35, 35, 0), 1, b, k);

@@ -73,7 +73,7 @@ public class Warrior extends Ant {
         		List<WorldObject> objects = perceivedMap[i][j][0].getObjects();
         		synchronized (objects) {
         			for (WorldObject wo : objects) {
-        				if (wo.getTexturePath().equals("img/Ants/warrior.png") && ((InsectBody) wo).getSide() != body.getSide()) {
+        				if (((InsectBody) wo).getSide() != body.getSide()) {
         					currentBehaviour = WarriorBehaviour.FIGHT;
         				}
         			}
@@ -112,7 +112,7 @@ public class Warrior extends Ant {
         }
         for (WorldObject wo : perceivedMap[positionInPerceivedMap.x][positionInPerceivedMap.y][0]
                 .getObjects()) {
-            if (wo.getTexturePath().equals("img/Ants/queen.png") && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
+            if (wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture()) && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
                 relativeStartingPointPosition = new Point3D(0, 0, 0);
                 break;
             }
@@ -148,7 +148,7 @@ public class Warrior extends Ant {
                 List<WorldObject> objects = perceivedMap[i][j][0].getObjects();
                 synchronized (objects) {
                     for (WorldObject wo : objects) {
-                        if (wo.getTexturePath().equals("img/Ants/queen.png") && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
+                        if (wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture()) && ((InsectBody) wo).getSide() == this.getBody().getSide()) {
                             movementPath = PathFinder.findPath(
                                     currentPerception
                                             .getPositionInPerceivedMap(),

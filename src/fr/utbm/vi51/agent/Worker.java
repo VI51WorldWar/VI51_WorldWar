@@ -173,7 +173,7 @@ public class Worker extends Ant {
                     if (currentBehaviour == WorkerBehaviour.GO_HOME
                             && wo instanceof Food
                             || currentBehaviour == WorkerBehaviour.SEARCH_FOOD
-                            && wo.getTexturePath().equals("img/Ants/queen.png")
+                            && wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())
                             && ((InsectBody) wo).getSide().equals(
                                     this.getBody().getSide())) {
                         targetPosition = new Point3D(wo.getPosition());
@@ -254,7 +254,7 @@ public class Worker extends Ant {
         boolean foodOnSameSquare = false;
         for (WorldObject wo : perceivedMap[positionInPerceivedMap.x][positionInPerceivedMap.y][0]
                 .getObjects()) {
-            if (wo.getTexturePath().equals("img/Ants/queen.png")
+            if (wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())
                     && ((InsectBody) wo).getSide().equals(
                             this.getBody().getSide())) {
                 foodOnSameSquare = false;
@@ -279,7 +279,7 @@ public class Worker extends Ant {
                 for (WorldObject wo : perceivedMap[i][j][0].getObjects()) {
                     // Avoid perceiving the food on the queen's square as it is
                     // already where it needs to be
-                    if (wo.getTexturePath().equals("img/Ants/queen.png")
+                    if (wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())
                             && ((InsectBody) wo).getSide().equals(
                                     this.getBody().getSide())) {
                         foodFound = null;
@@ -402,7 +402,7 @@ public class Worker extends Ant {
                 return;
             }
             if (!this.getBody().isHungry()
-                    && wo.getTexturePath().equals("img/Ants/queen.png")
+                    && wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())
                     && ((InsectBody) wo).getSide().equals(
                             this.getBody().getSide())) {
                 if (this.getBody().getCarriedObject() != null) {
@@ -420,7 +420,7 @@ public class Worker extends Ant {
                 List<WorldObject> objects = perceivedMap[i][j][0].getObjects();
                 synchronized (objects) {
                     for (WorldObject wo : objects) {
-                        if (wo.getTexturePath().equals("img/Ants/queen.png")
+                        if (wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())
                                 && ((InsectBody) wo).getSide().equals(
                                         this.getBody().getSide())) {
                             movementPath = PathFinder.findPath(
