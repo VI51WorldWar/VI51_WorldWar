@@ -50,7 +50,7 @@ public class Worker extends Ant {
     private Logger log = Logger.getLogger(MobileObject.class.getName());
 
     public Worker(Point3D position, int speed, Side side) {
-        super("img/Ants/worker.png", position, speed, side);
+        super(side.getWorkerTexture(), position, speed, side);
         currentBehaviour = WorkerBehaviour.GO_HOME;
         lastPosition = new Point3D(position);
     }
