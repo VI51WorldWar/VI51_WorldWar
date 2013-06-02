@@ -41,23 +41,20 @@ public final class Main {
         Queen q2 = new Queen(new Point3D(35, 35, 0), 1, b, k);
         k.launchLightAgent(q1);
         k.launchLightAgent(q2);
-        //k.launchLightAgent(new Warrior(new Point3D(5, 7, 0), 10,a));
-        //k.launchLightAgent(new Warrior(new Point3D(35, 34, 0), 1, b));
+        
+        k.launchLightAgent(new Warrior(new Point3D(5, 7, 0), 10,a));
+        //k.launchLightAgent(new Warrior(new Point3D(35, 34, 0), 10, b));
         //k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
        // k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
-        for (int i = 0; i < 500; ++i) {
+        for (int i = 0; i < 50; ++i) {
+            k.launchLightAgent(new Warrior(new Point3D(5, 6, 0), 15,a));
+            k.launchLightAgent(new Warrior(new Point3D(35, 35, 0), 15,b));
+        }
+        for (int i = 0; i < 200; ++i) {
             k.launchLightAgent(new Worker(new Point3D(5, 6, 0), 15,a));
             k.launchLightAgent(new Worker(new Point3D(35, 35, 0), 15,b));
-
         }
 
-        /*for (int i = 0; i < map.length; ++i) {
-            for (int j = 0; j < map[0].length; ++j) {
-                if (map[i][j][0].getLandType().isCrossable()) {
-                    k.launchLightAgent(new Worker(new Point3D(i, j, 0), 15));
-                }
-            }
-        }*/
         k.launchHeavyAgent(new WindowsContainer());
 
         for (int i = 0; i < 20; ++i) {

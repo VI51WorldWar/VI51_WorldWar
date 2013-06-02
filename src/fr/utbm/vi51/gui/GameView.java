@@ -29,8 +29,8 @@ import fr.utbm.vi51.util.ImageManager;
  */
 public class GameView extends JPanel {
 	// STATICS VARS
-		static int s_displayedTilesX = 20;
-	    static int s_displayedTilesY = 20;
+		static int s_displayedTilesX = 40;
+	    static int s_displayedTilesY = 40;
 	    
 	    // Represent the current view in terms of number of square
 	    private Rectangle view = null;

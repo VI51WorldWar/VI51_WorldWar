@@ -92,7 +92,7 @@ public final class Environment extends Agent {
     public Status live() {
 
         int diffTime = (int) (this.getTimeManager().getCurrentDate().getTime() - lastTime);
-        if(diffTime > 100000){
+        if (diffTime > 100000) {
             diffTime = 30;
         }
         LinkedList<WorldObject> toRemove = new LinkedList<WorldObject>();
@@ -105,15 +105,18 @@ public final class Environment extends Agent {
                         a.doAction();
                         b.setAction(null);
                     }
-                    if (a != null && !a.testAction()){
+                    if (a != null && !a.testAction()) {
                         b.setAction(null);
                     }
-                    if(b instanceof InsectBody) {
+                    if (b instanceof InsectBody) {
                         InsectBody ib = ((InsectBody) b);
                         ib.setHunger(ib.getHunger() + diffTime);
-                        if(ib.getHunger() > Consts.MAXHUNGER) {
-                            toRemove.add(ib);
+                        if (ib.getHunger() > Consts.MAXHUNGER) {
+
                             ib.die();
+                        }
+                        if (!ib.isAlive()) {
+                            toRemove.add(ib);
                         }
                     }
                 }
@@ -128,13 +131,14 @@ public final class Environment extends Agent {
         }
         for (WorldObject wo : toRemove) {
             objects.remove(wo);
-            map[wo.getPosition().x][wo.getPosition().y][wo.getPosition().z].getObjects().remove(wo);
+            map[wo.getPosition().x][wo.getPosition().y][wo.getPosition().z]
+                    .getObjects().remove(wo);
         }
         lastTime = this.getTimeManager().getCurrentDate().getTime();
         diffTime = (int) (this.getTimeManager().getCurrentDate().getTime() - lastTime);
         try {
-            if(30-diffTime > 0){
-                Thread.sleep(30-diffTime);
+            if (30 - diffTime > 0) {
+                Thread.sleep(30 - diffTime);
             }
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block

@@ -6,35 +6,37 @@ import fr.utbm.vi51.util.Point3D;
 
 public class KillEnemy implements Action {
 	private InsectBody body;
+	private Direction direction;
 	
-	public KillEnemy (InsectBody body) {
-		super();
-		this.body = body;
-	}
 
-	@Override
+	public KillEnemy(InsectBody body, Direction direction) {
+	    super();
+	    this.body = body;
+	    this.direction = direction;
+    }
+
+    @Override
 	public void doAction() {
-		Point3D pos = body.getPosition();
-		List<WorldObject> objects = Environment.getInstance().getMap()[pos.x][pos.y][pos.z].getObjects();
-		
-		for (WorldObject wo : objects) {
-			if (wo.getTexturePath().equals("img/Ants/warrior.png") && ((InsectBody) wo).getSide() != body.getSide()) {
-				InsectBody enemy = ((InsectBody) wo);
-				if (enemy.getHealthPoints() <= 0) {
-					enemy.die();
-					break;
-				}
-			}
-		}
-		
+        Point3D pos = body.getPosition();
+        for (WorldObject wo : Environment.getInstance().getMap()[pos.x+direction.dx][pos.y+direction.dy][pos.z].getObjects()) {
+            if (wo instanceof InsectBody) {
+                InsectBody ib = (InsectBody) wo;
+                if(!ib.getSide().equals(body.getSide())) {
+                    ib.die();
+                }
+            }
+        }
 	}
 
 	@Override
 	public boolean testAction() {
 		Point3D pos = body.getPosition();
-		for (WorldObject wo : Environment.getInstance().getMap()[pos.x][pos.y][pos.z].getObjects()) {
-			if (wo.getTexturePath().equals("img/Ants/warrior.png") && ((InsectBody) wo).getSide() != body.getSide()) {
-				return true;
+		for (WorldObject wo : Environment.getInstance().getMap()[pos.x+direction.dx][pos.y+direction.dy][pos.z].getObjects()) {
+			if (wo instanceof InsectBody) {
+			    InsectBody ib = (InsectBody) wo;
+			    if(!ib.getSide().equals(body.getSide())) {
+			        return true;
+			    }
 			}
 		}
 		return false;
