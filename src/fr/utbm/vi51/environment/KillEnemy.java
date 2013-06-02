@@ -24,6 +24,7 @@ public class KillEnemy implements Action {
                 InsectBody ib = (InsectBody) wo;
                 if(!ib.getSide().equals(body.getSide())) {
                     ib.die();
+                    return;
                 }
             }
         }
