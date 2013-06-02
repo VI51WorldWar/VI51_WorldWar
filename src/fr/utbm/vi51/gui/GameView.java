@@ -28,103 +28,163 @@ import fr.utbm.vi51.util.ImageManager;
  * 
  */
 public class GameView extends JPanel {
-	// STATICS VARS
-		static int s_displayedTilesX = 40;
-	    static int s_displayedTilesY = 40;
-	    
-	    // Represent the current view in terms of number of square
-	    private Rectangle view = null;
-	    int currentTileWidth = new Integer(0);
-		int currentTileHeight = new Integer(0);
-	    
-	    private Window parent = null;
-	    /*
-	     * Constructor for the GUI
-	     */
-	    public GameView(Window parent) {
-	    	this.view = new Rectangle(0,0,GameView.s_displayedTilesY,GameView.s_displayedTilesX);
-	    	this.parent = parent;
-	        this.setFocusable(true);
-	        this.addKeyListener(new KeyAdapter() {
-	            public void keyPressed(KeyEvent ke) {
-	                if (ke.getKeyCode() == KeyEvent.VK_UP) {		moveView("UP");		}
-	                if (ke.getKeyCode() == KeyEvent.VK_DOWN) {		moveView("DOWN");	}
-	                if (ke.getKeyCode() == KeyEvent.VK_LEFT) {		moveView("LEFT");	}
-	                if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {		moveView("RIGHT");	}
-	                if (ke.getKeyCode() == KeyEvent.VK_PAGE_UP) {	zoomIn();	}
-	                if (ke.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {	zoomOut();	}
-	                if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {	System.exit(0);	}
-	            }
-	        });
-	        
-	        this.addMouseListener(new MouseListener() {
-				@Override
-				public void mouseReleased(MouseEvent arg0) {}
-				@Override
-				public void mousePressed(MouseEvent arg0) {}
-				@Override
-				public void mouseExited(MouseEvent arg0) {}
-				@Override
-				public void mouseEntered(MouseEvent arg0) {}
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					clicAt(e.getPoint());
-				}
-			});
-	        
-	    }
+    // STATICS VARS
+    static int s_displayedTilesX = 40;
+    static int s_displayedTilesY = 40;
 
-	    public void paintComponent(Graphics g) {
-	    	// Print the view on the screen
-	    	printView(g);
-	    }
-	    
-	    public Rectangle getViewReference() {
-	    	return this.view;
-	    }
-	    
-	    public void moveView(String direction) {
-	    	if(direction == "UP") {
-	    		// Move UP
-	    		this.view.y--;
-	            this.view.y = Math.max(0, this.view.y);
-	    	}
-	    	else if(direction == "DOWN") {
-	    		// Move DOWN 
-	            this.view.y++;
-	            this.view.y = Math.min(	Environment.getInstance().getMap()[0].length - this.view.height,
-	            						this.view.y);
-	    	}
-	    	else if(direction == "RIGHT") {
-	    		// Move RIGHT
-	    		this.view.x ++;
-	    		this.view.x = Math.min(	Environment.getInstance().getMap().length - this.view.width, this.view.x);
-	    	}
-	    	else if(direction == "LEFT") {
-	    		this.view.x--;
-	    		this.view.x = Math.max(0,this.view.x);
-	    	}
-	    }
-	    
-	    public void zoomIn() {
-	    	view.width ++;
-	        view.width = Math.min(this.view.width, Environment.getInstance().getMap().length);
-	        view.height++;
-	        view.height = Math.min(this.view.height, Environment.getInstance().getMap().length);
-	    }
-	    
-	    public void zoomOut() {
-	    	view.width--;
-	        view.width = Math.max(this.view.width, 1);
-	        view.height--;
-	        view.height = Math.max(this.view.height, 1);
-	    }
-	    
-	    
-	    protected void printView(Graphics g) {
+    // Represent the current view in terms of number of square
+    private Rectangle view = null;
+    int currentTileWidth = new Integer(0);
+    int currentTileHeight = new Integer(0);
+
+    private Window parent = null;
+
+    /*
+     * Constructor for the GUI
+     */
+    public GameView(Window parent) {
+        this.view = new Rectangle(0, 0, GameView.s_displayedTilesY,
+                GameView.s_displayedTilesX);
+        this.parent = parent;
+        this.setFocusable(true);
+        this.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent ke) {
+                if (ke.getKeyCode() == KeyEvent.VK_UP) {
+                    moveView("UP");
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
+                    moveView("DOWN");
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
+                    moveView("LEFT");
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    moveView("RIGHT");
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_PAGE_UP) {
+                    zoomIn();
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
+                    zoomOut();
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_O) {
+                    zoomInX();
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_L) {
+                    zoomInY();
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_M) {
+                    zoomOutY();
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_P) {
+                    zoomOutX();
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    System.exit(0);
+                }
+            }
+        });
+
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseReleased(MouseEvent arg0) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent arg0) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent arg0) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent arg0) {
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                clicAt(e.getPoint());
+            }
+        });
+
+    }
+
+    public void paintComponent(Graphics g) {
+        // Print the view on the screen
+        printView(g);
+    }
+
+    public Rectangle getViewReference() {
+        return this.view;
+    }
+
+    public void moveView(String direction) {
+        if (direction == "UP") {
+            // Move UP
+            this.view.y--;
+            this.view.y = Math.max(0, this.view.y);
+        } else if (direction == "DOWN") {
+            // Move DOWN 
+            this.view.y++;
+            this.view.y = Math.min(Environment.getInstance().getMap()[0].length
+                    - this.view.height, this.view.y);
+        } else if (direction == "RIGHT") {
+            // Move RIGHT
+            this.view.x++;
+            this.view.x = Math.min(Environment.getInstance().getMap().length
+                    - this.view.width, this.view.x);
+        } else if (direction == "LEFT") {
+            this.view.x--;
+            this.view.x = Math.max(0, this.view.x);
+        }
+    }
+
+    public void zoomIn() {
+        view.width++;
+        view.width = Math.min(this.view.width, Environment.getInstance()
+                .getMap().length);
+        view.height++;
+        view.height = Math.min(this.view.height, Environment.getInstance()
+                .getMap().length);
+    }
+    
+    public void zoomInX() {
+        view.width++;
+        view.width = Math.min(this.view.width, Environment.getInstance()
+                .getMap().length);
+    }
+    
+    public void zoomInY() {
+        view.height++;
+        view.height = Math.min(this.view.height, Environment.getInstance()
+                .getMap().length);
+    }
+
+    public void zoomOut() {
+        view.width--;
+        view.width = Math.max(this.view.width, 1);
+        view.height--;
+        view.height = Math.max(this.view.height, 1);
+    }
+    
+    public void zoomOutX() {
+        view.width--;
+        view.width = Math.max(this.view.width, 1);
+    }
+    
+    public void zoomOutY() {
+        view.height--;
+        view.height = Math.max(this.view.height, 1);
+    }
+
+    protected void printView(Graphics g) {
 	    	
 	    	 this.currentTileWidth = this.getWidth() / this.view.width;
 	         this.currentTileHeight = this.getHeight() / this.view.height;
+	         int min = Math.min(currentTileHeight, currentTileWidth);
+	         this.currentTileHeight = min;
+	         this.currentTileWidth = min;
 
 	         Environment env = Environment.getInstance();
 	         ImageManager imgMgr = ImageManager.getInstance();
@@ -217,49 +277,54 @@ public class GameView extends JPanel {
 	                 }
 	         }
 	    }
-	    
-	    /*
-	     * Function to execute on a clic at the position pointPosition
-	     */
-	    public void clicAt(Point pointPosition) {
-	    	if(parent != null) {
-				parent.setSquareForInfos(getPointedSquare(pointPosition),getSquareCoord(pointPosition));
-			}
-	    }
-	    
-	    /*
-	     * Function to call to move the currentView to be centered on 
-	     * the wanted square
-	     */
-	    public void centerViewOn(Point squarePosition) {
-	    	// Determine the (x,y) origin of the view
-	 		Point originCoord = new Point (
-											Math.max(	0,
-														Math.min((int)Environment.getInstance().getMapWidth()- this.view.width,(int)squarePosition.x - this.view.width/2)
-													),
-											Math.max(	0,
-													Math.min((int)Environment.getInstance().getMapHeight()- this.view.height,(int)squarePosition.y - this.view.height/2)
-												)
-										);
-			// Set the view new coord
-	 		this.view.x = originCoord.x;
-			this.view.y = originCoord.y;
-	    }
-	    
-	    private Square getPointedSquare(Point pointPosition) {
-	    	Point3d squareCoord = getSquareCoord(pointPosition);
-	    	return Environment.getInstance().getMap()[(int) squareCoord.x][(int) squareCoord.y][(int) squareCoord.z];
-	    }
-	    
-	    private Point3d getSquareCoord(Point pointPosition) {
-	    	// Determine which square is at pointPosition
-	 		Point3d squareCoord = new Point3d( 	this.view.x + (int) pointPosition.x / this.currentTileWidth,
-	 											this.view.y + (int) pointPosition.y / this.currentTileHeight,
-	 											0);
-	 		assert(squareCoord.x >= 0 && squareCoord.x <= Environment.getInstance().getMapWidth());
-	 		assert(squareCoord.y >= 0 && squareCoord.y <= Environment.getInstance().getMapHeight());
-	 		assert(squareCoord.z >= 0 && squareCoord.z <= Environment.getInstance().getMapDepth());
-	 	
-	 		return squareCoord;
-	    }
+
+    /*
+     * Function to execute on a clic at the position pointPosition
+     */
+    public void clicAt(Point pointPosition) {
+        if (parent != null) {
+            parent.setSquareForInfos(getPointedSquare(pointPosition),
+                    getSquareCoord(pointPosition));
+        }
+    }
+
+    /*
+     * Function to call to move the currentView to be centered on 
+     * the wanted square
+     */
+    public void centerViewOn(Point squarePosition) {
+        // Determine the (x,y) origin of the view
+        Point originCoord = new Point(Math.max(
+                0,
+                Math.min((int) Environment.getInstance().getMapWidth()
+                        - this.view.width, (int) squarePosition.x
+                        - this.view.width / 2)), Math.max(
+                0,
+                Math.min((int) Environment.getInstance().getMapHeight()
+                        - this.view.height, (int) squarePosition.y
+                        - this.view.height / 2)));
+        // Set the view new coord
+        this.view.x = originCoord.x;
+        this.view.y = originCoord.y;
+    }
+
+    private Square getPointedSquare(Point pointPosition) {
+        Point3d squareCoord = getSquareCoord(pointPosition);
+        return Environment.getInstance().getMap()[(int) squareCoord.x][(int) squareCoord.y][(int) squareCoord.z];
+    }
+
+    private Point3d getSquareCoord(Point pointPosition) {
+        // Determine which square is at pointPosition
+        Point3d squareCoord = new Point3d(this.view.x + (int) pointPosition.x
+                / this.currentTileWidth, this.view.y + (int) pointPosition.y
+                / this.currentTileHeight, 0);
+        assert (squareCoord.x >= 0 && squareCoord.x <= Environment
+                .getInstance().getMapWidth());
+        assert (squareCoord.y >= 0 && squareCoord.y <= Environment
+                .getInstance().getMapHeight());
+        assert (squareCoord.z >= 0 && squareCoord.z <= Environment
+                .getInstance().getMapDepth());
+
+        return squareCoord;
+    }
 }

@@ -34,40 +34,68 @@ public final class Main {
         Kernel k = Kernels.create(as);
         k.launchLightAgent(env);
         // k.launchLightAgent(b);
-        Side a = new Side(1,"img/Ants/worker1.png","img/Ants/warrior1.png","img/Ants/queen1.png");
-        Side b = new Side(2,"img/Ants/worker2.png","img/Ants/warrior2.png","img/Ants/queen2.png");
+        Side a = new Side(1, "img/Ants/worker1.png", "img/Ants/warrior1.png",
+                "img/Ants/queen1.png");
+        Side b = new Side(2, "img/Ants/worker2.png", "img/Ants/warrior2.png",
+                "img/Ants/queen2.png");
+        Side c = new Side(3, "img/Ants/worker3.png", "img/Ants/warrior3.png",
+                "img/Ants/queen3.png");
 
-        Queen q1 = new Queen(new Point3D(5, 6, 0), 1, a, k);
+        Queen q1 = new Queen(new Point3D(5, 35, 0), 1, a, k);
         Queen q2 = new Queen(new Point3D(35, 35, 0), 1, b, k);
+        Queen q3 = new Queen(new Point3D(20, 5, 0), 1, c, k);
         k.launchLightAgent(q1);
         k.launchLightAgent(q2);
-        
-        //k.launchLightAgent(new Warrior(new Point3D(35, 34, 0), 10, b));
-        //k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
-       // k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
-        for (int i = 0; i < 50; ++i) {
-            k.launchLightAgent(new Warrior(new Point3D(20, 20, 0), 15,b));
-            k.launchLightAgent(new Warrior(new Point3D(25,25, 0), 15,a));
+        k.launchLightAgent(q3);
+
+        for (int i = 0; i < 25; ++i) {
+            k.launchLightAgent(new Warrior(new Point3D(5, 35, 0), 15, a));
+            k.launchLightAgent(new Warrior(new Point3D(35, 35, 0), 15, b));
+            k.launchLightAgent(new Warrior(new Point3D(20, 5, 0), 15, c));
         }
 
-
-        for (int i = 0; i < 200; ++i) {
-            k.launchLightAgent(new Worker(new Point3D(5, 6, 0), 15,a));
-            k.launchLightAgent(new Worker(new Point3D(35, 35, 0), 15,b));
+        for (int i = 0; i < 75; ++i) {
+            k.launchLightAgent(new Worker(new Point3D(5, 35, 0), 15, a));
+            k.launchLightAgent(new Worker(new Point3D(35, 35, 0), 15, b));
+            k.launchLightAgent(new Worker(new Point3D(20, 5, 0), 15, c));
         }
 
         k.launchHeavyAgent(new WindowsContainer());
 
-        for (int i = 0; i < 20; ++i) {
-            new Food(new Point3D(12, 12, 0));
-            new Food(new Point3D(19, 19, 0));
-            new Food(new Point3D(3, 17, 0));
-            new Food(new Point3D(17, 6, 0));
-            new Food(new Point3D(23, 23, 0));
-            new Food(new Point3D(5, 35, 0));
-            new Food(new Point3D(30, 33, 0));
-            new Food(new Point3D(16, 30, 0));
+        //Food around camps
+        for (int i = 0; i < 25; ++i) {
+            //Bottom left
+            new Food(new Point3D(1, 37, 0));
+            new Food(new Point3D(1, 38, 0));
+            new Food(new Point3D(2, 37, 0));
+            new Food(new Point3D(2, 38, 0));
 
+            //Bottom right
+            new Food(new Point3D(37, 37, 0));
+            new Food(new Point3D(37, 38, 0));
+            new Food(new Point3D(38, 37, 0));
+            new Food(new Point3D(38, 38, 0));
+
+            //Top middle
+            new Food(new Point3D(19, 1, 0));
+            new Food(new Point3D(20, 1, 0));
+            new Food(new Point3D(19, 2, 0));
+            new Food(new Point3D(20, 2, 0));
+        }
+
+        //Food in the middle
+        for (int i = 0; i < 100; ++i) {
+            new Food(new Point3D(19, 19, 0));
+            new Food(new Point3D(19, 21, 0));
+            new Food(new Point3D(21, 19, 0));
+            new Food(new Point3D(21, 21, 0));
+        }
+        
+        //Food on sides
+        for (int i = 0; i < 40; ++i) {
+            new Food(new Point3D(12, 18, 0));
+            new Food(new Point3D(map.length-12, 18, 0));
+            new Food(new Point3D(20, map[0].length-8, 0));
         }
     }
 
@@ -85,23 +113,6 @@ public final class Main {
             }
         }
 
-        for (int i = 3; i < 7; i++) {
-            for (int j = 3; j < 10; j++) {
-                map[i][j][0] = new Square(LandType.WATER);
-            }
-        }
-
-        for (int i = 3; i < 19; i++) {
-            map[i][10][0] = new Square(LandType.WALL);
-            map[10][i][0] = new Square(LandType.WALL);
-        }
-
-        for (int i = 9; i < 12; i++) {
-            for (int j = 9; j < 12; j++) {
-                map[i][j][0] = new Square(LandType.WATER);
-            }
-        }
-
         // Some walls around the map
         for (int i = 0; i < map.length; ++i) {
             map[i][0][0] = new Square(LandType.WALL);
@@ -112,6 +123,54 @@ public final class Main {
             map[map.length - 1][i][0] = new Square(LandType.WALL);
         }
 
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8 - i; ++j) {
+                map[i][j][0] = new Square(LandType.WALL);
+            }
+        }
+
+        for (int i = 0; i < 8; ++i) {
+            for (int j = 0; j < 8 - i; ++j) {
+                map[map.length - i - 1][j][0] = new Square(LandType.WALL);
+            }
+        }
+
+        for (int i = 8; i < 16; ++i) {
+            for (int j = 30; j < 34; ++j) {
+                map[i][j][0] = new Square(LandType.WALL);
+                map[i + 16][j][0] = new Square(LandType.WALL);
+            }
+        }
+
+        for (int i = 4; i < 10; ++i) {
+            for (int j = 35; j > 31; --j) {
+                map[i][j - i - 4][0] = new Square(LandType.WALL);
+                map[i + 8][j - i - 15][0] = new Square(LandType.WALL);
+            }
+        }
+
+        for (int i = 4; i < 10; ++i) {
+            for (int j = 35; j > 31; --j) {
+                map[map.length - (i) - 1][j - i - 4][0] = new Square(
+                        LandType.WALL);
+                map[map.length - (i + 8) - 1][j - i - 15][0] = new Square(
+                        LandType.WALL);
+            }
+        }
+
+        for (int i = 17; i < 24; ++i) {
+            map[i][17][0] = new Square(LandType.WATER);
+            map[i][18][0] = new Square(LandType.WATER);
+            map[i][22][0] = new Square(LandType.WATER);
+            map[i][23][0] = new Square(LandType.WATER);
+        }
+
+        for (int j = 19; j < 22; ++j) {
+            map[17][j][0] = new Square(LandType.WATER);
+            map[18][j][0] = new Square(LandType.WATER);
+            map[22][j][0] = new Square(LandType.WATER);
+            map[23][j][0] = new Square(LandType.WATER);
+        }
         return true;
     }
 }
