@@ -291,29 +291,33 @@ public class Warrior extends Ant {
         Perception p = this.getBody().getPerception();
         Square[][][] perceivedMap = p.getPerceivedMap();
         Point3D positionInPerceivedMap = p.getPositionInPerceivedMap();
-        InsectBody enemyBody = null;
-        Point3D enemyPositionInPerceivedMap = null;
-        for (int i = 0; i < perceivedMap.length && enemyBody == null; ++i) {
-            for (int j = 0; j < perceivedMap[0].length && enemyBody == null; ++j) {
+        InsectBody closestEnemyBody = null;
+        double closestEnemyDistance = Double.POSITIVE_INFINITY;
+        Point3D closestEnemyPositionInPerceivedMap = null;
+        for (int i = 0; i < perceivedMap.length; ++i) {
+            for (int j = 0; j < perceivedMap[0].length; ++j) {
                 List<WorldObject> objectsPerceived = perceivedMap[i][j][0]
                         .getObjects();
                 for (WorldObject wo : objectsPerceived) {
                     if (wo instanceof InsectBody) {
                         InsectBody ib = (InsectBody) wo;
                         if (!ib.getSide().equals(this.getBody().getSide())) {
-                            enemyBody = ib;
-                            enemyPositionInPerceivedMap = new Point3D(i,j,0);
-                            break;
+                            double distance = Point3D.euclidianDistance(this.getBody().getPosition(), ib.getPosition());
+                            if(distance < closestEnemyDistance) {
+                                closestEnemyBody = ib;
+                                closestEnemyDistance = distance;
+                                closestEnemyPositionInPerceivedMap = new Point3D(i,j,0);
+                            }
                         }
                     }
                 }
             }
         }
-        if(positionInPerceivedMap != null && enemyPositionInPerceivedMap != null && perceivedMap != null){
-            movementPath = PathFinder.findPath(positionInPerceivedMap,enemyPositionInPerceivedMap, perceivedMap);
+        if(positionInPerceivedMap != null && closestEnemyPositionInPerceivedMap != null && perceivedMap != null){
+            movementPath = PathFinder.findPath(positionInPerceivedMap,closestEnemyPositionInPerceivedMap, perceivedMap);
         }
         
-        if(enemyBody != null && movementPath != null) {
+        if(closestEnemyBody != null && movementPath != null) {
             if(movementPath.size() == 0) {
                 this.getBody().setAction(new KillEnemy(this.getBody(),Direction.NONE));
                 lastTime = this.getTimeManager().getCurrentDate().getTime();
@@ -329,8 +333,8 @@ public class Warrior extends Ant {
                 && Point3D.euclidianDistance(new Point3D(0, 0, 0),
                         relativeStartingPointPosition) > 20) {
             currentBehaviour = WarriorBehaviour.GO_HOME;
-        } else if (enemyBody != null) {
-            movementPath = PathFinder.findPath(positionInPerceivedMap, enemyPositionInPerceivedMap, perceivedMap);
+        } else if (closestEnemyBody != null) {
+            movementPath = PathFinder.findPath(positionInPerceivedMap, closestEnemyPositionInPerceivedMap, perceivedMap);
         } else if (relativeStartingPointPosition != null
                 && Point3D.euclidianDistance(new Point3D(0, 0, 0),
                         relativeStartingPointPosition) > 10) {
