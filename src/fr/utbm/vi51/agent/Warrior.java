@@ -1,6 +1,7 @@
 package fr.utbm.vi51.agent;
 
 import java.util.List;
+import java.util.Random;
 
 import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
@@ -231,7 +232,12 @@ public class Warrior extends Ant {
                 }
             }
         }
+        if(positionInPerceivedMap != null && enemyPositionInPerceivedMap != null && perceivedMap != null){
+            movementPath = PathFinder.findPath(positionInPerceivedMap,enemyPositionInPerceivedMap, perceivedMap);
+        }
+        
         if(enemyBody != null && movementPath != null) {
+            if(new Random().nextBoolean()){
             if(movementPath.size() == 0) {
                 this.getBody().setAction(new KillEnemy(this.getBody(),Direction.NONE));
                 lastTime = this.getTimeManager().getCurrentDate().getTime();
@@ -240,6 +246,7 @@ public class Warrior extends Ant {
                 this.getBody().setAction(new KillEnemy(this.getBody(),movementPath.getFirst()));
                 lastTime = this.getTimeManager().getCurrentDate().getTime();
                 return;
+            }
             }
         }
         
