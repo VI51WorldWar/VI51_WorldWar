@@ -24,6 +24,10 @@ public class KillEnemy implements Action {
                 InsectBody ib = (InsectBody) wo;
                 if(!ib.getSide().equals(body.getSide())) {
                     ib.die();
+                    System.out.println("Killed enemy at "+ib.getPosition());
+                    for(int i=0;i<10;++i) {
+                        new Food(ib.getPosition());
+                    }
                     return;
                 }
             }

@@ -91,6 +91,10 @@ public class Warrior extends Ant {
             }
             currentBehaviour = WarriorBehaviour.GO_HOME;
         }
+        
+        if(dropPheromoneIfNeeded()) {
+            return null;
+        }
 
         switch (currentBehaviour) {
             case GO_HOME:
@@ -135,6 +139,79 @@ public class Warrior extends Ant {
 
     }
 
+    /**
+     * Drops a pheromone if the closest pheromone with a strenght/maxStrength. >
+     * 0.5 is at a euclidian distance > 2
+     * 
+     * @return true if a pheromone will be dropped, false else.
+     */
+    private boolean dropPheromoneIfNeeded() {
+        Perception currentPerception = this.getBody().getPerception();
+        
+        // Variables for a pheromone validity
+        final float acceptedOldPh = 0.5f;
+        final int acceptedDistancePh = 2;
+
+        // If we are looking for home and the body is not carrying food, no need
+        // to create pheromone
+        if (currentBehaviour == WarriorBehaviour.GO_HOME) {
+            return false;
+        }
+
+        Square[][][] perceivedMap = currentPerception.getPerceivedMap();
+        // Represents the targets position, the nature of the target depends on
+        // the current behaviour (food for search food...)
+        Point3D targetPosition = null;
+        for (int i = 0; i < perceivedMap.length; ++i) {
+            for (int j = 0; j < perceivedMap[0].length; ++j) {
+                for (WorldObject wo : perceivedMap[i][j][0].getObjects()) {
+                    if (currentBehaviour == WarriorBehaviour.PATROL
+                            && wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())) {
+                        targetPosition = new Point3D(wo.getPosition());
+                    }
+                    if (wo instanceof Pheromone) {
+                        Pheromone p = (Pheromone) wo;
+                        // Check validity of the pheromone : strength is
+                        // sufficient and is of correct type
+                        if (p.getMessage() == Message.HOME && p.getSide().equals(this.getBody().getSide()) && p.getStrength() / Consts.STARTINGPHEROMONEVALUE > acceptedOldPh) {
+                            // If the pheromone is valid and close enough to the
+                            // body's position, no need to create one
+                            if (Point3D.euclidianDistance(p.getPosition(), this
+                                    .getBody().getPosition()) <= acceptedDistancePh) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // If no close and valid pheromone has been found, create one
+        Message m = Message.HOME;
+        assert m != null;
+
+        // If the target position is visible, place a pheromone pointing to it.
+        // Else, point the pheromone to the position of the insect a few moves
+        // ago.
+        if (targetPosition != null) {
+            new Pheromone(this.getBody().getPosition(), m,
+                    Direction.toDirection(this.getBody().getPosition(),
+                            targetPosition),
+                    (int) Consts.STARTINGPHEROMONEVALUE, this.getBody()
+                            .getSide());
+            return true;
+        } else if (relativeStartingPointPosition != null) {
+            new Pheromone(this.getBody().getPosition(), m,
+                    Direction.toDirection(new Point3D(0, 0, 0),
+                            relativeStartingPointPosition),
+                    (int) Consts.STARTINGPHEROMONEVALUE, this.getBody()
+                            .getSide());
+            return true;
+        }
+        return false;
+
+    }
+    
     private void goHome() {
         Perception currentPerception = this.getBody().getPerception();
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
