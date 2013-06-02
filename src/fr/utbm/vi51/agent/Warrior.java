@@ -237,7 +237,6 @@ public class Warrior extends Ant {
         }
         
         if(enemyBody != null && movementPath != null) {
-            if(new Random().nextBoolean()){
             if(movementPath.size() == 0) {
                 this.getBody().setAction(new KillEnemy(this.getBody(),Direction.NONE));
                 lastTime = this.getTimeManager().getCurrentDate().getTime();
@@ -246,7 +245,6 @@ public class Warrior extends Ant {
                 this.getBody().setAction(new KillEnemy(this.getBody(),movementPath.getFirst()));
                 lastTime = this.getTimeManager().getCurrentDate().getTime();
                 return;
-            }
             }
         }
         
