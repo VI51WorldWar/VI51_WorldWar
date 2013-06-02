@@ -47,14 +47,14 @@ public final class Main {
        // k.launchLightAgent(new Worker(new Point3D(7, 8, 0), 15,a));
         for (int i = 0; i < 50; ++i) {
             k.launchLightAgent(new Warrior(new Point3D(20, 20, 0), 15,b));
-            k.launchLightAgent(new Warrior(new Point3D(25,25, 0), 15,a));
+            //k.launchLightAgent(new Warrior(new Point3D(25,25, 0), 15,a));
         }
 
 
-        /*for (int i = 0; i < 200; ++i) {
+        for (int i = 0; i < 200; ++i) {
             k.launchLightAgent(new Worker(new Point3D(5, 6, 0), 15,a));
-            k.launchLightAgent(new Worker(new Point3D(35, 35, 0), 15,b));
-        }*/
+            //k.launchLightAgent(new Worker(new Point3D(35, 35, 0), 15,b));
+        }
 
         k.launchHeavyAgent(new WindowsContainer());
 

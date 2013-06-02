@@ -39,7 +39,7 @@ public class Warrior extends Ant {
 
     public Warrior(Point3D position, int speed, Side side) {
         super(side.getWarriorTexture(), position, speed, side);
-        currentBehaviour = WarriorBehaviour.PATROL;
+        currentBehaviour = WarriorBehaviour.GO_HOME;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Warrior extends Ant {
     public Status live() {
         super.live();
         InsectBody body = this.getBody();
-
+        
         //If their is no body, the agent is waiting to die
         if (body == null) {
             return null;

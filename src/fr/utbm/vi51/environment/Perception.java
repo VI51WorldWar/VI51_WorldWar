@@ -7,7 +7,7 @@ import fr.utbm.vi51.util.Point3D;
  *
  */
 public class Perception {
-    private static final int perceptionSize = 10;
+    private static final int perceptionSize = 5;
     private Square[][][] perceivedMap;
     private Point3D positionInPerceivedMap;
 
