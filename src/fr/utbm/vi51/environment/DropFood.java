@@ -6,7 +6,7 @@ import fr.utbm.vi51.util.Point3D;
  * @author Top-K
  *
  */
-public class DropFood implements Action {
+public class DropFood extends Action {
     private InsectBody body;
     
     public DropFood(InsectBody body) {
@@ -15,7 +15,7 @@ public class DropFood implements Action {
     }
 
     @Override
-    public void doAction() {
+    protected void doAction() {
         Point3D pos = body.getPosition();
         WorldObject carriedObject = body.getCarriedObject();
         Environment.getInstance().getMap()[pos.x][pos.y][pos.z].getObjects()
@@ -25,7 +25,7 @@ public class DropFood implements Action {
     }
 
     @Override
-    public boolean testAction() {
+    protected boolean testAction() {
         return true;
     }
 

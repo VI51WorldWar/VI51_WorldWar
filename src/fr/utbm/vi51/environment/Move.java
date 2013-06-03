@@ -6,7 +6,7 @@ import fr.utbm.vi51.util.Point3D;
  * @author Top-K
  *
  */
-public class Move implements Action {
+public class Move extends Action {
     private Body body;
     private Direction direction;
 
@@ -16,7 +16,7 @@ public class Move implements Action {
     }
 
     @Override
-    public void doAction() {
+    protected void doAction() {
         //System.out.println("Moving to direction : " + direction);
         Point3D pos = body.getPosition();
         Point3D newPos = new Point3D(pos.x + direction.dx,
@@ -26,13 +26,12 @@ public class Move implements Action {
         Square[][][] map = env.getMap();
         map[pos.x][pos.y][pos.z].getObjects().remove(body);
         map[newPos.x][newPos.y][newPos.z].getObjects().add(body);
-        env.setMap(map);
         body.setPosition(newPos);
         //Logger.getLogger(MobileObject.class.getName()).info("Moving");
     }
 
     @Override
-    public boolean testAction() {
+    protected boolean testAction() {
         Square[][][] map = Environment.getInstance().getMap();
         Point3D pos = body.getPosition();
 

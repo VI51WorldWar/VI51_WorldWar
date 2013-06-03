@@ -1,5 +1,6 @@
 package fr.utbm.vi51.gui;
 
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
@@ -8,6 +9,7 @@ import javax.swing.JFrame;
 import javax.vecmath.Point3d;
 
 import fr.utbm.vi51.configs.Consts;
+import fr.utbm.vi51.environment.InsectBody;
 import fr.utbm.vi51.environment.Square;
 
 /**
@@ -19,6 +21,9 @@ public class Window extends JFrame {
 	MiniMap 		minimap = null;
 	SquareInfos 	sqInfos = null;
 	
+	// Tracker
+	InsectTracker	insectTracker = null;
+	
     public Window() {
     	this.setTitle("Fenetre de base");
         this.setSize(Consts.WINWIDTH, Consts.WINHEIGHT);
@@ -29,6 +34,7 @@ public class Window extends JFrame {
         addMiniMap();
         addSquareInfos();
         this.setVisible(true);
+        this.insectTracker = new InsectTracker(this,this.view.getViewReference());
     }
     
     public void setSquareForInfos(Square squareReference,Point3d squarePosition) {
@@ -36,6 +42,18 @@ public class Window extends JFrame {
     		this.sqInfos.setSquare(squareReference,squarePosition);
     	}
     }
+    
+    public void setInsectToTrack(InsectBody insectBody) {
+    	if(this.insectTracker != null) {
+    		this.insectTracker.setInsect(insectBody);
+    	}
+    }
+    
+    public void paintRoad(Graphics g,int tileWidth,int tileHeight,int levelPainted) {
+    	if(this.insectTracker != null) {
+    		this.insectTracker.paintRoad(g, tileWidth, tileHeight, levelPainted);
+    	}
+	}
     
     public void centerCurrentViewOn(Point squarePosition) {
     	if(this.view != null) {
@@ -72,7 +90,7 @@ public class Window extends JFrame {
     
     private void addSquareInfos() {
     	GridBagConstraints c = new GridBagConstraints();
-    	this.sqInfos = new SquareInfos();
+    	this.sqInfos = new SquareInfos(this);
     	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 3;

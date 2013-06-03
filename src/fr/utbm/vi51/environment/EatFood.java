@@ -4,7 +4,7 @@ import java.util.List;
 
 import fr.utbm.vi51.util.Point3D;
 
-public class EatFood implements Action {
+public class EatFood extends Action {
     private InsectBody body;
 
     public EatFood(InsectBody body) {
@@ -13,7 +13,7 @@ public class EatFood implements Action {
     }
 
     @Override
-    public void doAction() {
+    protected void doAction() {
         if(body.getCarriedObject() instanceof Food) {
             body.setCarriedObject(null);
             body.setHunger(0);
@@ -36,7 +36,7 @@ public class EatFood implements Action {
     }
 
     @Override
-    public boolean testAction() {
+    protected boolean testAction() {
         //If the body is carrying food, it can eat it
         if (body.getCarriedObject() instanceof Food) {
             return true;

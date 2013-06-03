@@ -5,7 +5,7 @@ import java.util.Random;
 
 import fr.utbm.vi51.util.Point3D;
 
-public class KillEnemy implements Action {
+public class KillEnemy extends Action {
 	private InsectBody body;
 	private Direction direction;
 	
@@ -17,7 +17,7 @@ public class KillEnemy implements Action {
     }
 
     @Override
-	public void doAction() {
+	protected void doAction() {
         Point3D pos = body.getPosition();
         for (WorldObject wo : Environment.getInstance().getMap()[pos.x+direction.dx][pos.y+direction.dy][pos.z].getObjects()) {
             if (wo instanceof InsectBody) {
@@ -34,7 +34,7 @@ public class KillEnemy implements Action {
 	}
 
 	@Override
-	public boolean testAction() {
+	protected boolean testAction() {
         if(new Random().nextFloat() <= 0.3){
     		Point3D pos = body.getPosition();
     		for (WorldObject wo : Environment.getInstance().getMap()[pos.x+direction.dx][pos.y+direction.dy][pos.z].getObjects()) {

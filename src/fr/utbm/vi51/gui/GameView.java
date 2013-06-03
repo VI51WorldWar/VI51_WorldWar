@@ -36,7 +36,8 @@ public class GameView extends JPanel {
     private Rectangle view = null;
     int currentTileWidth = new Integer(0);
     int currentTileHeight = new Integer(0);
-
+    int	levelToPrint = new Integer(0);
+    
     private Window parent = null;
 
     /*
@@ -276,6 +277,7 @@ public class GameView extends JPanel {
 	                 }             
 	                 }
 	         }
+	         this.parent.paintRoad(g, this.currentTileWidth, this.currentTileHeight, this.levelToPrint);
 	    }
 
     /*

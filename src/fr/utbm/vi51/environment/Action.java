@@ -4,8 +4,8 @@ package fr.utbm.vi51.environment;
  * @author Top-K
  *
  */
-public interface Action {
-    void doAction();
+public abstract class Action {
+    protected abstract void doAction();
 
-    boolean testAction(); 
+    protected abstract boolean testAction(); 
 }
