@@ -34,9 +34,10 @@ public class GameView extends JPanel {
 
     // Represent the current view in terms of number of square
     private Rectangle view = null;
-    int currentTileWidth = new Integer(0);
-    int currentTileHeight = new Integer(0);
-
+    private int currentTileWidth = new Integer(0);
+    private int currentTileHeight = new Integer(0);
+    private int levelToPaint = new Integer(0);
+    
     private Window parent = null;
 
     /*
@@ -78,6 +79,12 @@ public class GameView extends JPanel {
                 }
                 if (ke.getKeyCode() == KeyEvent.VK_P) {
                     zoomOutX();
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_Q) {
+                    changeLevelUp();
+                }
+                if (ke.getKeyCode() == KeyEvent.VK_W) {
+                    changeLevelDown();
                 }
                 if (ke.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     System.exit(0);
@@ -135,18 +142,15 @@ public class GameView extends JPanel {
             this.view.x = Math.min(Environment.getInstance().getMap().length
                     - this.view.width, this.view.x);
         } else if (direction == "LEFT") {
+        	// Move LEFT
             this.view.x--;
             this.view.x = Math.max(0, this.view.x);
         }
     }
 
     public void zoomIn() {
-        view.width++;
-        view.width = Math.min(this.view.width, Environment.getInstance()
-                .getMap().length);
-        view.height++;
-        view.height = Math.min(this.view.height, Environment.getInstance()
-                .getMap().length);
+        zoomInX();
+        zoomInY();
     }
     
     public void zoomInX() {
@@ -162,10 +166,8 @@ public class GameView extends JPanel {
     }
 
     public void zoomOut() {
-        view.width--;
-        view.width = Math.max(this.view.width, 1);
-        view.height--;
-        view.height = Math.max(this.view.height, 1);
+        zoomOutX();
+        zoomOutY();
     }
     
     public void zoomOutX() {
@@ -176,6 +178,30 @@ public class GameView extends JPanel {
     public void zoomOutY() {
         view.height--;
         view.height = Math.max(this.view.height, 1);
+    }
+    
+    // FUNCTIONS FOR CHANGE AND GET THE LEVEL TO PAINT
+    
+    public void changeLevelUp() {
+    	this.levelToPaint --;
+    	this.levelToPaint = Math.max(this.levelToPaint, 0);
+    }
+    
+    public void changeLevelDown() {
+    	Environment env = Environment.getInstance();
+    	this.levelToPaint ++;
+    	this.levelToPaint = Math.min(this.levelToPaint, env.getMapDepth() - 1);
+    }
+    
+    public void setLevelToPaint(int level) {
+    	Environment env = Environment.getInstance();
+    	this.levelToPaint  = level;
+    	this.levelToPaint = Math.min(this.levelToPaint, env.getMapDepth() - 1);
+    	this.levelToPaint = Math.max(this.levelToPaint, 0);
+    }
+    
+    public int getLevelToPaint() {
+    	return this.levelToPaint;
     }
 
     protected void printView(Graphics g) {
@@ -192,7 +218,7 @@ public class GameView extends JPanel {
 	         for (int i = 0; i < this.view.width; i++) {
 	             for (int j = 0; j < this.view.height; j++) { 
 	             	// Reference to the current square to print
-	             	Square currentSquare = map[i + this.view.x][j + this.view.y][0];
+	             	Square currentSquare = map[i + this.view.x][j + this.view.y][this.levelToPaint];
 	                 // Draw land
 	                 g.drawImage(imgMgr.getImage(	currentSquare.getLandType().getTexturePath()), 
 	                		 						this.currentTileWidth * i,
@@ -276,6 +302,7 @@ public class GameView extends JPanel {
 	                 }             
 	                 }
 	         }
+	         parent.paintRoad(g, this.currentTileWidth, this.currentTileHeight, this.levelToPaint);
 	    }
 
     /*
@@ -317,7 +344,7 @@ public class GameView extends JPanel {
         // Determine which square is at pointPosition
         Point3d squareCoord = new Point3d(this.view.x + (int) pointPosition.x
                 / this.currentTileWidth, this.view.y + (int) pointPosition.y
-                / this.currentTileHeight, 0);
+                / this.currentTileHeight, this.levelToPaint);
         assert (squareCoord.x >= 0 && squareCoord.x <= Environment
                 .getInstance().getMapWidth());
         assert (squareCoord.y >= 0 && squareCoord.y <= Environment

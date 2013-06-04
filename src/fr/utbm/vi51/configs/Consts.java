@@ -14,6 +14,7 @@ public final class Consts {
     public static final float STARTINGPHEROMONEVALUE = 30000;
     public static final int MAXHUNGER = 120000;
 
+    public static final int MAX_TRACKED_POSITION = 50;
 
     private Consts() {
 

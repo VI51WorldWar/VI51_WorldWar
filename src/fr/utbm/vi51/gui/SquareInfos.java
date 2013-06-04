@@ -15,6 +15,7 @@ import javax.vecmath.Point3d;
 import fr.utbm.vi51.environment.Body;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.Food;
+import fr.utbm.vi51.environment.InsectBody;
 import fr.utbm.vi51.environment.LandType;
 import fr.utbm.vi51.environment.Pheromone;
 import fr.utbm.vi51.environment.Square;
@@ -23,13 +24,17 @@ import fr.utbm.vi51.util.Point3D;
 
 public class SquareInfos extends JPanel{
 	Square 				rSquareReference = null;
-	Point3d				squarePosition = null;
+	Point3D				squarePosition = null;
 	
 	JButton 			buttonAddFood = null;
-	JComboBox			comLandType = null;
+	JComboBox<LandType>	comLandType = null;
 	List<PheromoneBar> 	listBars = null;
 	
-	public SquareInfos() {
+	Window				rParent = null;
+	
+	public SquareInfos(Window parent) {
+		assert(parent != null);
+		this.rParent = parent;
 		this.rSquareReference = null;
 		this.listBars = new LinkedList<PheromoneBar>();
 		initLandTypeSelection();
@@ -65,7 +70,7 @@ public class SquareInfos extends JPanel{
 	public void setSquare(Square squareReference,Point3d squarePosition) {
 		// Set the reference
 		this.rSquareReference = squareReference;
-		this.squarePosition = new Point3d(squarePosition);
+		this.squarePosition = new Point3D(squarePosition);
 		// Update visibility of the differents widgets
 		if(squareReference == null) {
 			this.buttonAddFood.setVisible(false);
@@ -81,13 +86,27 @@ public class SquareInfos extends JPanel{
 			this.remove(bar);
 		}
 		this.listBars.clear();
+		
+		List<WorldObject> objs = this.rSquareReference.getObjects();
+	    for (int k = 0; k < objs.size(); ++k) {
+	    	WorldObject obj = objs.get(k);
+	        if (obj instanceof InsectBody) {
+	        	this.rParent.setInsectToTrack((InsectBody)obj);
+	        	break;
+	        }
+	    }
 	}
 	
 	private void drawSquareInfos(Graphics g,Point drawPosition) {
 		// Allocate a new Point
 		Point drawPos = new Point(drawPosition);
-		
+		// Square location
+	    g.drawString(	"Coord : "+ this.squarePosition.toString()
+	    				,drawPos.x
+	    				,drawPos.y);
+	    
 		// Type of Land
+	    drawPos.y += 20;
 		g.drawString("Type of land : ", drawPos.x, drawPos.y);
 		// Analyze the World objects on the square
 		int nbAnts = 0;
@@ -113,7 +132,7 @@ public class SquareInfos extends JPanel{
 		drawBars(g);
 		
 		// Foods
-		drawPos.x += 80;
+		drawPos.y += 20;
 		g.drawString("Foods : " + nbFood, drawPos.x, drawPos.y);
 	}
 	
@@ -160,8 +179,8 @@ public class SquareInfos extends JPanel{
 			return;
 		}	   
 		// Add a combo box with all values of the LandType enumeration
-	    this.comLandType = new JComboBox(LandType.values());
-	    this.comLandType.setBounds(80,0,70,20);
+	    this.comLandType = new JComboBox<LandType>(LandType.values());
+	    this.comLandType.setBounds(80,20,70,20);
 		ActionListener action = new ActionListener() {
 			   public void actionPerformed(ActionEvent e) {
 				   // Execute the private function
@@ -169,6 +188,7 @@ public class SquareInfos extends JPanel{
 			   }
 			};
 
+		this.comLandType.setFocusable(false);
 		this.comLandType.addActionListener(action);
 	    this.add(this.comLandType);
 	}

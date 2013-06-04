@@ -6,7 +6,7 @@ import fr.utbm.vi51.util.Point3D;
  * @author Top-K
  *
  */
-public class Move implements Action {
+public class Move extends Action {
     private Body body;
     private Direction direction;
 
@@ -16,23 +16,48 @@ public class Move implements Action {
     }
 
     @Override
-    public void doAction() {
+    protected void doAction() {
+        //System.out.println("Moving to direction : " + direction);
+    	Environment env = Environment.getInstance();
+        Square[][][] map = env.getMap();
         //System.out.println("Moving to direction : " + direction);
         Point3D pos = body.getPosition();
         Point3D newPos = new Point3D(pos.x + direction.dx,
                 pos.y + direction.dy, pos.z);
+        
+        // Cas d'une cave
+        if(map[newPos.x][newPos.y][newPos.z].getLandType() == LandType.CAVE) {
+        	if(pos.z == env.getMapDepth() - 1) {
+        		System.out.println("Erreur de placement d'une cave");
+        	}
+        	else {
+        		// On descend d'un niveau
+        		newPos.z += 1;
+        		newPos.z = Math.min(newPos.z, env.getMapDepth() -1 );
+        		System.out.println("Passage par une cave");
+        	}
+        }
+        // Cas d'une remontée
+        else if(map[newPos.x][newPos.y][newPos.z].getLandType() == LandType.STAIR) {
+        	if(pos.z == 0) {
+        		System.out.println("Erreur de placement d'une remontée");
+        	}
+        	else {
+        		// On remonte d'un niveau
+        		newPos.z -= 1;
+        		newPos.z = Math.max(newPos.z, 0);
+        		System.out.println("Passage par une remontée");
+        	}
+        }
         //System.out.println(newPos);
-        Environment env = Environment.getInstance();
-        Square[][][] map = env.getMap();
         map[pos.x][pos.y][pos.z].getObjects().remove(body);
         map[newPos.x][newPos.y][newPos.z].getObjects().add(body);
-        env.setMap(map);
         body.setPosition(newPos);
         //Logger.getLogger(MobileObject.class.getName()).info("Moving");
     }
 
     @Override
-    public boolean testAction() {
+    protected boolean testAction() {
         Square[][][] map = Environment.getInstance().getMap();
         Point3D pos = body.getPosition();
 

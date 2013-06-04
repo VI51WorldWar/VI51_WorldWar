@@ -8,7 +8,7 @@ import fr.utbm.vi51.util.Point3D;
  * @author Top-K
  *
  */
-public class TakeFood implements Action {
+public class TakeFood extends Action {
     private InsectBody body;
 
     public TakeFood(InsectBody body) {
@@ -17,7 +17,7 @@ public class TakeFood implements Action {
     }
 
     @Override
-    public void doAction() {
+    protected void doAction() {
         Point3D pos = body.getPosition();
         List<WorldObject> objects = Environment.getInstance().getMap()[pos.x][pos.y][pos.z]
                 .getObjects();
@@ -34,7 +34,7 @@ public class TakeFood implements Action {
     }
 
     @Override
-    public boolean testAction() {
+    protected boolean testAction() {
         Point3D pos = body.getPosition();
         for (WorldObject wo : Environment.getInstance().getMap()[pos.x][pos.y][pos.z]
                 .getObjects()) {

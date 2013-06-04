@@ -3,17 +3,24 @@ package fr.utbm.vi51.gui;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.vecmath.Point2d;
 
 import fr.utbm.vi51.environment.Environment;
+import fr.utbm.vi51.environment.Food;
+import fr.utbm.vi51.environment.LandType;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.ImageManager;
+import fr.utbm.vi51.util.Point3D;
 
 /*
  * This class represents the mini map in the user interface
@@ -22,15 +29,18 @@ public class MiniMap extends JPanel{
 	
 	// Reference to the current View 
 	// !!!!! DO NOT MODIFY HERE !!!!!!!!
-	Rectangle 	rCurrentView = null;
+	private Rectangle 	rCurrentView = null;
 	// Reference to the parent Window
-	Window 		rParent = null;
-		
+	private Window 		rParent = null;
 	
-	Rectangle 	mapView = null;
-	int 		currentZoom = new Integer(0);
-	int 		currentTileWidth = new Integer(0);
-	int 		currentTileHeight = new Integer(0);
+	private JButton		butLevelUp = null;
+	private JButton		butLevelDown = null;
+	
+	private Rectangle 	mapView = null;
+	private int			currentLevel = new Integer(0);
+	private int 		currentZoom = new Integer(0);
+	private int 		currentTileWidth = new Integer(0);
+	private int 		currentTileHeight = new Integer(0);
 	
 	public MiniMap(Window rParent,Rectangle currentViewReference) {
 		//assert(rCurrentView != null);
@@ -41,6 +51,7 @@ public class MiniMap extends JPanel{
 		this.mapView.width = env.getMapWidth();
 		this.rCurrentView = currentViewReference;
 		this.rParent = rParent;
+		this.setLayout(null);
 		this.addMouseListener(new MouseListener(){
 			@Override
 			public void mouseReleased(MouseEvent e) {}
@@ -56,6 +67,7 @@ public class MiniMap extends JPanel{
 			@Override
 			public void mouseExited(MouseEvent e) {}
 		});
+		initbutLevel();
 	}
 	
 	
@@ -101,6 +113,7 @@ public class MiniMap extends JPanel{
 	
 	// Function to draw the entire minimap
 	private void drawMiniMap(Graphics g) {
+		this.currentLevel = this.rParent.getLevelToPaint();
 		Square[][][] map = Environment.getInstance().getMap();
 		assert(map != null);
         Point2d drawPosition = new Point2d(0,0);
@@ -109,7 +122,7 @@ public class MiniMap extends JPanel{
         for (int i = 0; i < mapWidth; i++) {
             for (int j = 0; j < mapHeight; j++) {
             	// Get a square
-            	Square currentSquare = map[i][j][0];
+            	Square currentSquare = map[i][j][this.currentLevel];
             	drawPosition.x = this.mapView.x + this.currentTileWidth * i;
             	drawPosition.y = this.mapView.y + this.currentTileHeight * j;
             	// Draw land
@@ -134,5 +147,37 @@ public class MiniMap extends JPanel{
                 }
             }
         }
+        int x = this.mapView.x + this.currentTileWidth * this.mapView.width;
+		this.butLevelUp.setBounds(x + 10, 0, 50, 20);
+		this.butLevelDown.setBounds(x + 10, 20, 50, 20);
+	}
+	
+	// CHANGING Level
+	private void initbutLevel() {
+		// Only one initialization
+		if(this.butLevelDown != null && this.butLevelUp != null) {
+			assert(false);
+			return;
+		}
+		this.butLevelDown = new JButton("-");
+		this.butLevelUp = new JButton("+");
+		
+		ActionListener action = new ActionListener() {
+				   public void actionPerformed(ActionEvent e) {
+					   rParent.changeLevelDown();
+				   }
+		};
+		
+		this.butLevelDown.addActionListener(action);
+		this.add(butLevelDown);
+		
+		ActionListener action2 = new ActionListener() {
+			   public void actionPerformed(ActionEvent e) {
+				   rParent.changeLevelUp();
+			   }
+		};
+		
+		this.butLevelUp.addActionListener(action2);
+		this.add(butLevelUp);
 	}
 }

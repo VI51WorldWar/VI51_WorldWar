@@ -44,6 +44,10 @@ public class Queen extends Ant {
             this.getBody().setAction(new EatFood(this.getBody()));
         }
         
+        if(this.getBody().getAction() != null) {
+        	return null;
+        }
+        
         Point3D relativePos = this.getBody().getPerception().getPositionInPerceivedMap();
         Square sq = this.getBody().getPerception().getPerceivedMap()[relativePos.x][relativePos.y][relativePos.z];
         int foodAmount = 0;
@@ -55,7 +59,7 @@ public class Queen extends Ant {
         this.getBody().getSide().setFoodAmount(foodAmount);
         if(foodAmount > 100){
             Lay lay = new Lay(this.getBody().getSide(), this.getBody().getPosition(), this.k);
-            lay.doAction();
+            this.getBody().setAction(lay);
         }
         
         

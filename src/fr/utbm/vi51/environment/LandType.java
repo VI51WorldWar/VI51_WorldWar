@@ -8,9 +8,14 @@ package fr.utbm.vi51.environment;
 public enum LandType {
     // Enumeration of different types of land available in the game
     GRASS("Grass",1, true, "img/Tiles/grass.png"), 
+    SAND("Sand",1,true,"img/Tiles/sand.png"),
     WATER("Water",4, true, "img/Tiles/water.png"), 
-    WALL("Wall",0, false, "img/Tiles/wall.png");
-
+    WALL("Wall",0, false, "img/Tiles/wall.png"),
+    CAVE("Cave",1,true,"img/Tiles/cave.png"),
+    STAIR("Stair",1,true,"img/Tiles/stair.png"),
+    WATERFALL("Waterfall",0,false,"img/Tiles/waterfall.png"),
+    CLIFF("Cliff",0,false,"img/Tiles/cliff.png");
+    
     // Cost to pass across this type
     private final int cost;
     // Is this type of floor crossable ?
@@ -43,5 +48,4 @@ public enum LandType {
     public String getName() {
     	return this.name;
     }
-
 }
