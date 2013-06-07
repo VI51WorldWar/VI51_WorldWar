@@ -1,5 +1,6 @@
 package fr.utbm.vi51.gui;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;

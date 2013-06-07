@@ -33,8 +33,8 @@ public class Window extends JFrame {
         addView();
         addMiniMap();
         addSquareInfos();
+        addTracker();
         this.setVisible(true);
-        this.insectTracker = new InsectTracker(this,this.view.getViewReference());
     }
     
     public void setSquareForInfos(Square squareReference,Point3d squarePosition) {
@@ -82,9 +82,8 @@ public class Window extends JFrame {
     	this.minimap = new MiniMap(this,this.view.getViewReference());
     	c.fill = GridBagConstraints.BOTH;
     	c.gridx = 0;
-    	c.gridy = 3;
-    	c.gridheight = 2;
-    	c.gridwidth = 1;
+    	c.gridy = 4;
+    	c.gridheight = 1;
     	c.gridwidth = 1;
     	c.weighty = 0.1;
     	c.weightx = 0.1;
@@ -97,8 +96,8 @@ public class Window extends JFrame {
     	c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 0;
-        c.gridheight = 3;
-        c.gridwidth = 3;
+        c.gridheight = 4;
+        c.gridwidth = 4;
         c.weighty = 1.0;
         c.weightx = 1.0;
         this.add(this.view,c); 
@@ -108,12 +107,25 @@ public class Window extends JFrame {
     	GridBagConstraints c = new GridBagConstraints();
     	this.sqInfos = new SquareInfos(this);
     	c.fill = GridBagConstraints.BOTH;
-        c.gridx = 1;
-        c.gridy = 3;
-        c.gridheight = 2;
+        c.gridx = 2;
+        c.gridy = 4;
+        c.gridheight = 1;
         c.gridwidth = 2;
         c.weighty = 0.1;
         c.weightx = 0.1;
         this.add(this.sqInfos, c);
+    }
+    
+    private void addTracker() {
+    	GridBagConstraints c = new GridBagConstraints();
+        this.insectTracker = new InsectTracker(this,this.view.getViewReference());
+    	c.fill = GridBagConstraints.BOTH;
+        c.gridx = 1;
+        c.gridy = 4;
+        c.gridheight = 1;
+        c.gridwidth = 1;
+        c.weighty = 0.1;
+        c.weightx = 0.1;
+        this.add(insectTracker,c);
     }
 }
