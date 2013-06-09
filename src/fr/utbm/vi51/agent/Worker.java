@@ -1,9 +1,6 @@
 package fr.utbm.vi51.agent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Logger;
 
 import org.janusproject.kernel.status.Status;
@@ -24,13 +21,12 @@ import fr.utbm.vi51.environment.Side;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.TakeFood;
 import fr.utbm.vi51.environment.WorldObject;
-import fr.utbm.vi51.util.CustomRandom;
 import fr.utbm.vi51.util.PathFinder;
 import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
- * 
+ *
  */
 enum WorkerBehaviour {
     GO_HOME, SEARCH_FOOD,
@@ -38,15 +34,21 @@ enum WorkerBehaviour {
 
 /**
  * @author Top-K
- * 
+ *
  */
 public class Worker extends Ant {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 6981140970183171037L;
+
     private WorkerBehaviour currentBehaviour;
     private Point3D lastPosition;
     private Point3D relativeStartingPointPosition; // Remembers the position of
                                                    // the starting point (where
                                                    // food was taken, where home
                                                    // was...)
+    @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(MobileObject.class.getName());
 
     public Worker(Point3D position, int speed, Side side) {
@@ -69,7 +71,7 @@ public class Worker extends Ant {
         if (body == null) {
             return null;
         }
-        
+
         // If an action is already planned, wait for it to be resolved
         if (body.getAction() != null) {
             return null;
@@ -146,12 +148,12 @@ public class Worker extends Ant {
     /**
      * Drops a pheromone if the closest pheromone with a strenght/maxStrength. >
      * 0.5 is at a euclidian distance > 2
-     * 
+     *
      * @return true if a pheromone will be dropped, false else.
      */
     private boolean dropPheromoneIfNeeded() {
         Perception currentPerception = this.getBody().getPerception();
-        
+
         // Variables for a pheromone validity
         final float acceptedOldPh = 0.5f;
         final int acceptedDistancePh = 2;
@@ -216,9 +218,9 @@ public class Worker extends Ant {
         // Else, point the pheromone to the position of the insect a few moves
         // ago.
         if (targetPosition != null) {
-            new Pheromone(this.getBody().getPosition(), 
-            		m,Direction.toDirection(this.getBody().getPosition(),targetPosition),
-                    (int) Consts.STARTINGPHEROMONEVALUE, 
+            new Pheromone(this.getBody().getPosition(),
+                    m, Direction.toDirection(this.getBody().getPosition(), targetPosition),
+                    (int) Consts.STARTINGPHEROMONEVALUE,
                     this.getBody().getSide());
             return true;
         } else if (relativeStartingPointPosition != null) {
@@ -269,9 +271,6 @@ public class Worker extends Ant {
             relativeStartingPointPosition = new Point3D(0, 0, 0);
             return;
         }
-        Point3D currentBestFoodPheromonePositionInPerceivedMap = null;
-        Pheromone currentBestHomePheromone = null;
-
         // Searching the map for food or food pheromones
         for (int i = 0; i < perceivedMap.length; ++i) {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
@@ -297,16 +296,6 @@ public class Worker extends Ant {
                                 currentBestPheromonePositionInPerceivedMap = new Point3D(
                                         i, j, 0);
                             }
-                        /*} else if (p.getMessage() == Message.HOME
-                                && p.getSide().equals(this.getBody().getSide())) {
-                            currentBestHomePheromone = Pheromone
-                                    .closestToSubject(p,
-                                            currentBestFoodPheromone);
-                            if (currentBestHomePheromone == p) {
-                                //currentBestPheromonePositionInPerceivedMap = new Point3D(
-                                        i, j, 0);
-                            }*/
-                        } else {
                         }
                     }
                 }
@@ -318,12 +307,6 @@ public class Worker extends Ant {
                 }
             }
         }
-        if (currentBestFoodPheromone == null
-                && currentBestHomePheromone != null) {
-            currentBestFoodPheromone = currentBestHomePheromone;
-            currentBestPheromonePositionInPerceivedMap = currentBestFoodPheromonePositionInPerceivedMap;
-        }
-
         if (currentBestFoodPheromone != null
                 && currentBestPheromonePositionInPerceivedMap != null
                 && currentBestFoodPheromone.getMessage() == Message.FOOD) {
@@ -392,7 +375,7 @@ public class Worker extends Ant {
 
         // If the body is carrying food and we are on the queen's square, drop
         // the food
-        // If the body is hungry and there is food on the same square, eat it 
+        // If the body is hungry and there is food on the same square, eat it
         for (WorldObject wo : perceivedMap[currentPerception
                 .getPositionInPerceivedMap().x][currentPerception
                 .getPositionInPerceivedMap().y][0].getObjects()) {
@@ -455,7 +438,6 @@ public class Worker extends Ant {
         if (currentBestPheromone != null
                 && currentBestPheromonePositionInPerceivedMap != null) {
             movementPath = PathFinder.findPath(
-                    //TODO c'était ici que currentBestPheromoneblbla était null
                     currentPerception.getPositionInPerceivedMap(),
                     currentBestPheromonePositionInPerceivedMap, perceivedMap);
         }

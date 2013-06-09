@@ -1,7 +1,6 @@
 package fr.utbm.vi51.agent;
 
 import java.util.List;
-import java.util.Random;
 
 import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
@@ -23,19 +22,27 @@ import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.PathFinder;
 import fr.utbm.vi51.util.Point3D;
 
+/**
+ * @author Top-K
+ *
+ */
 enum WarriorBehaviour {
-    GO_HOME, PATROL, FIGHT,
+    GO_HOME, PATROL,
 }
 
 /**
  * @author Top-K
- * 
+ *
  */
 public class Warrior extends Ant {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -9113010531820084357L;
+
     private WarriorBehaviour currentBehaviour;
     private Point3D lastPosition;
     private Point3D relativeStartingPointPosition; // Remembers the position of
-    private static final int attackPoints = 1;
 
     public Warrior(Point3D position, int speed, Side side) {
         super(side.getWarriorTexture(), position, speed, side);
@@ -52,7 +59,7 @@ public class Warrior extends Ant {
     public Status live() {
         super.live();
         InsectBody body = this.getBody();
-        
+
         //If their is no body, the agent is waiting to die
         if (body == null) {
             return null;
@@ -91,8 +98,8 @@ public class Warrior extends Ant {
             }
             currentBehaviour = WarriorBehaviour.GO_HOME;
         }
-        
-        if(dropPheromoneIfNeeded()) {
+
+        if (dropPheromoneIfNeeded()) {
             return null;
         }
 
@@ -102,9 +109,6 @@ public class Warrior extends Ant {
                 break;
             case PATROL:
                 patrol();
-                break;
-            case FIGHT:
-                fight();
                 break;
             default:
                 break;
@@ -142,12 +146,12 @@ public class Warrior extends Ant {
     /**
      * Drops a pheromone if the closest pheromone with a strenght/maxStrength. >
      * 0.5 is at a euclidian distance > 2
-     * 
+     *
      * @return true if a pheromone will be dropped, false else.
      */
     private boolean dropPheromoneIfNeeded() {
         Perception currentPerception = this.getBody().getPerception();
-        
+
         // Variables for a pheromone validity
         final float acceptedOldPh = 0.5f;
         final int acceptedDistancePh = 2;
@@ -166,14 +170,18 @@ public class Warrior extends Ant {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
                 for (WorldObject wo : perceivedMap[i][j][0].getObjects()) {
                     if (currentBehaviour == WarriorBehaviour.PATROL
-                            && wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())) {
+                            && wo.getTexturePath().equals(
+                                    this.getBody().getSide().getQueenTexture())) {
                         targetPosition = new Point3D(wo.getPosition());
                     }
                     if (wo instanceof Pheromone) {
                         Pheromone p = (Pheromone) wo;
                         // Check validity of the pheromone : strength is
                         // sufficient and is of correct type
-                        if (p.getMessage() == Message.HOME && p.getSide().equals(this.getBody().getSide()) && p.getStrength() / Consts.STARTINGPHEROMONEVALUE > acceptedOldPh) {
+                        if (p.getMessage() == Message.HOME
+                                && p.getSide().equals(this.getBody().getSide())
+                                && p.getStrength()
+                                        / Consts.STARTINGPHEROMONEVALUE > acceptedOldPh) {
                             // If the pheromone is valid and close enough to the
                             // body's position, no need to create one
                             if (Point3D.euclidianDistance(p.getPosition(), this
@@ -211,7 +219,7 @@ public class Warrior extends Ant {
         return false;
 
     }
-    
+
     private void goHome() {
         Perception currentPerception = this.getBody().getPerception();
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
@@ -281,7 +289,6 @@ public class Warrior extends Ant {
         if (currentBestPheromone != null
                 && currentBestPheromonePositionInPerceivedMap != null) {
             movementPath = PathFinder.findPath(
-                    //TODO c'était ici que currentBestPheromoneblbla était null
                     currentPerception.getPositionInPerceivedMap(),
                     currentBestPheromonePositionInPerceivedMap, perceivedMap);
         }
@@ -302,39 +309,47 @@ public class Warrior extends Ant {
                     if (wo instanceof InsectBody) {
                         InsectBody ib = (InsectBody) wo;
                         if (!ib.getSide().equals(this.getBody().getSide())) {
-                            double distance = Point3D.euclidianDistance(this.getBody().getPosition(), ib.getPosition());
-                            if(distance < closestEnemyDistance) {
+                            double distance = Point3D.euclidianDistance(this
+                                    .getBody().getPosition(), ib.getPosition());
+                            if (distance < closestEnemyDistance) {
                                 closestEnemyBody = ib;
                                 closestEnemyDistance = distance;
-                                closestEnemyPositionInPerceivedMap = new Point3D(i,j,0);
+                                closestEnemyPositionInPerceivedMap = new Point3D(
+                                        i, j, 0);
                             }
                         }
                     }
                 }
             }
         }
-        if(positionInPerceivedMap != null && closestEnemyPositionInPerceivedMap != null && perceivedMap != null){
-            movementPath = PathFinder.findPath(positionInPerceivedMap,closestEnemyPositionInPerceivedMap, perceivedMap);
+        if (positionInPerceivedMap != null
+                && closestEnemyPositionInPerceivedMap != null
+                && perceivedMap != null) {
+            movementPath = PathFinder.findPath(positionInPerceivedMap,
+                    closestEnemyPositionInPerceivedMap, perceivedMap);
         }
-        
-        if(closestEnemyBody != null && movementPath != null) {
-            if(movementPath.size() == 0) {
-                this.getBody().setAction(new KillEnemy(this.getBody(),Direction.NONE));
+
+        if (closestEnemyBody != null && movementPath != null) {
+            if (movementPath.size() == 0) {
+                this.getBody().setAction(
+                        new KillEnemy(this.getBody(), Direction.NONE));
                 lastTime = this.getTimeManager().getCurrentDate().getTime();
                 return;
-            } else if(movementPath.size() == 1) {
-                this.getBody().setAction(new KillEnemy(this.getBody(),movementPath.getFirst()));
+            } else if (movementPath.size() == 1) {
+                this.getBody().setAction(
+                        new KillEnemy(this.getBody(), movementPath.getFirst()));
                 lastTime = this.getTimeManager().getCurrentDate().getTime();
                 return;
             }
         }
-        
+
         if (relativeStartingPointPosition != null
                 && Point3D.euclidianDistance(new Point3D(0, 0, 0),
                         relativeStartingPointPosition) > 20) {
             currentBehaviour = WarriorBehaviour.GO_HOME;
         } else if (closestEnemyBody != null) {
-            movementPath = PathFinder.findPath(positionInPerceivedMap, closestEnemyPositionInPerceivedMap, perceivedMap);
+            movementPath = PathFinder.findPath(positionInPerceivedMap,
+                    closestEnemyPositionInPerceivedMap, perceivedMap);
         } else if (relativeStartingPointPosition != null
                 && Point3D.euclidianDistance(new Point3D(0, 0, 0),
                         relativeStartingPointPosition) > 10) {
@@ -345,73 +360,4 @@ public class Warrior extends Ant {
             lastTime = this.getTimeManager().getCurrentDate().getTime();
         }
     }
-
-    private void fight() {
-        Perception currentPerception = this.getBody().getPerception();
-        Square[][][] perceivedMap = currentPerception.getPerceivedMap();
-        Point3D positionInPerceivedMap = currentPerception
-                .getPositionInPerceivedMap();
-
-        //If on the same square as the enemy, then attack him
-
-        /*for (WorldObject wo : perceivedMap[positionInPerceivedMap.x][positionInPerceivedMap.y][0].getObjects()) {
-        	if (wo.getTexturePath().equals("img/Ants/warrior.png") && ((InsectBody) wo).getSide() != this.getBody().getSide()) {
-        		InsectBody enemy = ((InsectBody) wo);
-        		enemy.setHealthPoints(enemy.getHealthPoints() - this.attackPoints);
-        		//if the enemy has no HP then he dies
-        		if (enemy.getHealthPoints() <= 0) {
-        			this.getBody().setAction(new KillEnemy(this.getBody()));
-        			
-        		}
-        	}
-        }*/
-
-        /*for (int i = 0; i < perceivedMap.length; ++i) {
-            for (int j = 0; j < perceivedMap[0].length; ++j) {
-                List<WorldObject> objectsPerceived = perceivedMap[i][j][0]
-                        .getObjects();
-                synchronized (objectsPerceived) {
-                    for (WorldObject wo : objectsPerceived) {
-                        if (wo.getTexturePath().equals("img/Ants/warrior.png")
-                                && ((InsectBody) wo).getSide() != this
-                                        .getBody().getSide()) {
-                            //if the enemy is not on the same square then try to reach it
-                            if (Point3D.euclidianDistance(this.getBody()
-                                    .getPosition(), wo.getPosition()) != 0) {
-                                System.out.println("enemy side :"
-                                        + ((InsectBody) wo).getSide());
-                                System.out.println("side :"
-                                        + this.getBody().getSide());
-                                System.out.println("enemy pos : "
-                                        + wo.getPosition());
-                                System.out.println("pos : "
-                                        + this.getBody().getPosition());
-                                movementPath = PathFinder.findPath(
-                                        currentPerception
-                                                .getPositionInPerceivedMap(),
-                                        new Point3D(i, j, 0), perceivedMap);
-                                return;
-                            } else {
-                                //else fight the enemy
-                                System.out.println("FIGHT");
-                                InsectBody enemy = ((InsectBody) wo);
-                                enemy.setHealthPoints(enemy.getHealthPoints()
-                                        - this.attackPoints);
-                                System.out.println("HP :"
-                                        + enemy.getHealthPoints());
-                                if (enemy.getHealthPoints() <= 0) {
-                                    //enemy dies !
-                                    this.getBody().setAction(
-                                            new KillEnemy(this.getBody()));
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
-
-    }
-
 }

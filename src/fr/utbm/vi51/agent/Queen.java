@@ -18,6 +18,11 @@ import fr.utbm.vi51.util.Point3D;
  *
  */
 public class Queen extends Ant {
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6211112771194869755L;
+
     private Kernel k;
     public Queen(Point3D position, int speed, Side side, Kernel k) {
         super(side.getQueenTexture(), position, speed, side);
@@ -32,37 +37,37 @@ public class Queen extends Ant {
     @Override
     public Status live() {
         super.live();
-        if(this.getBody() == null || !this.getBody().isAlive())
+        if (this.getBody() == null || !this.getBody().isAlive()) {
             return null;
-        
+        }
+
         if (this.getTimeManager().getCurrentDate().getTime() - lastTime < Consts.ANTACTIONDELAY
                 && lastTime != 0) {
             return null;
         }
-        
-        if(this.getBody().isHungry() && this.getBody().getAction() == null) {
+
+        if (this.getBody().isHungry() && this.getBody().getAction() == null) {
             this.getBody().setAction(new EatFood(this.getBody()));
         }
-        
-        if(this.getBody().getAction() != null) {
-        	return null;
+
+        if (this.getBody().getAction() != null) {
+            return null;
         }
-        
+
         Point3D relativePos = this.getBody().getPerception().getPositionInPerceivedMap();
         Square sq = this.getBody().getPerception().getPerceivedMap()[relativePos.x][relativePos.y][relativePos.z];
         int foodAmount = 0;
-        for(WorldObject ob :sq.getObjects()){
-            if (ob instanceof Food){
+        for (WorldObject ob :sq.getObjects()) {
+            if (ob instanceof Food) {
                 foodAmount++;
             }
         }
         this.getBody().getSide().setFoodAmount(foodAmount);
-        if(foodAmount > 100){
+        if (foodAmount > 100) {
             Lay lay = new Lay(this.getBody().getSide(), this.getBody().getPosition(), this.k);
             this.getBody().setAction(lay);
         }
-        
-        
+
         lastTime = this.getTimeManager().getCurrentDate().getTime();
 
         return null;
