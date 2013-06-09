@@ -108,7 +108,7 @@ public class Side {
 	}
 
 	public Color getDominantColor() {
-		return dominantColor;
+		return this.dominantColor;
 	}
 
 	public void setDominantColor(Color dominantColor) {
@@ -118,13 +118,13 @@ public class Side {
 	@Override
 	public String toString() {
 		String str = new String();
-		if(isQueenAlive) {
-			str += "Workers:" + this.amountOfWorker + " ";
-			str += "Warriors:" + this.amountOfWarrior + " ";
-			str += "Food:" + this.foodAmount;			
+		if(this.isQueenAlive) {
+			str += "Workers:" + this.amountOfWorker + " "; //$NON-NLS-1$ //$NON-NLS-2$
+			str += "Warriors:" + this.amountOfWarrior + " "; //$NON-NLS-1$ //$NON-NLS-2$
+			str += "Food:" + this.foodAmount;			 //$NON-NLS-1$
 		}
 		else {
-			str += "DEFEATED";
+			str += "DEFEATED"; //$NON-NLS-1$
 		}
 		return str;
 	}
