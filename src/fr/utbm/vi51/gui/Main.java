@@ -18,7 +18,7 @@ import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
- * 
+ *
  */
 public final class Main {
 
@@ -37,11 +37,11 @@ public final class Main {
         k.launchLightAgent(env);
         // k.launchLightAgent(b);
         Side a = new Side(1, "img/Ants/worker1.png", "img/Ants/warrior1.png",
-                "img/Ants/queen1.png",Color.magenta);
+                "img/Ants/queen1.png", Color.magenta);
         Side b = new Side(2, "img/Ants/worker2.png", "img/Ants/warrior2.png",
-                "img/Ants/queen2.png",Color.cyan);
+                "img/Ants/queen2.png", Color.cyan);
         Side c = new Side(3, "img/Ants/worker3.png", "img/Ants/warrior3.png",
-                "img/Ants/queen3.png",Color.pink);
+                "img/Ants/queen3.png", Color.pink);
 
         Queen q1 = new Queen(new Point3D(5, 35, 0), 1, a, k);
         Queen q2 = new Queen(new Point3D(35, 35, 0), 1, b, k);
@@ -92,12 +92,12 @@ public final class Main {
             new Food(new Point3D(21, 19, 0));
             new Food(new Point3D(21, 21, 0));
         }
-        
+
         //Food on sides
         for (int i = 0; i < 40; ++i) {
             new Food(new Point3D(12, 18, 0));
-            new Food(new Point3D(map.length-12, 18, 0));
-            new Food(new Point3D(20, map[0].length-8, 0));
+            new Food(new Point3D(map.length - 12, 18, 0));
+            new Food(new Point3D(20, map[0].length - 8, 0));
         }
     }
 
@@ -109,40 +109,44 @@ public final class Main {
         Square[][][] map = env.getMap();
 
         // Generation of top level full of grass
-        for(int k = 0; k < env.getMapDepth() ; k++) {
-	        for (int i = 0; i < map.length; i++) {
-	            for (int j = 0; j < map[0].length; j++) {
-	            	
-	                map[i][j][k] = (k == 0 ) ? new Square(LandType.GRASS) : new Square(LandType.SAND);
-	            }
-	        }
+        for (int k = 0; k < env.getMapDepth(); k++) {
+            for (int i = 0; i < map.length; i++) {
+                for (int j = 0; j < map[0].length; j++) {
+
+                    if (k == 0) {
+                        map[i][j][k] = new Square(LandType.GRASS);
+                    } else {
+                        map[i][j][k] = new Square(LandType.SAND);
+                    }
+                }
+            }
         }
-        
 
         // Some walls around the map at all levels
-        for(int level = 0; level < env.getMapDepth() ; level++) {
-        	 for (int i = 0; i < map.length; ++i) {
-                 map[i][0][level] = new Square(LandType.WALL);
-                 map[i][map[0].length - 1][level] = new Square(LandType.WALL);
-             }
-             for (int i = 0; i < map.length; ++i) {
-                 map[0][i][level] = new Square(LandType.WALL);
-                 map[map.length - 1][i][level] = new Square(LandType.WALL);
-             }
+        for (int level = 0; level < env.getMapDepth(); level++) {
+            for (int i = 0; i < map.length; ++i) {
+                map[i][0][level] = new Square(LandType.WALL);
+                map[i][map[0].length - 1][level] = new Square(LandType.WALL);
+            }
+            for (int i = 0; i < map.length; ++i) {
+                map[0][i][level] = new Square(LandType.WALL);
+                map[map.length - 1][i][level] = new Square(LandType.WALL);
+            }
 
-             for (int i = 0; i < 8; ++i) {
-                 for (int j = 0; j < 8 - i; ++j) {
-                     map[i][j][level] = new Square(LandType.WALL);
-                 }
-             }
+            for (int i = 0; i < 8; ++i) {
+                for (int j = 0; j < 8 - i; ++j) {
+                    map[i][j][level] = new Square(LandType.WALL);
+                }
+            }
 
-             for (int i = 0; i < 8; ++i) {
-                 for (int j = 0; j < 8 - i; ++j) {
-                     map[map.length - i - 1][j][level] = new Square(LandType.WALL);
-                 }
-             }    
+            for (int i = 0; i < 8; ++i) {
+                for (int j = 0; j < 8 - i; ++j) {
+                    map[map.length - i - 1][j][level] = new Square(
+                            LandType.WALL);
+                }
+            }
         }
-       
+
         for (int i = 8; i < 16; ++i) {
             for (int j = 30; j < 34; ++j) {
                 map[i][j][0] = new Square(LandType.WALL);
@@ -159,7 +163,7 @@ public final class Main {
 
         for (int i = 4; i < 10; ++i) {
             for (int j = 35; j > 31; --j) {
-                map[map.length - (i) - 1][j - i - 4][0] = new Square(
+                map[map.length - i - 1][j - i - 4][0] = new Square(
                         LandType.WALL);
                 map[map.length - (i + 8) - 1][j - i - 15][0] = new Square(
                         LandType.WALL);
@@ -179,48 +183,48 @@ public final class Main {
             map[22][j][0] = new Square(LandType.WATER);
             map[23][j][0] = new Square(LandType.WATER);
         }
-        
+
         map[20][20][0] = new Square(LandType.CAVE);
-        
+
         // Level 1 ( first underground )
-        
+
         // Underground river
-        for(int i = 6; i < 15; i++) {
-        	for (int j = 10; j < 18; ++j) {
+        for (int i = 6; i < 15; i++) {
+            for (int j = 10; j < 18; ++j) {
                 map[i][j][1] = new Square(LandType.WATER);
                 map[22][j][1] = new Square(LandType.WATER);
                 map[30][j][1] = new Square(LandType.WATER);
             }
-        	map[i+8][10][1] = new Square(LandType.WATER);
-        	map[i+24][10][1] = new Square(LandType.WATER);
-        	map[i+16][17][1] = new Square(LandType.WATER);
+            map[i + 8][10][1] = new Square(LandType.WATER);
+            map[i + 24][10][1] = new Square(LandType.WATER);
+            map[i + 16][17][1] = new Square(LandType.WATER);
         }
-        for(int i = 6; i < 15; i++) {
-        	for (int j = 21; j < 24; ++j) {
+        for (int i = 6; i < 15; i++) {
+            for (int j = 21; j < 24; ++j) {
                 map[i][j][1] = new Square(LandType.WATER);
             }
-        }        
-        for(int i = 6; i < 35; i++) {
-        	for (int j = 24; j < 39; ++j) {
-        		if( (i > 22 && i < 26) && (j > 27 && j < 31)) {
-        			continue;
-        		}
-    			map[i][j][1] = new Square(LandType.WATER);
+        }
+        for (int i = 6; i < 35; i++) {
+            for (int j = 24; j < 39; ++j) {
+                if ((i > 22 && i < 26) && (j > 27 && j < 31)) {
+                    continue;
+                }
+                map[i][j][1] = new Square(LandType.WATER);
             }
         }
-        
-        for(int i = 1; i < 35; i++) {
-        	for(int j = 18; j <= 20; j++) {
+
+        for (int i = 1; i < 35; i++) {
+            for (int j = 18; j <= 20; j++) {
                 map[i][j][1] = new Square(LandType.CLIFF);
-        	}
+            }
         }
         // Waterfall between the 2 lakes
-        for(int i = 8; i < 13; i++) {
-        	for (int j = 18; j <= 20; ++j) {
+        for (int i = 8; i < 13; i++) {
+            for (int j = 18; j <= 20; ++j) {
                 map[i][j][1] = new Square(LandType.WATERFALL);
             }
         }
-        
+
         map[20][20][1] = new Square(LandType.STAIR);
         return true;
     }
