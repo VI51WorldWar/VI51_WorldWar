@@ -230,6 +230,8 @@ public class GameView extends JPanel {
 
         this.currentTileWidth = this.getWidth() / this.view.width;
         this.currentTileHeight = this.getHeight() / this.view.height;
+        this.currentTileWidth = Math.min(currentTileWidth, currentTileHeight);
+        this.currentTileHeight = Math.min(currentTileWidth, currentTileHeight);
 
         Environment env = Environment.getInstance();
         ImageManager imgMgr = ImageManager.getInstance();
