@@ -18,34 +18,32 @@ public class Move extends Action {
     @Override
     protected void doAction() {
         //System.out.println("Moving to direction : " + direction);
-    	Environment env = Environment.getInstance();
+        Environment env = Environment.getInstance();
         Square[][][] map = env.getMap();
         //System.out.println("Moving to direction : " + direction);
         Point3D pos = body.getPosition();
         Point3D newPos = new Point3D(pos.x + direction.dx,
                 pos.y + direction.dy, pos.z);
-        
+
         // Cas d'une cave
-        if(map[newPos.x][newPos.y][newPos.z].getLandType() == LandType.CAVE) {
-        	if(pos.z == env.getMapDepth() - 1) {
-        		System.out.println("Erreur de placement d'une cave");
-        	}
-        	else {
-        		// On descend d'un niveau
-        		newPos.z += 1;
-        		newPos.z = Math.min(newPos.z, env.getMapDepth() -1 );
-        	}
+        if (map[newPos.x][newPos.y][newPos.z].getLandType() == LandType.CAVE) {
+            if (pos.z == env.getMapDepth() - 1) {
+                System.out.println("Erreur de placement d'une cave");
+            } else {
+                // On descend d'un niveau
+                newPos.z += 1;
+                newPos.z = Math.min(newPos.z, env.getMapDepth() - 1);
+            }
         }
         // Cas d'une remontée
-        else if(map[newPos.x][newPos.y][newPos.z].getLandType() == LandType.STAIR) {
-        	if(pos.z == 0) {
-        		System.out.println("Erreur de placement d'une remontée");
-        	}
-        	else {
-        		// On remonte d'un niveau
-        		newPos.z -= 1;
-        		newPos.z = Math.max(newPos.z, 0);
-        	}
+        else if (map[newPos.x][newPos.y][newPos.z].getLandType() == LandType.STAIR) {
+            if (pos.z == 0) {
+                System.out.println("Erreur de placement d'une remontée");
+            } else {
+                // On remonte d'un niveau
+                newPos.z -= 1;
+                newPos.z = Math.max(newPos.z, 0);
+            }
         }
         //System.out.println(newPos);
         map[pos.x][pos.y][pos.z].getObjects().remove(body);

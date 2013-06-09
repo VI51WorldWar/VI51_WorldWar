@@ -8,7 +8,7 @@ import fr.utbm.vi51.util.Point3D;
  */
 public class DropFood extends Action {
     private InsectBody body;
-    
+
     public DropFood(InsectBody body) {
         super();
         this.body = body;

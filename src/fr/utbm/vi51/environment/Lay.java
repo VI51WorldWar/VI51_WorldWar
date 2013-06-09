@@ -7,13 +7,24 @@ import org.janusproject.kernel.Kernel;
 import fr.utbm.vi51.agent.Worker;
 import fr.utbm.vi51.util.Point3D;
 
-public class Lay extends Action{
+/**
+ * @author Top-K
+ *
+ */
+public class Lay extends Action {
     private Side side;
     private Point3D pos;
     private Kernel k;
+
+    public Lay(Side side, Point3D pos, Kernel k) {
+        this.side = side;
+        this.pos = pos;
+        this.k = k;
+    }
+
     @Override
     protected void doAction() {
-        Worker w = new Worker(new Point3D(this.pos),10, this.side);
+        Worker w = new Worker(new Point3D(this.pos), 10, this.side);
         k.launchLightAgent(w);
         List<WorldObject> objects = Environment.getInstance().getMap()[pos.x][pos.y][pos.z]
                 .getObjects();
@@ -23,22 +34,16 @@ public class Lay extends Action{
             if (wo instanceof Food) {
                 toRemove[i] = wo;
                 i++;
-                if(i == 10){
+                if (i == 10) {
                     break;
                 }
             }
         }
-        for(int j = 0; j<i;j++){
+        for (int j = 0; j < i; j++) {
             objects.remove(toRemove[j]);
             Environment.getInstance().getObjects().remove(toRemove[j]);
         }
-        this.side.setFoodAmount(this.side.getFoodAmount()-10);
-    }
-
-    public Lay(Side side, Point3D pos, Kernel k) {
-        this.side = side;
-        this.pos = pos;
-        this.k = k;
+        this.side.setFoodAmount(this.side.getFoodAmount() - 10);
     }
 
     @Override

@@ -12,6 +12,7 @@ public abstract class WorldObject {
 
     private Point3D position;
     private String texturePath;
+    @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(MobileObject.class.getName());
 
     public WorldObject(Point3D position) {

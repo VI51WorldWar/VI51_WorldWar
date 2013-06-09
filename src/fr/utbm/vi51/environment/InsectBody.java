@@ -3,19 +3,21 @@ package fr.utbm.vi51.environment;
 import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.util.Point3D;
 
+/**
+ * @author Top-K
+ *
+ */
 public class InsectBody extends Body {
 
     private boolean isAlive;
     private int hunger;
     private Side side;
-    private int healthPoints;
     private WorldObject carriedObject;
 
     public InsectBody(String texture, Point3D position, int speed, Side side) {
         super(texture, position, speed);
         this.side = side;
         this.hunger = 0;
-        this.healthPoints = 1;
         this.isAlive = true;
     }
 
@@ -46,15 +48,6 @@ public class InsectBody extends Body {
     public boolean isHungry() {
         return this.hunger > Consts.MAXHUNGER * 0.8;
     }
-
-	public int getHealthPoints() {
-		return this.healthPoints;
-	}
-
-	public void setHealthPoints(int healthPoints) {
-		this.healthPoints = healthPoints;
-	}
-	
 
     public WorldObject getCarriedObject() {
         return this.carriedObject;
