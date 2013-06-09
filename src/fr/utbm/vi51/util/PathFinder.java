@@ -128,7 +128,6 @@ public final class PathFinder {
             closedList.add(current);
         }
         return null;
-
     }
 
     /**

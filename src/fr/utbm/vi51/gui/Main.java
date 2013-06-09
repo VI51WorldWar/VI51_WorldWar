@@ -30,12 +30,11 @@ public final class Main {
         generateMap1();
         Environment env = Environment.getInstance();
         Square[][][] map = Environment.getInstance().getMap();
-        // SenderAgent b = new SenderAgent();
-        //KernelTimeManager tm = new VMKernelTimeManager();
         AgentScheduler as = new AgentScheduler();
         Kernel k = Kernels.create(as);
         k.launchLightAgent(env);
-        // k.launchLightAgent(b);
+        
+        
         Side a = new Side(1, "img/Ants/worker1.png", "img/Ants/warrior1.png",
                 "img/Ants/queen1.png",Color.magenta);
         Side b = new Side(2, "img/Ants/worker2.png", "img/Ants/warrior2.png",

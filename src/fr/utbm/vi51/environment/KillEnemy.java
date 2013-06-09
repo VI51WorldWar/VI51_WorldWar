@@ -1,6 +1,5 @@
 package fr.utbm.vi51.environment;
 
-import java.util.List;
 import java.util.Random;
 
 import fr.utbm.vi51.util.Point3D;
@@ -18,15 +17,14 @@ public class KillEnemy extends Action {
 
     @Override
 	protected void doAction() {
-        Point3D pos = body.getPosition();
-        for (WorldObject wo : Environment.getInstance().getMap()[pos.x+direction.dx][pos.y+direction.dy][pos.z].getObjects()) {
+        Point3D pos = this.body.getPosition();
+        for (WorldObject wo : Environment.getInstance().getMap()[pos.x+this.direction.dx][pos.y+this.direction.dy][pos.z].getObjects()) {
             if (wo instanceof InsectBody) {
                 InsectBody ib = (InsectBody) wo;
-                if(!ib.getSide().equals(body.getSide())) {
-                    ib.die();
-                    for(int i=0;i<10;++i) {
-                        new Food(ib.getPosition());
-                    }
+                // If the sides are different
+                if(!ib.getSide().equals(this.body.getSide())) {
+                	// Hit the enemy
+                    ib.hit(this.body.generateHitAmount());
                     return;
                 }
             }
@@ -36,11 +34,11 @@ public class KillEnemy extends Action {
 	@Override
 	protected boolean testAction() {
         if(new Random().nextFloat() <= 0.3){
-    		Point3D pos = body.getPosition();
-    		for (WorldObject wo : Environment.getInstance().getMap()[pos.x+direction.dx][pos.y+direction.dy][pos.z].getObjects()) {
+    		Point3D pos = this.body.getPosition();
+    		for (WorldObject wo : Environment.getInstance().getMap()[pos.x+this.direction.dx][pos.y+this.direction.dy][pos.z].getObjects()) {
     			if (wo instanceof InsectBody) {
     			    InsectBody ib = (InsectBody) wo;
-    			    if(!ib.getSide().equals(body.getSide())) {
+    			    if(!ib.getSide().equals(this.body.getSide())) {
     			        return true;
     			    }
     			}

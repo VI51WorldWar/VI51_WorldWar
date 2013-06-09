@@ -4,6 +4,10 @@ import java.awt.Color;
 
 public class Side {
     private int 	foodAmount = 0;
+    private int		amountOfWarrior = 0;
+    private int 	amountOfWorker = 0;
+    private boolean isQueenAlive = false;
+    
     private int 	id;
     private String 	workerTexture;
     private String 	warriorTexture;
@@ -17,6 +21,30 @@ public class Side {
         this.warriorTexture = warrior;
         this.queenTexture = queen;
         this.dominantColor = dominantColor;
+    }
+    
+    public void addMember(InsectBodyType type) {
+    	switch(type){
+		case QUEEN:		this.isQueenAlive = true;	break;
+		case WARRIOR: 	this.amountOfWarrior++;		break;
+		case WORKER:	this.amountOfWorker++;		break;
+    	}
+    }
+    
+    public void removeMember(InsectBodyType type) {
+    	switch(type){
+		case QUEEN:		this.isQueenAlive = false;	break;
+		case WARRIOR: 	this.amountOfWarrior--;		break;
+		case WORKER:	this.amountOfWorker--;		break;
+    	}
+    }
+    
+    public int getAmountOfWarrior() {
+    	return this.amountOfWarrior;
+    }
+    
+    public int getAmountOfWorker() {
+    	return this.amountOfWorker;
     }
 
     public String getWorkerTexture() {
@@ -87,5 +115,18 @@ public class Side {
 		this.dominantColor = dominantColor;
 	}
     
+	@Override
+	public String toString() {
+		String str = new String();
+		if(isQueenAlive) {
+			str += "Workers:" + this.amountOfWorker + " ";
+			str += "Warriors:" + this.amountOfWarrior + " ";
+			str += "Food:" + this.foodAmount;			
+		}
+		else {
+			str += "DEFEATED";
+		}
+		return str;
+	}
     
 }

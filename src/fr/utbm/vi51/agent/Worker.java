@@ -1,9 +1,6 @@
 package fr.utbm.vi51.agent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.logging.Logger;
 
 import org.janusproject.kernel.status.Status;
@@ -24,7 +21,6 @@ import fr.utbm.vi51.environment.Side;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.TakeFood;
 import fr.utbm.vi51.environment.WorldObject;
-import fr.utbm.vi51.util.CustomRandom;
 import fr.utbm.vi51.util.PathFinder;
 import fr.utbm.vi51.util.Point3D;
 
@@ -41,7 +37,11 @@ enum WorkerBehaviour {
  * 
  */
 public class Worker extends Ant {
-    private WorkerBehaviour currentBehaviour;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6981140970183171037L;
+	private WorkerBehaviour currentBehaviour;
     private Point3D lastPosition;
     private Point3D relativeStartingPointPosition; // Remembers the position of
                                                    // the starting point (where
@@ -51,8 +51,8 @@ public class Worker extends Ant {
 
     public Worker(Point3D position, int speed, Side side) {
         super(side.getWorkerTexture(), position, speed, side);
-        currentBehaviour = WorkerBehaviour.GO_HOME;
-        lastPosition = new Point3D(position);
+        this.currentBehaviour = WorkerBehaviour.GO_HOME;
+        this.lastPosition = new Point3D(position);
     }
 
     @Override
@@ -63,6 +63,12 @@ public class Worker extends Ant {
     @Override
     public Status live() {
         super.live();
+        // Worker will only act every ANTACTIONDELAY milliseconds
+        if (this.getTimeManager().getCurrentDate().getTime() - this.lastTime < Consts.ANTACTIONDELAY
+                && this.lastTime != 0) {
+            return null;
+        }
+        
         InsectBody body = this.getBody();
 
         //If their is no body, the agent is waiting to die
@@ -75,19 +81,13 @@ public class Worker extends Ant {
             return null;
         }
 
-        // Worker will only act every ANTACTIONDELAY milliseconds
-        if (this.getTimeManager().getCurrentDate().getTime() - lastTime < Consts.ANTACTIONDELAY
-                && lastTime != 0) {
-            return null;
+        if (this.relativeStartingPointPosition != null) {
+            this.relativeStartingPointPosition.x -= body.getPosition().x
+                    - this.lastPosition.x;
+            this.relativeStartingPointPosition.y -= body.getPosition().y
+                    - this.lastPosition.y;
         }
-
-        if (relativeStartingPointPosition != null) {
-            relativeStartingPointPosition.x -= body.getPosition().x
-                    - lastPosition.x;
-            relativeStartingPointPosition.y -= body.getPosition().y
-                    - lastPosition.y;
-        }
-        lastPosition = new Point3D(body.getPosition());
+        this.lastPosition = new Point3D(body.getPosition());
 
         Perception currentPerception = this.getBody().getPerception();
 
@@ -95,9 +95,9 @@ public class Worker extends Ant {
             return null;
         }
 
-        if (movementPath != null && !movementPath.isEmpty()) {
-            lastTime = this.getTimeManager().getCurrentDate().getTime();
-            Move m = new Move(body, movementPath.removeFirst());
+        if (this.movementPath != null && !this.movementPath.isEmpty()) {
+            this.lastTime = this.getTimeManager().getCurrentDate().getTime();
+            Move m = new Move(body, this.movementPath.removeFirst());
             body.setAction(m);
             return null;
         }
@@ -107,10 +107,10 @@ public class Worker extends Ant {
                 body.setAction(new EatFood(body));
                 return null;
             }
-            currentBehaviour = WorkerBehaviour.GO_HOME;
+            this.currentBehaviour = WorkerBehaviour.GO_HOME;
         }
 
-        switch (currentBehaviour) {
+        switch (this.currentBehaviour) {
             case GO_HOME:
                 goHome();
                 break;
@@ -126,7 +126,7 @@ public class Worker extends Ant {
          * path is empty, the worker doesn't know what to do, so move randomly .
          */
         if (body.getAction() == null
-                && (movementPath == null || movementPath.isEmpty())) {
+                && (this.movementPath == null || this.movementPath.isEmpty())) {
             Square[][][] perceivedMap = currentPerception.getPerceivedMap();
             // Find a crossable square
             int x;
@@ -135,7 +135,7 @@ public class Worker extends Ant {
                 x = (int) Math.floor(Math.random() * perceivedMap.length);
                 y = (int) Math.floor(Math.random() * perceivedMap[0].length);
             } while (!perceivedMap[x][y][0].getLandType().isCrossable());
-            movementPath = PathFinder.findPath(currentPerception
+            this.movementPath = PathFinder.findPath(currentPerception
                     .getPositionInPerceivedMap(), new Point3D(x, y, 0),
                     perceivedMap);
         }
@@ -158,7 +158,7 @@ public class Worker extends Ant {
 
         // If we are looking for home and the body is not carrying food, no need
         // to create pheromone
-        if (currentBehaviour == WorkerBehaviour.GO_HOME
+        if (this.currentBehaviour == WorkerBehaviour.GO_HOME
                 && this.getBody().getCarriedObject() == null) {
             return false;
         }
@@ -170,9 +170,9 @@ public class Worker extends Ant {
         for (int i = 0; i < perceivedMap.length; ++i) {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
                 for (WorldObject wo : perceivedMap[i][j][0].getObjects()) {
-                    if (currentBehaviour == WorkerBehaviour.GO_HOME
+                    if (this.currentBehaviour == WorkerBehaviour.GO_HOME
                             && wo instanceof Food
-                            || currentBehaviour == WorkerBehaviour.SEARCH_FOOD
+                            || this.currentBehaviour == WorkerBehaviour.SEARCH_FOOD
                             && wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())
                             && ((InsectBody) wo).getSide().equals(
                                     this.getBody().getSide())) {
@@ -183,8 +183,8 @@ public class Worker extends Ant {
                         // Check validity of the pheromone : strength is
                         // sufficient and is of correct type
                         if (p.getStrength() / Consts.STARTINGPHEROMONEVALUE > acceptedOldPh
-                                && ((currentBehaviour == WorkerBehaviour.GO_HOME && p
-                                        .getMessage() == Message.FOOD) || (currentBehaviour == WorkerBehaviour.SEARCH_FOOD && p
+                                && ((this.currentBehaviour == WorkerBehaviour.GO_HOME && p
+                                        .getMessage() == Message.FOOD) || (this.currentBehaviour == WorkerBehaviour.SEARCH_FOOD && p
                                         .getMessage() == Message.HOME))) {
                             // If the pheromone is valid and close enough to the
                             // body's position, no need to create one
@@ -200,7 +200,7 @@ public class Worker extends Ant {
 
         // If no close and valid pheromone has been found, create one
         Message m;
-        switch (currentBehaviour) {
+        switch (this.currentBehaviour) {
             case GO_HOME:
                 m = Message.FOOD;
                 break;
@@ -221,10 +221,10 @@ public class Worker extends Ant {
                     (int) Consts.STARTINGPHEROMONEVALUE, 
                     this.getBody().getSide());
             return true;
-        } else if (relativeStartingPointPosition != null) {
+        } else if (this.relativeStartingPointPosition != null) {
             new Pheromone(this.getBody().getPosition(), m,
                     Direction.toDirection(new Point3D(0, 0, 0),
-                            relativeStartingPointPosition),
+                            this.relativeStartingPointPosition),
                     (int) Consts.STARTINGPHEROMONEVALUE, this.getBody()
                             .getSide());
             return true;
@@ -244,7 +244,7 @@ public class Worker extends Ant {
 
         // If the body is already carrying an object, go home
         if (this.getBody().getCarriedObject() != null) {
-            currentBehaviour = WorkerBehaviour.GO_HOME;
+            this.currentBehaviour = WorkerBehaviour.GO_HOME;
             goHome();
             return;
         }
@@ -265,8 +265,8 @@ public class Worker extends Ant {
         }
         if (foodOnSameSquare) {
             this.getBody().setAction(new TakeFood(this.getBody()));
-            currentBehaviour = WorkerBehaviour.GO_HOME;
-            relativeStartingPointPosition = new Point3D(0, 0, 0);
+            this.currentBehaviour = WorkerBehaviour.GO_HOME;
+            this.relativeStartingPointPosition = new Point3D(0, 0, 0);
             return;
         }
         Point3D currentBestFoodPheromonePositionInPerceivedMap = null;
@@ -306,12 +306,11 @@ public class Worker extends Ant {
                                 //currentBestPheromonePositionInPerceivedMap = new Point3D(
                                         i, j, 0);
                             }*/
-                        } else {
                         }
                     }
                 }
                 if (foodFound != null) {
-                    movementPath = PathFinder.findPath(
+                    this.movementPath = PathFinder.findPath(
                             currentPerception.getPositionInPerceivedMap(),
                             new Point3D(i, j, 0), perceivedMap);
                     return;
@@ -327,7 +326,7 @@ public class Worker extends Ant {
         if (currentBestFoodPheromone != null
                 && currentBestPheromonePositionInPerceivedMap != null
                 && currentBestFoodPheromone.getMessage() == Message.FOOD) {
-            movementPath = PathFinder.findPath(
+            this.movementPath = PathFinder.findPath(
                     currentPerception.getPositionInPerceivedMap(),
                     currentBestPheromonePositionInPerceivedMap, perceivedMap);
         } else if (currentBestFoodPheromone != null
@@ -375,7 +374,7 @@ public class Worker extends Ant {
                     .getPositionInPerceivedMap(), new Point3D(x, y, 0),
                     perceivedMap);*/
             if (currentBestPheromonePositionInPerceivedMap != null) {
-                movementPath = PathFinder.findPath(
+                this.movementPath = PathFinder.findPath(
                         currentPerception.getPositionInPerceivedMap(),
                         currentBestPheromonePositionInPerceivedMap,
                         perceivedMap);
@@ -407,8 +406,8 @@ public class Worker extends Ant {
                 if (this.getBody().getCarriedObject() != null) {
                     this.getBody().setAction(new DropFood(this.getBody()));
                 }
-                currentBehaviour = WorkerBehaviour.SEARCH_FOOD;
-                relativeStartingPointPosition = new Point3D(0, 0, 0);
+                this.currentBehaviour = WorkerBehaviour.SEARCH_FOOD;
+                this.relativeStartingPointPosition = new Point3D(0, 0, 0);
                 return;
             }
         }
@@ -422,7 +421,7 @@ public class Worker extends Ant {
                         if (wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())
                                 && ((InsectBody) wo).getSide().equals(
                                         this.getBody().getSide())) {
-                            movementPath = PathFinder.findPath(
+                            this.movementPath = PathFinder.findPath(
                                     currentPerception
                                             .getPositionInPerceivedMap(),
                                     new Point3D(i, j, 0), perceivedMap);
@@ -442,7 +441,7 @@ public class Worker extends Ant {
                             }
                         } else if (this.getBody().isHungry()
                                 && wo instanceof Food) {
-                            movementPath = PathFinder.findPath(
+                            this.movementPath = PathFinder.findPath(
                                     currentPerception
                                             .getPositionInPerceivedMap(),
                                     new Point3D(i, j, 0), perceivedMap);
@@ -454,7 +453,7 @@ public class Worker extends Ant {
         }
         if (currentBestPheromone != null
                 && currentBestPheromonePositionInPerceivedMap != null) {
-            movementPath = PathFinder.findPath(
+            this.movementPath = PathFinder.findPath(
                     //TODO c'était ici que currentBestPheromoneblbla était null
                     currentPerception.getPositionInPerceivedMap(),
                     currentBestPheromonePositionInPerceivedMap, perceivedMap);

@@ -1,14 +1,12 @@
 package fr.utbm.vi51.agent;
 
 import java.util.List;
-import java.util.Random;
 
 import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
 
 import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.Direction;
-import fr.utbm.vi51.environment.DropFood;
 import fr.utbm.vi51.environment.EatFood;
 import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.InsectBody;
@@ -32,27 +30,47 @@ enum WarriorBehaviour {
  * 
  */
 public class Warrior extends Ant {
-    private WarriorBehaviour currentBehaviour;
-    private Point3D lastPosition;
-    private Point3D relativeStartingPointPosition; // Remembers the position of
-    private static final int attackPoints = 1;
-
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6837234120747826328L;
+    // Variables for a pheromone validity
+    private final float acceptedOldPh = 0.5f;
+    private final int acceptedDistancePh = 2;
+    
+    
+	private WarriorBehaviour 	currentBehaviour;
+    private Point3D 			lastPosition;
+    private Point3D 			relativeStartingPointPosition;
+//    private static final int attackPoints = 1;
+    
+    /**
+     * Constructor for the warrior Agent
+     * @param position
+     * @param speed
+     * @param side
+     */
     public Warrior(Point3D position, int speed, Side side) {
         super(side.getWarriorTexture(), position, speed, side);
-        currentBehaviour = WarriorBehaviour.GO_HOME;
+        this.currentBehaviour = WarriorBehaviour.GO_HOME;
     }
 
     @Override
     public Status activate(Object... params) {
-        lastTime = this.getTimeManager().getCurrentDate().getTime();
+        this.lastTime = this.getTimeManager().getCurrentDate().getTime();
         return StatusFactory.ok(this);
     }
 
     @Override
     public Status live() {
         super.live();
-        InsectBody body = this.getBody();
+        // Insects will only act every ANTACTIONDELAY milliseconds
+        if (	this.getTimeManager().getCurrentDate().getTime() - this.lastTime < Consts.ANTACTIONDELAY
+                && this.lastTime != 0) {
+            return null;
+        }
         
+        InsectBody body = this.getBody();
         //If their is no body, the agent is waiting to die
         if (body == null) {
             return null;
@@ -63,81 +81,69 @@ public class Warrior extends Ant {
             return null;
         }
 
-        // Worker will only act every ANTACTIONDELAY milliseconds
-        if (this.getTimeManager().getCurrentDate().getTime() - lastTime < Consts.ANTACTIONDELAY
-                && lastTime != 0) {
-            return null;
-        }
+        // Update the relative and current position
+        updatePositions(body);
 
-        if (relativeStartingPointPosition != null) {
-            relativeStartingPointPosition.x -= body.getPosition().x
-                    - lastPosition.x;
-            relativeStartingPointPosition.y -= body.getPosition().y
-                    - lastPosition.y;
-        }
-        lastPosition = new Point3D(body.getPosition());
-
-        Perception currentPerception = this.getBody().getPerception();
-
-        /*if (dropPheromoneIfNeeded()) {
-            return null;
-        }*/
-
-        if (body.isHungry()) {
-            if (body.getCarriedObject() instanceof Food) {
-                body.setAction(new EatFood(body));
-                lastTime = this.getTimeManager().getCurrentDate().getTime();
-                return null;
-            }
-            currentBehaviour = WarriorBehaviour.GO_HOME;
+        
+        if(eatIfNeed(body)) {
+        	return null;
         }
         
         if(dropPheromoneIfNeeded()) {
             return null;
         }
 
-        switch (currentBehaviour) {
-            case GO_HOME:
-                goHome();
-                break;
-            case PATROL:
-                patrol();
-                break;
-            case FIGHT:
-                fight();
-                break;
-            default:
-                break;
+        switch (this.currentBehaviour) {
+            case GO_HOME:	goHome();					break;
+            case PATROL:	patrol();					break;
+            case FIGHT:		fight();					break;
+            default:		generateWanderMovement();	break;
         }
-
-        if (movementPath != null && !movementPath.isEmpty()) {
-            lastTime = this.getTimeManager().getCurrentDate().getTime();
-            Move m = new Move(body, movementPath.removeFirst());
-            body.setAction(m);
-            return null;
-        }
-
-        /*
-         * If after behavior functions, no action has been defined and movement
-         * path is empty, the worker doesn't know what to do, so move randomly .
-         */
-        if (body.getAction() == null
-                && (movementPath == null || movementPath.isEmpty())) {
-            Square[][][] perceivedMap = currentPerception.getPerceivedMap();
-            // Find a crossable square
-            int x;
-            int y;
-            do {
-                x = (int) Math.floor(Math.random() * perceivedMap.length);
-                y = (int) Math.floor(Math.random() * perceivedMap[0].length);
-            } while (!perceivedMap[x][y][0].getLandType().isCrossable());
-            movementPath = PathFinder.findPath(currentPerception
-                    .getPositionInPerceivedMap(), new Point3D(x, y, 0),
-                    perceivedMap);
-        }
+        
+        doNextMovement(body);
+        // Success
         return null;
-
     }
+
+    /**
+     * Function doNextMovement
+     * Transform the next movement in path into the move action
+     * !! WARNING !! The movement path MUST be filled when you call this function
+     * @param body
+     */
+	private void doNextMovement(InsectBody body) {
+		// If an action is already planed
+		if(this.getBody().getAction() != null) {
+			// Do nothing
+			return;
+		}
+		if(this.movementPath == null) {
+			System.out.println("Error in warrior algorithm 1." + this.currentBehaviour.toString()); //$NON-NLS-1$
+			return;
+		}
+		if(this.movementPath.isEmpty()) {
+			System.out.println("Error in warrior algorithm 2." + this.currentBehaviour.toString()); //$NON-NLS-1$
+			return;
+		}
+		// Do next movement in the pathfinding list
+		this.lastTime = this.getTimeManager().getCurrentDate().getTime();
+        Move m = new Move(body, this.movementPath.removeFirst());
+        body.setAction(m);
+	}
+
+	/**
+	 * Function updatePositions
+	 * Update the relative position of the starting point
+	 * and the current position of the body
+	 * @param body
+	 */
+	private void updatePositions(InsectBody body) {
+		if (this.relativeStartingPointPosition != null) {
+            this.relativeStartingPointPosition.x -= body.getPosition().x - this.lastPosition.x;
+            this.relativeStartingPointPosition.y -= body.getPosition().y - this.lastPosition.y;
+        }
+        this.lastPosition = new Point3D(body.getPosition());
+	}
 
     /**
      * Drops a pheromone if the closest pheromone with a strenght/maxStrength. >
@@ -146,38 +152,32 @@ public class Warrior extends Ant {
      * @return true if a pheromone will be dropped, false else.
      */
     private boolean dropPheromoneIfNeeded() {
-        Perception currentPerception = this.getBody().getPerception();
-        
-        // Variables for a pheromone validity
-        final float acceptedOldPh = 0.5f;
-        final int acceptedDistancePh = 2;
-
-        // If we are looking for home and the body is not carrying food, no need
-        // to create pheromone
-        if (currentBehaviour == WarriorBehaviour.GO_HOME) {
+        // If we are looking for home no need to create pheromone
+        if (this.currentBehaviour == WarriorBehaviour.GO_HOME) {
             return false;
         }
 
-        Square[][][] perceivedMap = currentPerception.getPerceivedMap();
+        Square[][][] perceivedMap = this.getBody().getPerception().getPerceivedMap();
         // Represents the targets position, the nature of the target depends on
         // the current behaviour (food for search food...)
         Point3D targetPosition = null;
         for (int i = 0; i < perceivedMap.length; ++i) {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
                 for (WorldObject wo : perceivedMap[i][j][0].getObjects()) {
-                    if (currentBehaviour == WarriorBehaviour.PATROL
+                    if (	this.currentBehaviour == WarriorBehaviour.PATROL
                             && wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())) {
                         targetPosition = new Point3D(wo.getPosition());
                     }
                     if (wo instanceof Pheromone) {
                         Pheromone p = (Pheromone) wo;
-                        // Check validity of the pheromone : strength is
-                        // sufficient and is of correct type
-                        if (p.getMessage() == Message.HOME && p.getSide().equals(this.getBody().getSide()) && p.getStrength() / Consts.STARTINGPHEROMONEVALUE > acceptedOldPh) {
+                        // Check validity of the pheromone : 
+                        // strength is sufficient and is of correct type
+                        if (p.getMessage() == Message.HOME 
+                        	&& p.getSide().equals(this.getBody().getSide()) 
+                        	&& p.getStrength() / Consts.STARTINGPHEROMONEVALUE > this.acceptedOldPh) {
                             // If the pheromone is valid and close enough to the
                             // body's position, no need to create one
-                            if (Point3D.euclidianDistance(p.getPosition(), this
-                                    .getBody().getPosition()) <= acceptedDistancePh) {
+                            if (Point3D.euclidianDistance(p.getPosition(),this.getBody().getPosition()) <= this.acceptedDistancePh) {
                                 return false;
                             }
                         }
@@ -185,27 +185,26 @@ public class Warrior extends Ant {
                 }
             }
         }
-
         // If no close and valid pheromone has been found, create one
-        Message m = Message.HOME;
-        assert m != null;
 
         // If the target position is visible, place a pheromone pointing to it.
         // Else, point the pheromone to the position of the insect a few moves
         // ago.
+        @SuppressWarnings("unused")
+		Pheromone p = null;
         if (targetPosition != null) {
-            new Pheromone(this.getBody().getPosition(), m,
-                    Direction.toDirection(this.getBody().getPosition(),
-                            targetPosition),
-                    (int) Consts.STARTINGPHEROMONEVALUE, this.getBody()
-                            .getSide());
+            p = new Pheromone(	this.getBody().getPosition(),
+				            				Message.HOME,
+				                    		Direction.toDirection(this.getBody().getPosition(),targetPosition),
+				                    		(int) Consts.STARTINGPHEROMONEVALUE, 
+				                    		this.getBody().getSide());
             return true;
-        } else if (relativeStartingPointPosition != null) {
-            new Pheromone(this.getBody().getPosition(), m,
-                    Direction.toDirection(new Point3D(0, 0, 0),
-                            relativeStartingPointPosition),
-                    (int) Consts.STARTINGPHEROMONEVALUE, this.getBody()
-                            .getSide());
+        } else if (this.relativeStartingPointPosition != null) {
+            p = new Pheromone(	this.getBody().getPosition(),
+	            				Message.HOME,
+	            				Direction.toDirection(new Point3D(0, 0, 0),this.relativeStartingPointPosition),
+	            				(int) Consts.STARTINGPHEROMONEVALUE,
+	            				this.getBody().getSide());
             return true;
         }
         return false;
@@ -217,88 +216,97 @@ public class Warrior extends Ant {
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
         Pheromone currentBestPheromone = null;
         Point3D currentBestPheromonePositionInPerceivedMap = null;
-
-        // If the body is carrying food and we are on the queen's square, drop
-        // the food
+        
+        boolean isOnQueenSquare = false;
         // If the body is hungry and there is food on the same square, eat it 
-        for (WorldObject wo : perceivedMap[currentPerception
-                .getPositionInPerceivedMap().x][currentPerception
-                .getPositionInPerceivedMap().y][0].getObjects()) {
+        for (WorldObject wo : perceivedMap	[currentPerception.getPositionInPerceivedMap().x]
+        									[currentPerception.getPositionInPerceivedMap().y]
+        									[0].getObjects()) {
+        	// Eat the food which is on square
             if (this.getBody().isHungry() && wo instanceof Food) {
                 this.getBody().setAction(new EatFood(this.getBody()));
+                // Back to patrol
+                this.currentBehaviour = WarriorBehaviour.PATROL;
                 return;
             }
-            if (!this.getBody().isHungry()
-                    && wo.getTexturePath().equals(
-                            this.getBody().getSide().getQueenTexture())) {
-                if (this.getBody().getCarriedObject() != null) {
-                    this.getBody().setAction(new DropFood(this.getBody()));
-                }
-                currentBehaviour = WarriorBehaviour.PATROL;
-                relativeStartingPointPosition = new Point3D(0, 0, 0);
-                return;
+            // A object on the current square is the queen
+            if(wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())) {
+            	isOnQueenSquare = true;
             }
+        }
+        
+        // If warrior is on queen's square
+        if(isOnQueenSquare) {
+        	// Go patrol
+        	this.currentBehaviour = WarriorBehaviour.PATROL;
+        	patrol();
+        	return;
         }
 
         // Look for the queen, for home pheromones, or if hungry for food
         for (int i = 0; i < perceivedMap.length; ++i) {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
-                List<WorldObject> objects = perceivedMap[i][j][0].getObjects();
-                synchronized (objects) {
-                    for (WorldObject wo : objects) {
-                        if (wo.getTexturePath().equals(
-                                this.getBody().getSide().getQueenTexture())) {
-                            movementPath = PathFinder.findPath(
-                                    currentPerception
-                                            .getPositionInPerceivedMap(),
-                                    new Point3D(i, j, 0), perceivedMap);
-                            return;
-                        } else if (wo instanceof Pheromone) {
-                            Pheromone p = (Pheromone) wo;
-                            if (p.getMessage() == Message.HOME
-                                    && p.getSide().equals(
-                                            this.getBody().getSide())) {
-                                currentBestPheromone = Pheromone
-                                        .closestToSubject(p,
-                                                currentBestPheromone);
-                                if (currentBestPheromone == p) {
-                                    currentBestPheromonePositionInPerceivedMap = new Point3D(
-                                            i, j, 0);
-                                }
+                for (WorldObject wo : perceivedMap[i][j][0].getObjects()) {
+                	// Queen is founded
+                    if (wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())) {
+                        // Try to reach it
+                    	this.movementPath = PathFinder.findPath(currentPerception.getPositionInPerceivedMap(),
+                                								new Point3D(i, j, 0), 
+                                								perceivedMap);
+                    	// If a good path has been generated
+                    	if(this.movementPath != null) {
+                    		if(!this.movementPath.isEmpty()) {
+                    			// Go out
+                    			return;
+                    		}
+                    	}
+                    	System.out.println("Error in goHome() for Warrior l.248 reached"); //$NON-NLS-1$
+                        return;
+                    // Search the best pheromone for home 
+                    } else if (wo instanceof Pheromone) {
+                        Pheromone p = (Pheromone) wo;
+                        if (	p.getMessage() == Message.HOME && 
+                        		p.getSide().equals(this.getBody().getSide())) {
+                            currentBestPheromone = Pheromone.closestToSubject(p,currentBestPheromone);
+                            if (currentBestPheromone == p) {
+                                currentBestPheromonePositionInPerceivedMap = new Point3D(i, j, 0);
                             }
-                        } else if (this.getBody().isHungry()
-                                && wo instanceof Food) {
-                            movementPath = PathFinder.findPath(
-                                    currentPerception
-                                            .getPositionInPerceivedMap(),
-                                    new Point3D(i, j, 0), perceivedMap);
-                            return;
                         }
+                    // If Hungry, search for food
+                    } else if (this.getBody().isHungry() && wo instanceof Food) {
+                        this.movementPath = PathFinder.findPath(currentPerception.getPositionInPerceivedMap(),
+                                								new Point3D(i, j, 0), 
+                                								perceivedMap);
+                        return;
                     }
-                }
+                }            
             }
         }
-        if (currentBestPheromone != null
-                && currentBestPheromonePositionInPerceivedMap != null) {
-            movementPath = PathFinder.findPath(
-                    //TODO c'était ici que currentBestPheromoneblbla était null
-                    currentPerception.getPositionInPerceivedMap(),
-                    currentBestPheromonePositionInPerceivedMap, perceivedMap);
+        
+        if (currentBestPheromone != null && currentBestPheromonePositionInPerceivedMap != null) {
+            this.movementPath = PathFinder.findPath(currentPerception.getPositionInPerceivedMap(),
+                    								currentBestPheromonePositionInPerceivedMap, 
+                    								perceivedMap);
+            return;
         }
+        // In case of no pheromone of no food or no queen, do wander
+        generateWanderMovement();
     }
 
     private void patrol() {
         Perception p = this.getBody().getPerception();
         Square[][][] perceivedMap = p.getPerceivedMap();
         Point3D positionInPerceivedMap = p.getPositionInPerceivedMap();
+        
         InsectBody closestEnemyBody = null;
         double closestEnemyDistance = Double.POSITIVE_INFINITY;
         Point3D closestEnemyPositionInPerceivedMap = null;
+        // Search the closest enemy in perception field
         for (int i = 0; i < perceivedMap.length; ++i) {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
-                List<WorldObject> objectsPerceived = perceivedMap[i][j][0]
-                        .getObjects();
+                List<WorldObject> objectsPerceived = perceivedMap[i][j][0].getObjects();
                 for (WorldObject wo : objectsPerceived) {
+                	//
                     if (wo instanceof InsectBody) {
                         InsectBody ib = (InsectBody) wo;
                         if (!ib.getSide().equals(this.getBody().getSide())) {
@@ -313,105 +321,58 @@ public class Warrior extends Ant {
                 }
             }
         }
-        if(positionInPerceivedMap != null && closestEnemyPositionInPerceivedMap != null && perceivedMap != null){
-            movementPath = PathFinder.findPath(positionInPerceivedMap,closestEnemyPositionInPerceivedMap, perceivedMap);
-        }
-        
-        if(closestEnemyBody != null && movementPath != null) {
-            if(movementPath.size() == 0) {
-                this.getBody().setAction(new KillEnemy(this.getBody(),Direction.NONE));
-                lastTime = this.getTimeManager().getCurrentDate().getTime();
-                return;
-            } else if(movementPath.size() == 1) {
-                this.getBody().setAction(new KillEnemy(this.getBody(),movementPath.getFirst()));
-                lastTime = this.getTimeManager().getCurrentDate().getTime();
-                return;
+        // If no enemy has been found in perceived field
+        if(closestEnemyBody == null) {
+        	// If the warrior is too far from its queen 
+            if (	this.relativeStartingPointPosition != null
+                    && Point3D.euclidianDistance(new Point3D(0, 0, 0),this.relativeStartingPointPosition) > 20) {
+                // Return to home
+            	goHome();
             }
+        	// Do a wander movement
+        	generateWanderMovement();
+        	return;
         }
-        
-        if (relativeStartingPointPosition != null
-                && Point3D.euclidianDistance(new Point3D(0, 0, 0),
-                        relativeStartingPointPosition) > 20) {
-            currentBehaviour = WarriorBehaviour.GO_HOME;
-        } else if (closestEnemyBody != null) {
-            movementPath = PathFinder.findPath(positionInPerceivedMap, closestEnemyPositionInPerceivedMap, perceivedMap);
-        } else if (relativeStartingPointPosition != null
-                && Point3D.euclidianDistance(new Point3D(0, 0, 0),
-                        relativeStartingPointPosition) > 10) {
-            currentBehaviour = WarriorBehaviour.GO_HOME;
-        } else {
-            this.getBody().setAction(
-                    new Move(this.getBody(), Direction.random()));
-            lastTime = this.getTimeManager().getCurrentDate().getTime();
+        // An enemy has been found -> generate the path to reach its position
+        this.movementPath = PathFinder.findPath(positionInPerceivedMap,closestEnemyPositionInPerceivedMap, perceivedMap);
+        // No path to target are available
+        if(this.movementPath == null) {
+        	// Generate a random movement
+        	generateWanderMovement();
+        	return;
+        }
+        // If the enemy is on the same square as the Warrior
+        if(this.movementPath.size()  == 0) {
+        		// Attack him
+                this.getBody().setAction(new KillEnemy(this.getBody(),Direction.NONE));
+                this.lastTime = this.getTimeManager().getCurrentDate().getTime();
+        // Else if there is only 1 movement between the warrior and its target
+        } else if(this.movementPath.size() == 1) {
+                this.getBody().setAction(new KillEnemy(this.getBody(),this.movementPath.getFirst()));
+                this.lastTime = this.getTimeManager().getCurrentDate().getTime();
         }
     }
 
     private void fight() {
-        Perception currentPerception = this.getBody().getPerception();
-        Square[][][] perceivedMap = currentPerception.getPerceivedMap();
-        Point3D positionInPerceivedMap = currentPerception
-                .getPositionInPerceivedMap();
-
-        //If on the same square as the enemy, then attack him
-
-        /*for (WorldObject wo : perceivedMap[positionInPerceivedMap.x][positionInPerceivedMap.y][0].getObjects()) {
-        	if (wo.getTexturePath().equals("img/Ants/warrior.png") && ((InsectBody) wo).getSide() != this.getBody().getSide()) {
-        		InsectBody enemy = ((InsectBody) wo);
-        		enemy.setHealthPoints(enemy.getHealthPoints() - this.attackPoints);
-        		//if the enemy has no HP then he dies
-        		if (enemy.getHealthPoints() <= 0) {
-        			this.getBody().setAction(new KillEnemy(this.getBody()));
-        			
-        		}
-        	}
-        }*/
-
-        /*for (int i = 0; i < perceivedMap.length; ++i) {
-            for (int j = 0; j < perceivedMap[0].length; ++j) {
-                List<WorldObject> objectsPerceived = perceivedMap[i][j][0]
-                        .getObjects();
-                synchronized (objectsPerceived) {
-                    for (WorldObject wo : objectsPerceived) {
-                        if (wo.getTexturePath().equals("img/Ants/warrior.png")
-                                && ((InsectBody) wo).getSide() != this
-                                        .getBody().getSide()) {
-                            //if the enemy is not on the same square then try to reach it
-                            if (Point3D.euclidianDistance(this.getBody()
-                                    .getPosition(), wo.getPosition()) != 0) {
-                                System.out.println("enemy side :"
-                                        + ((InsectBody) wo).getSide());
-                                System.out.println("side :"
-                                        + this.getBody().getSide());
-                                System.out.println("enemy pos : "
-                                        + wo.getPosition());
-                                System.out.println("pos : "
-                                        + this.getBody().getPosition());
-                                movementPath = PathFinder.findPath(
-                                        currentPerception
-                                                .getPositionInPerceivedMap(),
-                                        new Point3D(i, j, 0), perceivedMap);
-                                return;
-                            } else {
-                                //else fight the enemy
-                                System.out.println("FIGHT");
-                                InsectBody enemy = ((InsectBody) wo);
-                                enemy.setHealthPoints(enemy.getHealthPoints()
-                                        - this.attackPoints);
-                                System.out.println("HP :"
-                                        + enemy.getHealthPoints());
-                                if (enemy.getHealthPoints() <= 0) {
-                                    //enemy dies !
-                                    this.getBody().setAction(
-                                            new KillEnemy(this.getBody()));
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
-
+    	// Function to go attack another camp is the number of warrior is big
+    	// AT THE MOMENT MUST NOT BE CALLED
+    	System.out.println("Error: call to fight() for Warrior"); //$NON-NLS-1$
+    }
+    
+    /**
+     * Function to check if the insect is hungry
+     * @return true if the body can eat the food he's carrying false otherwise
+     */
+    private boolean eatIfNeed(InsectBody body) {
+    	if (body.isHungry()) {
+//            if (body.getCarriedObject() instanceof Food) {
+//                body.setAction(new EatFood(body));
+//                this.lastTime = this.getTimeManager().getCurrentDate().getTime();
+//                return true;
+//            }
+            this.currentBehaviour = WarriorBehaviour.GO_HOME;
+        }
+    	return false;
     }
 
 }

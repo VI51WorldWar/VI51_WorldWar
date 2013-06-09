@@ -26,13 +26,13 @@ public abstract class WorldObject {
         Environment.getInstance().addWorldObject(this);
     }
     public String getTexturePath() {
-        return texturePath;
+        return this.texturePath;
     }
     public void setTexturePath(String texturePath) {
         this.texturePath = texturePath;
     }
     public Point3D getPosition() {
-        return position;
+        return this.position;
     }
     public void setPosition(Point3D position) {
         this.position = position;

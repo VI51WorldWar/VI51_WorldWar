@@ -9,7 +9,6 @@ import org.janusproject.kernel.agent.Agent;
 import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
 
-import fr.utbm.vi51.agent.Insect;
 import fr.utbm.vi51.configs.Consts;
 
 /**
@@ -18,10 +17,14 @@ import fr.utbm.vi51.configs.Consts;
  */
 public final class Environment extends Agent {
 
-    private static Environment evt;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7153465442819248768L;
+
+	private static Environment evt;
 
     private CopyOnWriteArrayList<WorldObject> objects;
-    private List<Insect> insects;
     private Square[][][] map;
     // width = x, height = y, depth = z
     private final int mapWidth;
@@ -31,12 +34,11 @@ public final class Environment extends Agent {
     private long lastTime;
 
     private Environment() {
-        mapHeight = 40;
-        mapWidth = 40;
-        mapDepth = 5;
-        map = new Square[mapWidth][mapHeight][mapDepth];
-        objects = new CopyOnWriteArrayList<WorldObject>();
-        insects = new LinkedList<Insect>();
+        this.mapHeight = 40;
+        this.mapWidth = 40;
+        this.mapDepth = 5;
+        this.map = new Square[this.mapWidth][this.mapHeight][this.mapDepth];
+        this.objects = new CopyOnWriteArrayList<>();
     }
 
     public static Environment getInstance() {
@@ -48,15 +50,15 @@ public final class Environment extends Agent {
     }
 
     public int getMapWidth() {
-        return mapWidth;
+        return this.mapWidth;
     }
 
     public int getMapHeight() {
-        return mapHeight;
+        return this.mapHeight;
     }
 
     public int getMapDepth() {
-        return mapDepth;
+        return this.mapDepth;
     }
 
     @Override
@@ -65,7 +67,7 @@ public final class Environment extends Agent {
     }
 
     public List<WorldObject> getObjects() {
-        return objects;
+        return this.objects;
     }
 
     public void setObjects(CopyOnWriteArrayList<WorldObject> objects) {
@@ -73,7 +75,7 @@ public final class Environment extends Agent {
     }
 
     public Square[][][] getMap() {
-        return map;
+        return this.map;
     }
 
     public void setMap(Square[][][] map) {
@@ -81,23 +83,23 @@ public final class Environment extends Agent {
     }
 
     public void addWorldObject(WorldObject wo) {
-        synchronized (objects) {
-            objects.add(wo);
+        synchronized (this.objects) {
+            this.objects.add(wo);
         }
-        map[(int) wo.getPosition().x][(int) wo.getPosition().y][(int) wo
+        this.map[wo.getPosition().x][wo.getPosition().y][wo
                 .getPosition().z].getObjects().add(wo);
     }
 
     @Override
     public Status live() {
 
-        int diffTime = (int) (this.getTimeManager().getCurrentDate().getTime() - lastTime);
+        int diffTime = (int) (this.getTimeManager().getCurrentDate().getTime() - this.lastTime);
         if (diffTime > 100000) {
             diffTime = 30;
         }
-        LinkedList<WorldObject> toRemove = new LinkedList<WorldObject>();
-        synchronized (objects) {
-            for (WorldObject o : objects) {
+        LinkedList<WorldObject> toRemove = new LinkedList<>();
+        synchronized (this.objects) {
+            for (WorldObject o : this.objects) {
                 if (o instanceof Body) {
                     Body b = (Body) o;
                     Action a = b.getAction();
@@ -130,12 +132,12 @@ public final class Environment extends Agent {
 
         }
         for (WorldObject wo : toRemove) {
-            objects.remove(wo);
-            map[wo.getPosition().x][wo.getPosition().y][wo.getPosition().z]
+            this.objects.remove(wo);
+            this.map[wo.getPosition().x][wo.getPosition().y][wo.getPosition().z]
                     .getObjects().remove(wo);
         }
-        lastTime = this.getTimeManager().getCurrentDate().getTime();
-        diffTime = (int) (this.getTimeManager().getCurrentDate().getTime() - lastTime);
+        this.lastTime = this.getTimeManager().getCurrentDate().getTime();
+        diffTime = (int) (this.getTimeManager().getCurrentDate().getTime() - this.lastTime);
         try {
             if (30 - diffTime > 0) {
                 Thread.sleep(30 - diffTime);

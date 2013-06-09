@@ -3,8 +3,6 @@ package fr.utbm.vi51.environment;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.vecmath.Point2d;
-
 /**
  * @author Top-K
  *
@@ -16,7 +14,7 @@ public class Square {
     private LandType landType;
 
     public Square(LandType landType) {
-        this.objects = new  CopyOnWriteArrayList<WorldObject>();
+        this.objects = new  CopyOnWriteArrayList<>();
         this.landType = landType;
     }
 
@@ -29,7 +27,7 @@ public class Square {
     }
 
     public LandType getLandType() {
-        return landType;
+        return this.landType;
     }
     
     public void setLandType(LandType landtype) {
@@ -37,14 +35,15 @@ public class Square {
     }
 
     public List<WorldObject> getObjects() {
-            return objects;
+            return this.objects;
     }
 
     public void setObjects( CopyOnWriteArrayList<WorldObject> objects) {
         this.objects = objects;
     }
 
-    public String toString() {
-        return landType.toString();
+    @Override
+	public String toString() {
+        return this.landType.toString();
     }
 }

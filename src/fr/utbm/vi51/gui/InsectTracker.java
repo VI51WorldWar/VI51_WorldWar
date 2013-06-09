@@ -16,6 +16,7 @@ import javax.swing.JProgressBar;
 
 import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.InsectBody;
+import fr.utbm.vi51.environment.InsectBodyType;
 import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.ImageManager;
 import fr.utbm.vi51.util.Point3D;
@@ -40,7 +41,7 @@ public class InsectTracker  extends JPanel{
 	
     private InsectBody		rInsect = null;
 	private JProgressBar	lifeBar = null;
-	private String			insectFunction = null;
+	private InsectBodyType	insectType = null;
     private List<Point3D>	listOldPosition = null;
 	private Point3D			insectLastPos = null;
 	
@@ -64,6 +65,7 @@ public class InsectTracker  extends JPanel{
 		this.rInsect = insect;
 		this.listOldPosition = new LinkedList<>();
 		this.buttonStopTrack.setVisible(true);
+		this.lifeBar.setMaximum(this.rInsect.getMaxHealth());
 		this.lifeBar.setVisible(true);
 	}
 	
@@ -79,10 +81,9 @@ public class InsectTracker  extends JPanel{
 	}
 	
 	public void paintInfos(Graphics g) {
-		if(this.insectFunction == null) {
-			determineInsectFunction();
+		if(this.insectType == null) {
+			this.insectType = this.rInsect.getType();
 		}
-		assert(this.insectFunction != null);
 	    // Draw Img
         g.drawImage(ImageManager.getInstance().getImage(this.rInsect.getTexturePath()),
         			IMG_POSITION.x,IMG_POSITION.y,50,50,this);
@@ -92,9 +93,9 @@ public class InsectTracker  extends JPanel{
         g2.setPaint(this.rInsect.getSide().getDominantColor());
         g2.fill(new Rectangle2D.Double(SIDE_POSITION.x, SIDE_POSITION.y,this.getWidth() - SIDE_POSITION.x,15));
         g2.setPaint(Color.black);
-        
+        g2.drawString(this.rInsect.getSide().toString(), SIDE_POSITION.x, SIDE_POSITION.y + 10);
         // Draw insect function
-	    g.drawString(this.insectFunction, FUNCTION_POSITION.x, FUNCTION_POSITION.y);
+	    g.drawString(this.insectType.toString(), FUNCTION_POSITION.x, FUNCTION_POSITION.y);
         
 	    // Insect location
 	    g.drawString(this.rInsect.getPosition().toString(),COORD_POSITION.x,COORD_POSITION.y);
@@ -112,7 +113,7 @@ public class InsectTracker  extends JPanel{
         }
         
         // Update lifeBar value
-        this.lifeBar.setValue(this.rInsect.getHealthPoints());
+        this.lifeBar.setValue(this.rInsect.getCurrentHealth());
         
         // Update button position
 		this.buttonStopTrack.setBounds(this.getWidth() - 60, this.getHeight() - 20 , 60, 20);
@@ -184,7 +185,7 @@ public class InsectTracker  extends JPanel{
 		this.insectLastPos = null;
 		this.buttonStopTrack.setVisible(false);
 		this.lifeBar.setVisible(false);
-		this.insectFunction = null;
+		this.insectType = null;
 	}
 	/**
 	 * Function to initialize the button
@@ -210,26 +211,9 @@ public class InsectTracker  extends JPanel{
 	private void addLifeBar() {
 		this.lifeBar = new JProgressBar();
 		this.lifeBar.setBounds(LIFE_POSITION.x, LIFE_POSITION.y, 50, 15);
-		this.lifeBar.setMaximum(1);
 		this.lifeBar.setVisible(false);
 		this.lifeBar.setBackground(new Color(255,0,0));
 		this.lifeBar.setForeground(new Color(0,255,0));
 		this.add(this.lifeBar);
-	}
-	
-	private void determineInsectFunction() {
-		 // Use the body path to determine the function of the insect
-	    if(this.rInsect.getTexturePath().startsWith("img/Ants/warrior")) { //$NON-NLS-1$
-	    	this.insectFunction = "Warrior"; //$NON-NLS-1$
-	    }
-	    else if(this.rInsect.getTexturePath().startsWith("img/Ants/worker")) { //$NON-NLS-1$
-	    	this.insectFunction = "Worker"; //$NON-NLS-1$
-	    }
-	    else if(this.rInsect.getTexturePath().startsWith("img/Ants/queen")) { //$NON-NLS-1$
-	    	this.insectFunction = "Queen"; //$NON-NLS-1$
-	    }
-	    else {
-	    	return;
-	    }
 	}
 }
