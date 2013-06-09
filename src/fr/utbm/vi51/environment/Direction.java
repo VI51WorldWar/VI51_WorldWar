@@ -4,7 +4,7 @@ import fr.utbm.vi51.util.CustomRandom;
 import fr.utbm.vi51.util.Point3D;
 
 /**
- * 
+ *
  * @author Author: sgalland
  */
 public enum Direction {
@@ -183,7 +183,7 @@ public enum Direction {
 
     /**
      * Replies a random direction.
-     * 
+     *
      * @return a random direction.
      */
     public static Direction random() {
@@ -192,7 +192,7 @@ public enum Direction {
 
     /**
      * Replies the opposite direction.
-     * 
+     *
      * @return the opposite direction.
      */
     public abstract Direction opposite();

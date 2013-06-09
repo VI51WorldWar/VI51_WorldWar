@@ -4,14 +4,13 @@ import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
- * 
+ *
  */
 public class Pheromone extends WorldObject {
+    protected int strength;
     private Message message;
     private Direction direction;
     private Side side;
-    protected int strength; // Represents distance and amount of food/danger.
-                            // Weakens with time
 
     public Pheromone(Point3D position, Message mess, Direction direction,
             int strength, Side side) {
@@ -21,17 +20,14 @@ public class Pheromone extends WorldObject {
         this.strength = strength;
         this.side = side;
     }
-    
 
     public Side getSide() {
         return side;
     }
 
-
     public void setSide(Side side) {
         this.side = side;
     }
-
 
     public Message getMessage() {
         return message;
@@ -41,8 +37,7 @@ public class Pheromone extends WorldObject {
         return direction;
     }
 
-
-	public int getStrength() {
+    public int getStrength() {
         return strength;
     }
 

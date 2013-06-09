@@ -4,7 +4,7 @@ import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
- * 
+ *
  */
 public class Body extends MobileObject {
     private Action action;

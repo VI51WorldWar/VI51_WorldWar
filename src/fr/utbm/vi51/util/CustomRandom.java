@@ -2,7 +2,11 @@ package fr.utbm.vi51.util;
 
 import java.util.Random;
 
-public class CustomRandom {
+/**
+ * @author Top-K
+ *
+ */
+public final class CustomRandom {
     private static Random randomGenerator;
 
     private CustomRandom() {

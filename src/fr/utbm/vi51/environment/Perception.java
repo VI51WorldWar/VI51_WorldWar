@@ -7,7 +7,7 @@ import fr.utbm.vi51.util.Point3D;
  *
  */
 public class Perception {
-    private static final int perceptionSize = 5;
+    private static final int PERCEPTIONSIZE = 5;
     private Square[][][] perceivedMap;
     private Point3D positionInPerceivedMap;
 
@@ -18,13 +18,13 @@ public class Perception {
         //Ensure that the top left and bottom right points are not out of the global map
         Point3D perceptionTopLeft = new Point3D();
         perceptionTopLeft.z = pos.z;
-        perceptionTopLeft.x = Math.max(pos.x - perceptionSize, 0);
-        perceptionTopLeft.y = Math.max(pos.y - perceptionSize, 0);
+        perceptionTopLeft.x = Math.max(pos.x - PERCEPTIONSIZE, 0);
+        perceptionTopLeft.y = Math.max(pos.y - PERCEPTIONSIZE, 0);
 
         Point3D perceptionBottomRight = new Point3D();
         perceptionBottomRight.z = pos.z;
-        perceptionBottomRight.x = Math.min(pos.x + perceptionSize, map.length - 1);
-        perceptionBottomRight.y = Math.min(pos.y + perceptionSize, map[0].length - 1);
+        perceptionBottomRight.x = Math.min(pos.x + PERCEPTIONSIZE, map.length - 1);
+        perceptionBottomRight.y = Math.min(pos.y + PERCEPTIONSIZE, map[0].length - 1);
 
         //Get the perceived part of the global map
         perceivedMap = new Square[perceptionBottomRight.x - perceptionTopLeft.x
