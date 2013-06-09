@@ -1,6 +1,5 @@
 package fr.utbm.vi51.gui;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -24,6 +23,10 @@ import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.Point3D;
 
 public class SquareInfos extends JPanel{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1567904831818122601L;
 	Square 				rSquareReference = null;
 	Point3D				squarePosition = null;
 	
@@ -37,18 +40,20 @@ public class SquareInfos extends JPanel{
 		assert(parent != null);
 		this.rParent = parent;
 		this.rSquareReference = null;
-		this.listBars = new LinkedList<PheromoneBar>();
+		this.listBars = new LinkedList<>();
 		initLandTypeSelection();
 		initAddFoodButton();
+		this.setFocusable(false);
 		this.setLayout(null);
 		this.buttonAddFood.setVisible(false);
 		this.comLandType.setVisible(false);
 	}
 	
+	@Override
 	public void paintComponent(Graphics g) {
 		Point drawPosition = new Point(0,10);
 		if(this.rSquareReference == null) {
-			g.drawString("No case selected.", drawPosition.x, drawPosition.y);
+			g.drawString("No case selected.", drawPosition.x, drawPosition.y); //$NON-NLS-1$
 		}
 		else {
 			drawSquareInfos(g,drawPosition);
@@ -81,7 +86,7 @@ public class SquareInfos extends JPanel{
 			this.buttonAddFood.setVisible(true);
 			this.comLandType.setVisible(true);
 			// Set the current landtype as default value of the combo box
-			this.comLandType.setSelectedItem(rSquareReference.getLandType());
+			this.comLandType.setSelectedItem(this.rSquareReference.getLandType());
 		}
 		for(PheromoneBar bar : this.listBars) {
 			this.remove(bar);
@@ -102,13 +107,13 @@ public class SquareInfos extends JPanel{
 		// Allocate a new Point
 		Point drawPos = new Point(drawPosition);
 		// Square location
-	    g.drawString(	"Coord : "+ this.squarePosition.toString()
+	    g.drawString(	"Coord : "+ this.squarePosition.toString() //$NON-NLS-1$
 	    				,drawPos.x
 	    				,drawPos.y);
 	    
 		// Type of Land
 	    drawPos.y += 20;
-		g.drawString("Type of land : ", drawPos.x, drawPos.y);
+		g.drawString("Type of land : ", drawPos.x, drawPos.y); //$NON-NLS-1$
 		// Analyze the World objects on the square
 		int nbAnts = 0;
 		int nbFood = 0;
@@ -127,20 +132,20 @@ public class SquareInfos extends JPanel{
 	    }
 		// Number of Ants
 		drawPos.y += 20;
-		g.drawString("Ants : " + nbAnts, drawPos.x, drawPos.y);
+		g.drawString("Ants : " + nbAnts, drawPos.x, drawPos.y); //$NON-NLS-1$
 		
 		// Draw Pheromones bars
 		drawBars(g);
 		
 		// Foods
 		drawPos.y += 20;
-		g.drawString("Foods : " + nbFood, drawPos.x, drawPos.y);
+		g.drawString("Foods : " + nbFood, drawPos.x, drawPos.y); //$NON-NLS-1$
 	}
 	
 	public void drawBars(Graphics g) {
 		PheromoneBar bar = null;
 		int i = 0;
-		g.drawString("Pheromones : ",200,10);
+		g.drawString("Pheromones : ",200,10); //$NON-NLS-1$
 		while( i < this.listBars.size()) {
 			bar = this.listBars.get(i);
 			if(bar.isEnded()) {
@@ -157,19 +162,21 @@ public class SquareInfos extends JPanel{
 	// ADDING FOOD
 	private void initAddFoodButton() {
 		// Only one initialization
-		if(buttonAddFood != null) {
+		if(this.buttonAddFood != null) {
 			assert(false);
 			return;
 		}
-		buttonAddFood = new JButton("Add food.");
+		this.buttonAddFood = new JButton("Add food."); //$NON-NLS-1$
 		this.buttonAddFood.setBounds(80, 40, 100, 20);
 		ActionListener action = new ActionListener() {
-				   public void actionPerformed(ActionEvent e) {
-					   Environment.getInstance().addWorldObject(new Food(new Point3D(squarePosition)));
+				   @Override
+				public void actionPerformed(ActionEvent e) {
+					   Environment.getInstance().addWorldObject(new Food(new Point3D(SquareInfos.this.squarePosition)));
 				   }
 		};
 		this.buttonAddFood.addActionListener(action);
-		this.add(buttonAddFood);
+		this.buttonAddFood.setFocusable(false);
+		this.add(this.buttonAddFood);
 	}
 	
 	// CHANGING LANDTYPE
@@ -180,10 +187,11 @@ public class SquareInfos extends JPanel{
 			return;
 		}	   
 		// Add a combo box with all values of the LandType enumeration
-	    this.comLandType = new JComboBox<LandType>(LandType.values());
+	    this.comLandType = new JComboBox<>(LandType.values());
 	    this.comLandType.setBounds(80,20,70,20);
 		ActionListener action = new ActionListener() {
-			   public void actionPerformed(ActionEvent e) {
+			   @Override
+			public void actionPerformed(ActionEvent e) {
 				   // Execute the private function
 				   changeLandType();					   
 			   }
@@ -194,12 +202,12 @@ public class SquareInfos extends JPanel{
 	    this.add(this.comLandType);
 	}
 	
-	private void changeLandType() {
+	void changeLandType() {
 		// Square must be referenced
-		if(rSquareReference == null) {
+		if(this.rSquareReference == null) {
 			return;
 		}
 		// Change to selected type
-		rSquareReference.setLandType((LandType)this.comLandType.getSelectedItem());
+		this.rSquareReference.setLandType((LandType)this.comLandType.getSelectedItem());
 	}
 }

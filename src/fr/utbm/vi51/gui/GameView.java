@@ -18,25 +18,31 @@ import javax.vecmath.Point3d;
 
 import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.Environment;
+import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.Pheromone;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.ImageManager;
+import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
  * 
  */
 public class GameView extends JPanel {
-    // STATICS VARS
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2289482330627425662L;
+	// STATICS VARS
     static int s_displayedTilesX = 40;
     static int s_displayedTilesY = 40;
 
     // Represent the current view in terms of number of square
     private Rectangle view = null;
-    private int currentTileWidth = new Integer(0);
-    private int currentTileHeight = new Integer(0);
-    private int levelToPaint = new Integer(0);
+    private int currentTileWidth = 0;
+    private int currentTileHeight = 0;
+    private int levelToPaint = 0;
     
     private Window parent = null;
 
@@ -49,18 +55,19 @@ public class GameView extends JPanel {
         this.parent = parent;
         this.setFocusable(true);
         this.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent ke) {
+            @Override
+			public void keyPressed(KeyEvent ke) {
                 if (ke.getKeyCode() == KeyEvent.VK_UP) {
-                    moveView("UP");
+                    moveView("UP"); //$NON-NLS-1$
                 }
                 if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
-                    moveView("DOWN");
+                    moveView("DOWN"); //$NON-NLS-1$
                 }
                 if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
-                    moveView("LEFT");
+                    moveView("LEFT"); //$NON-NLS-1$
                 }
                 if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    moveView("RIGHT");
+                    moveView("RIGHT"); //$NON-NLS-1$
                 }
                 if (ke.getKeyCode() == KeyEvent.VK_PAGE_UP) {
                     zoomIn();
@@ -95,18 +102,22 @@ public class GameView extends JPanel {
         this.addMouseListener(new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent arg0) {
+            	// NOTHING TO DO
             }
 
             @Override
             public void mousePressed(MouseEvent arg0) {
+            	// NOTHING TO DO
             }
 
             @Override
             public void mouseExited(MouseEvent arg0) {
+            	// NOTHING TO DO
             }
 
             @Override
             public void mouseEntered(MouseEvent arg0) {
+            	// NOTHING TO DO
             }
 
             @Override
@@ -117,7 +128,8 @@ public class GameView extends JPanel {
 
     }
 
-    public void paintComponent(Graphics g) {
+    @Override
+	public void paintComponent(Graphics g) {
         // Print the view on the screen
         printView(g);
     }
@@ -127,21 +139,21 @@ public class GameView extends JPanel {
     }
 
     public void moveView(String direction) {
-        if (direction == "UP") {
+        if (direction == "UP") { //$NON-NLS-1$
             // Move UP
             this.view.y--;
             this.view.y = Math.max(0, this.view.y);
-        } else if (direction == "DOWN") {
+        } else if (direction == "DOWN") { //$NON-NLS-1$
             // Move DOWN 
             this.view.y++;
             this.view.y = Math.min(Environment.getInstance().getMap()[0].length
                     - this.view.height, this.view.y);
-        } else if (direction == "RIGHT") {
+        } else if (direction == "RIGHT") { //$NON-NLS-1$
             // Move RIGHT
             this.view.x++;
             this.view.x = Math.min(Environment.getInstance().getMap().length
                     - this.view.width, this.view.x);
-        } else if (direction == "LEFT") {
+        } else if (direction == "LEFT") { //$NON-NLS-1$
         	// Move LEFT
             this.view.x--;
             this.view.x = Math.max(0, this.view.x);
@@ -154,15 +166,13 @@ public class GameView extends JPanel {
     }
     
     public void zoomInX() {
-        view.width++;
-        view.width = Math.min(this.view.width, Environment.getInstance()
-                .getMap().length);
+        this.view.width--;
+        this.view.width = Math.max(this.view.width, 1);        
     }
     
     public void zoomInY() {
-        view.height++;
-        view.height = Math.min(this.view.height, Environment.getInstance()
-                .getMap().length);
+        this.view.height--;
+        this.view.height = Math.max(this.view.height, 1);
     }
 
     public void zoomOut() {
@@ -171,13 +181,19 @@ public class GameView extends JPanel {
     }
     
     public void zoomOutX() {
-        view.width--;
-        view.width = Math.max(this.view.width, 1);
+        this.view.width++;
+        this.view.width = Math.min(this.view.width, Environment.getInstance().getMapWidth());
+        if(this.view.x + this.view.width > Environment.getInstance().getMapWidth() ) {
+        	this.view.x = Environment.getInstance().getMapWidth() - this.view.width; 
+        }
     }
     
     public void zoomOutY() {
-        view.height--;
-        view.height = Math.max(this.view.height, 1);
+        this.view.height++;
+        this.view.height = Math.min(this.view.height, Environment.getInstance().getMapHeight());
+        if(this.view.y + this.view.height > Environment.getInstance().getMapHeight()) {
+        	this.view.y = Environment.getInstance().getMapHeight() - this.view.height; 
+        }
     }
     
     // FUNCTIONS FOR CHANGE AND GET THE LEVEL TO PAINT
@@ -208,109 +224,70 @@ public class GameView extends JPanel {
 	    	
 	    	 this.currentTileWidth = this.getWidth() / this.view.width;
 	         this.currentTileHeight = this.getHeight() / this.view.height;
-	         int min = Math.min(currentTileHeight, currentTileWidth);
-	         this.currentTileHeight = min;
-	         this.currentTileWidth = min;
+//	         int min = Math.min(this.currentTileHeight, this.currentTileWidth);
+//	         this.currentTileHeight = min;
+//	         this.currentTileWidth = min;
 
 	         Environment env = Environment.getInstance();
 	         ImageManager imgMgr = ImageManager.getInstance();
 	         Square[][][] map = env.getMap();
 	         for (int i = 0; i < this.view.width; i++) {
 	             for (int j = 0; j < this.view.height; j++) { 
-	             	// Reference to the current square to print
-	             	Square currentSquare = map[i + this.view.x][j + this.view.y][this.levelToPaint];
+		             // Reference to the current square to print
+		             Square currentSquare = map[i + this.view.x][j + this.view.y][this.levelToPaint];
+		             Point3D currentPosition = new Point3D(this.currentTileWidth *i,this.currentTileHeight * j,this.levelToPaint);
 	                 // Draw land
 	                 g.drawImage(imgMgr.getImage(	currentSquare.getLandType().getTexturePath()), 
-	                		 						this.currentTileWidth * i,
-	                		 						this.currentTileHeight * j, 
+	                		 						currentPosition.x,
+	                		 						currentPosition.y, 
 		         									this.currentTileWidth, 
 		         									this.currentTileHeight, 
 		         									this);
 	                 // Draw World's objects on the square
 	                 List<WorldObject> objs = currentSquare.getObjects();
+	                 int amountOfFood = 0;
+	                 int objIndex = 0;
+	                 // Draw the world object on the square
 	                 for (int k = 0; k < objs.size(); ++k) {
 	                     WorldObject obj = objs.get(k);
 	                     Composite oldComposite = ((Graphics2D) g).getComposite();
+	                     // Object is a Pheromone
 	                     if (obj instanceof Pheromone) {
-	                    	//Pheromones are printed in the corner corresponding to their direction
-	                         if (obj instanceof Pheromone) {
-	                             Pheromone p = (Pheromone) obj;
-	                             ((Graphics2D) g)
-	                                     .setComposite(AlphaComposite.getInstance(
-	                                             AlphaComposite.SRC_OVER,
-	                                             Math.max(
-	                                                     p.getStrength()
-	                                                             / Consts.STARTINGPHEROMONEVALUE,
-	                                                     0)));
-	                             int imagePositionX;
-	                             switch (p.getDirection().dx) {
-	                                 case -1:
-	                                     imagePositionX = this.currentTileWidth
-	                                             * (obj.getPosition().x - this.view.x);
-	                                     break;
-	                                 case 1:
-	                                     imagePositionX = this.currentTileWidth
-	                                             * (obj.getPosition().x - this.view.x)
-	                                             + this.currentTileWidth * 2 / 3;
-	                                     break;
-	                                 case 0:
-	                                 default:
-	                                     imagePositionX = this.currentTileWidth
-	                                             * (obj.getPosition().x - this.view.x)
-	                                             + this.currentTileWidth / 2 - (this.currentTileWidth/3)/2;
-	                                     break;
-	                             }
-	                             int imagePositionY;
-	                             switch (p.getDirection().dy) {
-	                                 case -1:
-	                                     imagePositionY = this.currentTileHeight
-	                                             * (obj.getPosition().y - this.view.y);
-	                                     break;
-	                                 case 1:
-	                                     imagePositionY = this.currentTileHeight
-	                                             * (obj.getPosition().y - this.view.y)
-	                                             + this.currentTileHeight * 2 / 3;
-	                                     break;
-	                                 case 0:
-	                                 default:
-	                                     imagePositionY = this.currentTileHeight
-	                                             * (obj.getPosition().y - this.view.y)
-	                                             + this.currentTileHeight / 2 - (this.currentTileHeight/3)/2;
-	                                     break;
-	                             }
-	                             g.drawImage(
-	                                     ImageManager.getInstance().getImage(
-	                                             p.getTexturePath()), imagePositionX,
-	                                     imagePositionY, this.currentTileWidth / 3, this.currentTileHeight / 3,
-	                                     this);
-	                             ((Graphics2D) g).setComposite(AlphaComposite
-	                                     .getInstance(AlphaComposite.SRC_OVER, 1));
-	                             continue;
-	                         }
-	                     } else {
-	                         g.setColor(new Color(255, 255, 255));
+	                         drawPheromone(g, obj);
+	                         continue;
 	                     }
-	                     g.drawImage(
-	                             ImageManager.getInstance().getImage(
-	                                     obj.getTexturePath()),
-	                                     this.currentTileWidth * (obj.getPosition().x - this.view.x) + k
-	                                     * this.currentTileWidth / objs.size(),
-	                                     this.currentTileHeight * (obj.getPosition().y - this.view.y),
-	                             this.currentTileWidth / 3, this.currentTileHeight / 3, this);
+	                     // Object is a Food
+	                     if(obj instanceof Food) {
+	                    	 amountOfFood++;
+	                    	 continue;
+	                     }
+	                     // Others objects
+	                     g.setColor(new Color(255, 255, 255));
+	                     g.drawImage(	ImageManager.getInstance().getImage(obj.getTexturePath()),
+	                                    currentPosition.x + objIndex* this.currentTileWidth / objs.size(),
+	                                    currentPosition.y,
+	                                    this.currentTileWidth / 3, 
+	                                    this.currentTileHeight / 3, 
+	                                    this);
 	                     ((Graphics2D) g).setComposite(oldComposite);
-
-	                 }             
+	                     objIndex++;
 	                 }
+	                 // Draw food if needed
+	                 if(amountOfFood != 0) {
+	                	 drawFood(g, currentPosition, amountOfFood); 
+	                 }
+	             }
 	         }
-	         parent.paintRoad(g, this.currentTileWidth, this.currentTileHeight, this.levelToPaint);
+	         // Ask the parent to draw the road of the tracked insect
+	         this.parent.paintRoad(g, this.currentTileWidth, this.currentTileHeight, this.levelToPaint);
 	    }
 
     /*
      * Function to execute on a clic at the position pointPosition
      */
     public void clicAt(Point pointPosition) {
-        if (parent != null) {
-            parent.setSquareForInfos(getPointedSquare(pointPosition),
+        if (this.parent != null) {
+            this.parent.setSquareForInfos(getPointedSquare(pointPosition),
                     getSquareCoord(pointPosition));
         }
     }
@@ -323,13 +300,12 @@ public class GameView extends JPanel {
         // Determine the (x,y) origin of the view
         Point originCoord = new Point(Math.max(
                 0,
-                Math.min((int) Environment.getInstance().getMapWidth()
-                        - this.view.width, (int) squarePosition.x
-                        - this.view.width / 2)), Math.max(
+                Math.min(Environment.getInstance().getMapWidth()
+                        - this.view.width,squarePosition.x - this.view.width / 2)), Math.max(
                 0,
-                Math.min((int) Environment.getInstance().getMapHeight()
-                        - this.view.height, (int) squarePosition.y
-                        - this.view.height / 2)));
+                Math.min(Environment.getInstance().getMapHeight()
+                        - this.view.height,
+                        squarePosition.y - this.view.height / 2)));
         // Set the view new coord
         this.view.x = originCoord.x;
         this.view.y = originCoord.y;
@@ -342,8 +318,8 @@ public class GameView extends JPanel {
 
     private Point3d getSquareCoord(Point pointPosition) {
         // Determine which square is at pointPosition
-        Point3d squareCoord = new Point3d(this.view.x + (int) pointPosition.x
-                / this.currentTileWidth, this.view.y + (int) pointPosition.y
+        Point3d squareCoord = new Point3d(this.view.x + pointPosition.x
+                / this.currentTileWidth, this.view.y + pointPosition.y
                 / this.currentTileHeight, this.levelToPaint);
         assert (squareCoord.x >= 0 && squareCoord.x <= Environment
                 .getInstance().getMapWidth());
@@ -353,5 +329,76 @@ public class GameView extends JPanel {
                 .getInstance().getMapDepth());
 
         return squareCoord;
+    }
+    
+    private void drawPheromone(Graphics g,WorldObject obj) {
+    	Pheromone p = (Pheromone) obj;
+        ((Graphics2D) g).setComposite(AlphaComposite.getInstance(	AlphaComposite.SRC_OVER,
+                        											Math.max(p.getStrength()
+                        											/ Consts.STARTINGPHEROMONEVALUE,
+                        											0)
+                        										)
+                        				);
+        int imagePositionX;
+        switch (p.getDirection().dx) {
+            case -1:
+                imagePositionX = this.currentTileWidth
+                        * (obj.getPosition().x - this.view.x);
+                break;
+            case 1:
+                imagePositionX = this.currentTileWidth
+                        * (obj.getPosition().x - this.view.x)
+                        + this.currentTileWidth * 2 / 3;
+                break;
+            case 0:
+            default:
+                imagePositionX = this.currentTileWidth
+                        * (obj.getPosition().x - this.view.x)
+                        + this.currentTileWidth / 2 - (this.currentTileWidth/3)/2;
+                break;
+        }
+        int imagePositionY;
+        switch (p.getDirection().dy) {
+            case -1:
+                imagePositionY = this.currentTileHeight
+                        * (obj.getPosition().y - this.view.y);
+                break;
+            case 1:
+                imagePositionY = this.currentTileHeight
+                        * (obj.getPosition().y - this.view.y)
+                        + this.currentTileHeight * 2 / 3;
+                break;
+            case 0:
+            default:
+                imagePositionY = this.currentTileHeight
+                        * (obj.getPosition().y - this.view.y)
+                        + this.currentTileHeight / 2 - (this.currentTileHeight/3)/2;
+                break;
+        }
+        g.drawImage(
+                ImageManager.getInstance().getImage(
+                        p.getTexturePath()), imagePositionX,
+                imagePositionY, this.currentTileWidth / 3, this.currentTileHeight / 3,
+                this);
+        ((Graphics2D) g).setComposite(AlphaComposite
+                .getInstance(AlphaComposite.SRC_OVER, 1));
+    }
+    
+    private void drawFood(Graphics g,Point3D position,int amountOfFood) {
+    	// If no food on the square, return
+    	if(amountOfFood == 0) {
+    		return;
+    	}
+    	int scale = 3;
+    	if(amountOfFood > 100) {
+    		scale = 1;
+    	}else if(amountOfFood > 50) {
+    		scale = 2;
+    	}
+    	int imgHeight = this.currentTileHeight / scale;
+    	int imgWidth = this.currentTileWidth / scale;
+    	int imgPositionX = position.x + this.currentTileWidth / 2 - imgWidth/2;
+    	int imgPositionY = position.y + this.currentTileHeight / 2 - imgHeight/2;
+    	g.drawImage(ImageManager.getInstance().getImage(Food.imgPath),imgPositionX,imgPositionY,imgWidth,imgHeight,this);
     }
 }

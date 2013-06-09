@@ -14,7 +14,7 @@ public class Body extends MobileObject {
     }
 
     public Action getAction() {
-        return action;
+        return this.action;
     }
 
     public void setAction(Action action) {

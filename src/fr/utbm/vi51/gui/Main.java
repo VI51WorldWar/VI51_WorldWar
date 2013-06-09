@@ -1,5 +1,7 @@
 package fr.utbm.vi51.gui;
 
+import java.awt.Color;
+
 import org.janusproject.kernel.Kernel;
 import org.janusproject.kernel.agent.Kernels;
 
@@ -35,11 +37,11 @@ public final class Main {
         k.launchLightAgent(env);
         // k.launchLightAgent(b);
         Side a = new Side(1, "img/Ants/worker1.png", "img/Ants/warrior1.png",
-                "img/Ants/queen1.png");
+                "img/Ants/queen1.png",Color.magenta);
         Side b = new Side(2, "img/Ants/worker2.png", "img/Ants/warrior2.png",
-                "img/Ants/queen2.png");
+                "img/Ants/queen2.png",Color.cyan);
         Side c = new Side(3, "img/Ants/worker3.png", "img/Ants/warrior3.png",
-                "img/Ants/queen3.png");
+                "img/Ants/queen3.png",Color.pink);
 
         Queen q1 = new Queen(new Point3D(5, 35, 0), 1, a, k);
         Queen q2 = new Queen(new Point3D(35, 35, 0), 1, b, k);

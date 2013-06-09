@@ -1,21 +1,26 @@
 package fr.utbm.vi51.environment;
 
+import java.awt.Color;
+
 public class Side {
-    private int foodAmount = 0;
-    private int id;
-    private String workerTexture;
-    private String warriorTexture;
-    private String queenTexture;
+    private int 	foodAmount = 0;
+    private int 	id;
+    private String 	workerTexture;
+    private String 	warriorTexture;
+    private String 	queenTexture;
+    private Color	dominantColor = null;
     
-    public Side(int id, String worker, String warrior, String queen){
-        this.id = id;
+    public Side(int id, String worker, String warrior, String queen,Color dominantColor){
+        assert(dominantColor != null);
+    	this.id = id;
         this.workerTexture = worker;
         this.warriorTexture = warrior;
         this.queenTexture = queen;
+        this.dominantColor = dominantColor;
     }
 
     public String getWorkerTexture() {
-        return workerTexture;
+        return this.workerTexture;
     }
 
     public void setWorkerTexture(String workerTexture) {
@@ -23,7 +28,7 @@ public class Side {
     }
 
     public String getWarriorTexture() {
-        return warriorTexture;
+        return this.warriorTexture;
     }
 
     public void setWarriorTexture(String warriorTexture) {
@@ -31,7 +36,7 @@ public class Side {
     }
 
     public String getQueenTexture() {
-        return queenTexture;
+        return this.queenTexture;
     }
 
     public void setQueenTexture(String queenTexture) {
@@ -39,7 +44,7 @@ public class Side {
     }
 
     public int getFoodAmount() {
-        return foodAmount;
+        return this.foodAmount;
     }
 
     public void setFoodAmount(int foodAmount) {
@@ -47,7 +52,7 @@ public class Side {
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(int id) {
@@ -63,10 +68,24 @@ public class Side {
         if (getClass() != obj.getClass())
             return false;
         Side other = (Side) obj;
-        if (id != other.id)
+        if (this.id != other.id)
             return false;
         return true;
     }
+
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
+	}
+
+	public Color getDominantColor() {
+		return dominantColor;
+	}
+
+	public void setDominantColor(Color dominantColor) {
+		this.dominantColor = dominantColor;
+	}
     
     
 }

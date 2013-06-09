@@ -34,7 +34,6 @@ public class Move extends Action {
         		// On descend d'un niveau
         		newPos.z += 1;
         		newPos.z = Math.min(newPos.z, env.getMapDepth() -1 );
-        		System.out.println("Passage par une cave");
         	}
         }
         // Cas d'une remontée
@@ -46,7 +45,6 @@ public class Move extends Action {
         		// On remonte d'un niveau
         		newPos.z -= 1;
         		newPos.z = Math.max(newPos.z, 0);
-        		System.out.println("Passage par une remontée");
         	}
         }
         //System.out.println(newPos);

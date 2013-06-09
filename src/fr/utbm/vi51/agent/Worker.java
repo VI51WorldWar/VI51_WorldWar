@@ -216,11 +216,10 @@ public class Worker extends Ant {
         // Else, point the pheromone to the position of the insect a few moves
         // ago.
         if (targetPosition != null) {
-            new Pheromone(this.getBody().getPosition(), m,
-                    Direction.toDirection(this.getBody().getPosition(),
-                            targetPosition),
-                    (int) Consts.STARTINGPHEROMONEVALUE, this.getBody()
-                            .getSide());
+            new Pheromone(this.getBody().getPosition(), 
+            		m,Direction.toDirection(this.getBody().getPosition(),targetPosition),
+                    (int) Consts.STARTINGPHEROMONEVALUE, 
+                    this.getBody().getSide());
             return true;
         } else if (relativeStartingPointPosition != null) {
             new Pheromone(this.getBody().getPosition(), m,

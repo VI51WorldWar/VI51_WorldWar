@@ -16,7 +16,11 @@ import fr.utbm.vi51.environment.Square;
  * @author valentin
  */
 public class Window extends JFrame {
-    // Dimensions of the Window
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 608538579149859313L;
+	// Dimensions of the Window
 	GameView 		view = null;
 	MiniMap 		minimap = null;
 	SquareInfos 	sqInfos = null;
@@ -25,7 +29,7 @@ public class Window extends JFrame {
 	InsectTracker	insectTracker = null;
 	
     public Window() {
-    	this.setTitle("Fenetre de base");
+    	this.setTitle("Fenetre de base"); //$NON-NLS-1$
         this.setSize(Consts.WINWIDTH, Consts.WINHEIGHT);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,7 +122,7 @@ public class Window extends JFrame {
     
     private void addTracker() {
     	GridBagConstraints c = new GridBagConstraints();
-        this.insectTracker = new InsectTracker(this,this.view.getViewReference());
+        this.insectTracker = new InsectTracker(/*this,*/this.view.getViewReference());
     	c.fill = GridBagConstraints.BOTH;
         c.gridx = 1;
         c.gridy = 4;
@@ -126,6 +130,6 @@ public class Window extends JFrame {
         c.gridwidth = 1;
         c.weighty = 0.1;
         c.weightx = 0.1;
-        this.add(insectTracker,c);
+        this.add(this.insectTracker,c);
     }
 }

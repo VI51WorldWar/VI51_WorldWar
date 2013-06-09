@@ -20,7 +20,7 @@ public class InsectBody extends Body {
     }
 
     public Side getSide() {
-        return side;
+        return this.side;
     }
 
     public void setSide(Side side) {
@@ -28,7 +28,7 @@ public class InsectBody extends Body {
     }
 
     public boolean isAlive() {
-        return isAlive;
+        return this.isAlive;
     }
 
     protected void die() {
@@ -36,7 +36,7 @@ public class InsectBody extends Body {
     }
 
     public int getHunger() {
-        return hunger;
+        return this.hunger;
     }
 
     protected void setHunger(int hunger) {
@@ -48,7 +48,7 @@ public class InsectBody extends Body {
     }
 
 	public int getHealthPoints() {
-		return healthPoints;
+		return this.healthPoints;
 	}
 
 	public void setHealthPoints(int healthPoints) {
@@ -57,7 +57,7 @@ public class InsectBody extends Body {
 	
 
     public WorldObject getCarriedObject() {
-        return carriedObject;
+        return this.carriedObject;
     }
 
     protected void setCarriedObject(WorldObject carriedObject) {

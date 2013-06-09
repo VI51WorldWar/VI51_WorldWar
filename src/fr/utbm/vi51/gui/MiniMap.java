@@ -10,37 +10,37 @@ import java.awt.event.MouseListener;
 import java.util.List;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.vecmath.Point2d;
 
 import fr.utbm.vi51.environment.Environment;
-import fr.utbm.vi51.environment.Food;
-import fr.utbm.vi51.environment.LandType;
 import fr.utbm.vi51.environment.Square;
 import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.ImageManager;
-import fr.utbm.vi51.util.Point3D;
 
 /*
  * This class represents the mini map in the user interface
  */
 public class MiniMap extends JPanel{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4627169120531941096L;
 	// Reference to the current View 
 	// !!!!! DO NOT MODIFY HERE !!!!!!!!
 	private Rectangle 	rCurrentView = null;
 	// Reference to the parent Window
-	private Window 		rParent = null;
+	Window 		rParent = null;
 	
 	private JButton		butLevelUp = null;
 	private JButton		butLevelDown = null;
 	
 	private Rectangle 	mapView = null;
-	private int			currentLevel = new Integer(0);
-	private int 		currentZoom = new Integer(0);
-	private int 		currentTileWidth = new Integer(0);
-	private int 		currentTileHeight = new Integer(0);
+	private int			currentLevel = 0;
+	private int 		currentZoom = 0;
+	private int 		currentTileWidth = 0;
+	private int 		currentTileHeight = 0;
 	
 	public MiniMap(Window rParent,Rectangle currentViewReference) {
 		//assert(rCurrentView != null);
@@ -54,23 +54,33 @@ public class MiniMap extends JPanel{
 		this.setLayout(null);
 		this.addMouseListener(new MouseListener(){
 			@Override
-			public void mouseReleased(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {
+				// NOTHING TO DO
+			}
 			@Override
-			public void mousePressed(MouseEvent e) 	{}
+			public void mousePressed(MouseEvent e) 	{
+				// NOTHING TO DO
+			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// Move the view to center it on the mouse
 				moveView(new Point(e.getPoint()));
 			}
 			@Override
-			public void mouseEntered(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {
+				// NOTHING TO DO
+			}
 			@Override
-			public void mouseExited(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {
+				// NOTHING TO DO
+			}
 		});
 		initbutLevel();
+		this.setFocusable(false);
 	}
 	
 	
+	@Override
 	public void paintComponent(Graphics g) {
 		// Get the better zoom to paint
 		updateZoom();
@@ -82,8 +92,8 @@ public class MiniMap extends JPanel{
 	
 	// Update the zoom to have the better view
 	private void updateZoom() {
-		this.currentZoom = Math.min(	(int) this.getHeight() / Environment.getInstance().getMapHeight(),
-										(int) this.getWidth() / Environment.getInstance().getMapWidth()
+		this.currentZoom = Math.min(	this.getHeight() / Environment.getInstance().getMapHeight(),
+										this.getWidth() / Environment.getInstance().getMapWidth()
 									);
 		// Update the Width and height of each tile
 		this.currentTileWidth = this.mapView.width / Environment.getInstance().getMapWidth() * this.currentZoom;
@@ -94,12 +104,12 @@ public class MiniMap extends JPanel{
 	 * Function to move the current view
 	 * The aim is to have the point coordViewCenter centered in the view
 	 */
-	private void moveView(Point coordViewCenter) {
+	void moveView(Point coordViewCenter) {
 		// Determine which square have to be in the middle
- 		Point squareCoord = new Point( (int) coordViewCenter.x / this.currentTileWidth,(int) coordViewCenter.y / this.currentTileHeight );
+ 		Point squareCoord = new Point( coordViewCenter.x / this.currentTileWidth,coordViewCenter.y / this.currentTileHeight );
 		// Ask to the parent to move view
- 		if(rParent != null) {
- 			rParent.centerCurrentViewOn(squareCoord);
+ 		if(this.rParent != null) {
+ 			this.rParent.centerCurrentViewOn(squareCoord);
  		}
 	}
 	
@@ -159,25 +169,30 @@ public class MiniMap extends JPanel{
 			assert(false);
 			return;
 		}
-		this.butLevelDown = new JButton("-");
-		this.butLevelUp = new JButton("+");
+		this.butLevelDown = new JButton("-"); //$NON-NLS-1$
+		this.butLevelUp = new JButton("+"); //$NON-NLS-1$
 		
 		ActionListener action = new ActionListener() {
-				   public void actionPerformed(ActionEvent e) {
-					   rParent.changeLevelDown();
+				   @Override
+				public void actionPerformed(ActionEvent e) {
+					   MiniMap.this.rParent.changeLevelDown();
 				   }
 		};
 		
 		this.butLevelDown.addActionListener(action);
-		this.add(butLevelDown);
+		this.add(this.butLevelDown);
 		
 		ActionListener action2 = new ActionListener() {
-			   public void actionPerformed(ActionEvent e) {
-				   rParent.changeLevelUp();
+			   @Override
+			public void actionPerformed(ActionEvent e) {
+				   MiniMap.this.rParent.changeLevelUp();
 			   }
 		};
 		
 		this.butLevelUp.addActionListener(action2);
-		this.add(butLevelUp);
+		this.add(this.butLevelUp);
+		
+		this.butLevelDown.setFocusable(false);
+		this.butLevelUp.setFocusable(false);
 	}
 }
