@@ -52,6 +52,7 @@ public final class PathFinder {
             return heuristicCost;
         }
 
+        @SuppressWarnings("unused")
         public boolean equals(Node n) {
             return position.equals(n.getPosition());
         }
@@ -73,7 +74,8 @@ public final class PathFinder {
 
         @Override
         public int compare(Node a, Node b) {
-            return Integer.valueOf(a.getCurrentCost() + a.getHeuristicCost()).compareTo(b.getCurrentCost() + b.getHeuristicCost());
+            return Integer.valueOf(a.getCurrentCost() + a.getHeuristicCost())
+                    .compareTo(b.getCurrentCost() + b.getHeuristicCost());
 
         }
 
@@ -133,7 +135,7 @@ public final class PathFinder {
 
     /**
      * . Returns all 4 direct neighbors of the origin node
-     * 
+     *
      * @param origin
      *            Point around which the neighbors will be searched
      * @param goal
@@ -150,7 +152,8 @@ public final class PathFinder {
         if (origin.getPosition().x > 0) {
             Point3D newPos = new Point3D(origin.getPosition().x - 1,
                     origin.getPosition().y, origin.getPosition().z);
-            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable() && goal != null) {
+            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable()
+                    && goal != null) {
                 neighboors.add(new Node(newPos, origin.getCurrentCost()
                         + map[newPos.x][newPos.y][newPos.z].getLandType()
                                 .getCost(), computeHeuristicCost(newPos, goal),
@@ -162,7 +165,8 @@ public final class PathFinder {
         if (origin.getPosition().x < map.length - 1) {
             Point3D newPos = new Point3D(origin.getPosition().x + 1,
                     origin.getPosition().y, origin.getPosition().z);
-            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable() && goal != null) {
+            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable()
+                    && goal != null) {
                 neighboors.add(new Node(newPos, origin.getCurrentCost()
                         + map[newPos.x][newPos.y][newPos.z].getLandType()
                                 .getCost(), computeHeuristicCost(newPos, goal),
@@ -174,7 +178,8 @@ public final class PathFinder {
         if (origin.getPosition().y > 0) {
             Point3D newPos = new Point3D(origin.getPosition().x,
                     origin.getPosition().y - 1, origin.getPosition().z);
-            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable() && goal != null) {
+            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable()
+                    && goal != null) {
                 neighboors.add(new Node(newPos, origin.getCurrentCost()
                         + map[newPos.x][newPos.y][newPos.z].getLandType()
                                 .getCost(), computeHeuristicCost(newPos, goal),
@@ -186,7 +191,8 @@ public final class PathFinder {
         if (origin.getPosition().y < map[0].length - 1) {
             Point3D newPos = new Point3D(origin.getPosition().x,
                     origin.getPosition().y + 1, origin.getPosition().z);
-            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable() && goal != null) {
+            if (map[newPos.x][newPos.y][newPos.z].getLandType().isCrossable()
+                    && goal != null) {
                 neighboors.add(new Node(newPos, origin.getCurrentCost()
                         + map[newPos.x][newPos.y][newPos.z].getLandType()
                                 .getCost(), computeHeuristicCost(newPos, goal),
@@ -200,6 +206,7 @@ public final class PathFinder {
     /**
      * Estimate the movement cost between position and goal (currently euclidian
      * distance)
+     *
      * @param position
      * @param goal
      * @return The estimate cost
@@ -208,18 +215,18 @@ public final class PathFinder {
         try {
             return (int) Math.floor(Math.sqrt(Math.pow(goal.x - position.x, 2)
                     + Math.pow(goal.y - position.y, 2)));
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            
         }
 
         //System.out.println("erf");
-            return 1000;
-        }
+        return 1000;
+    }
 
     /**
      * Once A* is completed, gives the successive directions to follow to go
      * from start to goal
+     *
      * @param goal
      *            The node representing the goal position.
      * @return An ordered list of directions
@@ -237,6 +244,7 @@ public final class PathFinder {
 
     /**
      * Returns the first node in c that has the same postion as a
+     *
      * @param c
      *            The collection to search
      * @param a

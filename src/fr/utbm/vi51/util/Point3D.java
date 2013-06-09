@@ -4,7 +4,7 @@ import javax.vecmath.Point3d;
 
 /**
  * @author Top-K
- * 
+ *
  */
 public class Point3D {
     public int x;
@@ -37,6 +37,10 @@ public class Point3D {
 
     public String toString() {
         return "x:" + x + " y:" + y + " z:" + z;
+    }
+
+    public int hashCode() {
+        return this.x * 10000 + this.y * 100 + this.z;
     }
 
     public boolean equals(Point3D p) {

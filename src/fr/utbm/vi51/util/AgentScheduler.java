@@ -41,13 +41,15 @@ public class AgentScheduler extends AgentActivator {
         return new MyIterator(candidates.iterator());
     }
 
-    
-
+    /**
+     * @author Top-K
+     *
+     */
     private class MyIterator extends SafeIterator<Agent> {
 
         private final Iterator<? extends Agent> candidate;
         private Environment e = env;
-        private Agent next = null;
+        private Agent next;
 
         public MyIterator(Iterator<? extends Agent> candidate) {
             this.candidate = candidate;
