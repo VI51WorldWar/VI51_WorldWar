@@ -3,6 +3,10 @@ package fr.utbm.vi51.environment;
 import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.util.Point3D;
 
+/**
+ * @author Top-K
+ *
+ */
 public class InsectBody extends Body {
 
 	private final static int MAX_HEALTH = 10;

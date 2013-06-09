@@ -91,7 +91,8 @@ public class InsectTracker  extends JPanel{
         // Draw side rectangle
         Graphics2D g2 = (Graphics2D) g;
         g2.setPaint(this.rInsect.getSide().getDominantColor());
-        g2.fill(new Rectangle2D.Double(SIDE_POSITION.x, SIDE_POSITION.y,this.getWidth() - SIDE_POSITION.x,15));
+        g2.fill(new Rectangle2D.Double(SIDE_POSITION.x, SIDE_POSITION.y, this
+                .getWidth() - SIDE_POSITION.x, 15));
         g2.setPaint(Color.black);
         g2.drawString(this.rInsect.getSide().toString(), SIDE_POSITION.x, SIDE_POSITION.y + 10);
         // Draw insect function
@@ -102,19 +103,16 @@ public class InsectTracker  extends JPanel{
         
 	    // Draw the object carried by the insect
         WorldObject obj = this.rInsect.getCarriedObject();
-        if(obj != null) {
-        	g.drawString("Carrying :",CARRIED_POSITION.x, CARRIED_POSITION.y); //$NON-NLS-1$
-    		g.drawImage(ImageManager.getInstance().getImage(obj.getTexturePath()),
-    					CARRIED_POSITION.x + 60,
-    					CARRIED_POSITION.y - 12, 
-       		 			25,
-       		 			25,
-       		 			this);
+        if (obj != null) {
+            g.drawString("Carrying :", CARRIED_POSITION.x, CARRIED_POSITION.y); //$NON-NLS-1$
+            g.drawImage(
+                    ImageManager.getInstance().getImage(obj.getTexturePath()),
+                    CARRIED_POSITION.x + 60, CARRIED_POSITION.y - 12, 25, 25,
+                    this);
         }
         
         // Update lifeBar value
         this.lifeBar.setValue(this.rInsect.getCurrentHealth());
-        
         // Update button position
 		this.buttonStopTrack.setBounds(this.getWidth() - 60, this.getHeight() - 20 , 60, 20);
 	}

@@ -21,18 +21,19 @@ import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.PathFinder;
 import fr.utbm.vi51.util.Point3D;
 
+/**
+ * @author Top-K
+ *
+ */
 enum WarriorBehaviour {
-    GO_HOME, PATROL, FIGHT,
+    GO_HOME, PATROL,
 }
 
 /**
  * @author Top-K
- * 
+ *
  */
 public class Warrior extends Ant {
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 6837234120747826328L;
     // Variables for a pheromone validity
     private final float acceptedOldPh = 0.5f;
@@ -88,15 +89,15 @@ public class Warrior extends Ant {
         if(eatIfNeed(body)) {
         	return null;
         }
-        
-        if(dropPheromoneIfNeeded()) {
+
+        if (dropPheromoneIfNeeded()) {
             return null;
         }
 
         switch (this.currentBehaviour) {
             case GO_HOME:	goHome();					break;
             case PATROL:	patrol();					break;
-            case FIGHT:		fight();					break;
+            //case FIGHT:		fight();					break;
             default:		generateWanderMovement();	break;
         }
         
@@ -148,7 +149,7 @@ public class Warrior extends Ant {
     /**
      * Drops a pheromone if the closest pheromone with a strenght/maxStrength. >
      * 0.5 is at a euclidian distance > 2
-     * 
+     *
      * @return true if a pheromone will be dropped, false else.
      */
     private boolean dropPheromoneIfNeeded() {
@@ -210,7 +211,7 @@ public class Warrior extends Ant {
         return false;
 
     }
-    
+
     private void goHome() {
         Perception currentPerception = this.getBody().getPerception();
         Square[][][] perceivedMap = currentPerception.getPerceivedMap();
@@ -310,11 +311,13 @@ public class Warrior extends Ant {
                     if (wo instanceof InsectBody) {
                         InsectBody ib = (InsectBody) wo;
                         if (!ib.getSide().equals(this.getBody().getSide())) {
-                            double distance = Point3D.euclidianDistance(this.getBody().getPosition(), ib.getPosition());
-                            if(distance < closestEnemyDistance) {
+                            double distance = Point3D.euclidianDistance(this
+                                    .getBody().getPosition(), ib.getPosition());
+                            if (distance < closestEnemyDistance) {
                                 closestEnemyBody = ib;
                                 closestEnemyDistance = distance;
-                                closestEnemyPositionInPerceivedMap = new Point3D(i,j,0);
+                                closestEnemyPositionInPerceivedMap = new Point3D(
+                                        i, j, 0);
                             }
                         }
                     }
@@ -333,6 +336,7 @@ public class Warrior extends Ant {
         	generateWanderMovement();
         	return;
         }
+
         // An enemy has been found -> generate the path to reach its position
         this.movementPath = PathFinder.findPath(positionInPerceivedMap,closestEnemyPositionInPerceivedMap, perceivedMap);
         // No path to target are available
@@ -374,5 +378,4 @@ public class Warrior extends Ant {
         }
     	return false;
     }
-
 }

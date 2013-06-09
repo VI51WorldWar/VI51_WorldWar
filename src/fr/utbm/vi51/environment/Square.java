@@ -8,9 +8,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  */
 public class Square {
-	
     private  CopyOnWriteArrayList<WorldObject> objects;
-    
+
     private LandType landType;
 
     public Square(LandType landType) {
@@ -29,16 +28,16 @@ public class Square {
     public LandType getLandType() {
         return this.landType;
     }
-    
+
     public void setLandType(LandType landtype) {
-    	this.landType = landtype;
+        this.landType = landtype;
     }
 
     public List<WorldObject> getObjects() {
             return this.objects;
     }
 
-    public void setObjects( CopyOnWriteArrayList<WorldObject> objects) {
+    public void setObjects(CopyOnWriteArrayList<WorldObject> objects) {
         this.objects = objects;
     }
 

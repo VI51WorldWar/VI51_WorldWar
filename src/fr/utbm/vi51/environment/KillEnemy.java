@@ -4,15 +4,18 @@ import java.util.Random;
 
 import fr.utbm.vi51.util.Point3D;
 
+/**
+ * @author Top-K
+ *
+ */
 public class KillEnemy extends Action {
-	private InsectBody body;
-	private Direction direction;
-	
+    private InsectBody body;
+    private Direction direction;
 
-	public KillEnemy(InsectBody body, Direction direction) {
-	    super();
-	    this.body = body;
-	    this.direction = direction;
+    public KillEnemy(InsectBody body, Direction direction) {
+        super();
+        this.body = body;
+        this.direction = direction;
     }
 
     @Override
@@ -29,7 +32,7 @@ public class KillEnemy extends Action {
                 }
             }
         }
-	}
+    }
 
 	@Override
 	protected boolean testAction() {
@@ -46,5 +49,4 @@ public class KillEnemy extends Action {
 		}
 		return false;
 	}
-
 }

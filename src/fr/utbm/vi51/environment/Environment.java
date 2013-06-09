@@ -13,14 +13,14 @@ import fr.utbm.vi51.configs.Consts;
 
 /**
  * @author Top-K
- * 
+ *
  */
 public final class Environment extends Agent {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 7153465442819248768L;
+     *
+     */
+    private static final long serialVersionUID = 8497722280590030106L;
 
 	private static Environment evt;
 
@@ -30,6 +30,7 @@ public final class Environment extends Agent {
     private final int mapWidth;
     private final int mapHeight;
     private final int mapDepth;
+    @SuppressWarnings("unused")
     private Logger log = Logger.getLogger(Environment.class.getName());
     private long lastTime;
 
@@ -111,7 +112,7 @@ public final class Environment extends Agent {
                         b.setAction(null);
                     }
                     if (b instanceof InsectBody) {
-                        InsectBody ib = ((InsectBody) b);
+                        InsectBody ib = (InsectBody) b;
                         ib.setHunger(ib.getHunger() + diffTime);
                         if (ib.getHunger() > Consts.MAXHUNGER) {
 
@@ -143,7 +144,6 @@ public final class Environment extends Agent {
                 Thread.sleep(30 - diffTime);
             }
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;

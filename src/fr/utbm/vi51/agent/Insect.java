@@ -15,15 +15,13 @@ import fr.utbm.vi51.util.Point3D;
  *
  */
 public abstract class Insect extends Agent {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -706580571446108492L;
-	protected long lastTime;
+   
+    private static final long serialVersionUID = -706580571446108492L;
+    protected long lastTime;
     //protected Perception currentPerception;
     protected LinkedList<Direction> movementPath;
     private InsectBody body;
-    
+
     public Insect(String texture, Point3D position, int speed, Side side) {
         this.body = new InsectBody(texture, position, speed, side);
     }
@@ -60,6 +58,4 @@ public abstract class Insect extends Agent {
     	this.movementPath = new  LinkedList<>();
     	this.movementPath.add(Direction.random());
     }
-    
-    
 }

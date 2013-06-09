@@ -18,11 +18,9 @@ import fr.utbm.vi51.util.Point3D;
  *
  */
 public class Queen extends Ant {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -6211112771194869755L;
-	private Kernel k;
+    private static final long serialVersionUID = -6211112771194869755L;
+
+    private Kernel k;
     public Queen(Point3D position, int speed, Side side, Kernel k) {
         super(side.getQueenTexture(), position, speed, side);
         this.k = k;
@@ -45,7 +43,6 @@ public class Queen extends Ant {
         if(this.getBody() == null || !this.getBody().isAlive()) {
         	return null;
         }
-        
         countAmountOfFood();
         
         if(this.getBody().getAction() != null) {
@@ -87,8 +84,8 @@ public class Queen extends Ant {
 		Point3D relativePos = this.getBody().getPerception().getPositionInPerceivedMap();
         Square sq = this.getBody().getPerception().getPerceivedMap()[relativePos.x][relativePos.y][relativePos.z];
         int foodAmount = 0;
-        for(WorldObject ob :sq.getObjects()){
-            if (ob instanceof Food){
+        for (WorldObject ob :sq.getObjects()) {
+            if (ob instanceof Food) {
                 foodAmount++;
             }
         }
