@@ -253,35 +253,37 @@ public class GameView extends JPanel {
                 int amountOfFood = 0;
                 int objIndex = 0;
                 // Draw the world object on the square
-                for (int k = 0; k < objs.size(); ++k) {
-                    WorldObject obj = objs.get(k);
-                    Composite oldComposite = ((Graphics2D) g).getComposite();
-                    // Object is a Pheromone
-                    if (obj instanceof Pheromone) {
-                        drawPheromone(g, obj);
-                        continue;
-                    }
-                    // Object is a Food
-                    if (obj instanceof Food) {
-                        amountOfFood++;
-                        continue;
-                    }
-                    // Others objects
-                    g.setColor(new Color(255, 255, 255));
-                    g.drawImage(
-                            ImageManager.getInstance().getImage(
-                                    obj.getTexturePath()),
-                            currentPosition.x + objIndex
-                                    * this.currentTileWidth / objs.size(),
-                            currentPosition.y, this.currentTileWidth / 3,
-                            this.currentTileHeight / 3, this);
-                    ((Graphics2D) g).setComposite(oldComposite);
-                    objIndex++;
-                }
-                // Draw food if needed
-                if (amountOfFood != 0) {
-                    drawFood(g, currentPosition, amountOfFood);
-                }
+	        	 for (WorldObject obj : objs) {
+	                 Composite oldComposite = ((Graphics2D) g).getComposite();
+	                 // Object is a Pheromone
+	                 if (obj instanceof Pheromone) {
+	                     drawPheromone(g, obj);
+	                     continue;
+	                 }
+	                 // Object is a Food
+	                 if (obj instanceof Food) {
+	                     amountOfFood++;
+	                     continue;
+	                 }
+	                 // Others objects
+	                 g.setColor(new Color(255, 255, 255));
+	                 try {
+	                 g.drawImage(
+	                         ImageManager.getInstance().getImage(obj.getTexturePath()),
+	                         currentPosition.x + objIndex* this.currentTileWidth / objs.size(),
+	                         currentPosition.y,
+	                         this.currentTileWidth / 3,
+	                         this.currentTileHeight / 3, this);
+	                 }catch(Exception e) {
+	                	 
+	                 }
+	                 ((Graphics2D) g).setComposite(oldComposite);
+	                 objIndex++;
+	             }
+	             // Draw food if needed
+	             if (amountOfFood != 0) {
+	                 drawFood(g, currentPosition, amountOfFood);
+	             }
             }
         }
         // Ask the parent to draw the road of the tracked insect

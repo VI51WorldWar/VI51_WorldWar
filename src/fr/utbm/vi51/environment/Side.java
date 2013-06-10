@@ -50,6 +50,10 @@ public class Side {
     public int getAmountOfWorker() {
     	return this.amountOfWorker;
     }
+    
+    public boolean isDefeated() {
+    	return !this.isQueenAlive;
+    }
 
     public String getWorkerTexture() {
         return this.workerTexture;

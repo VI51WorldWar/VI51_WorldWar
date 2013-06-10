@@ -84,9 +84,7 @@ public final class Environment extends Agent {
     }
 
     public void addWorldObject(WorldObject wo) {
-        synchronized (this.objects) {
-            this.objects.add(wo);
-        }
+        this.objects.add(wo);
         this.map[wo.getPosition().x][wo.getPosition().y][wo
                 .getPosition().z].getObjects().add(wo);
     }

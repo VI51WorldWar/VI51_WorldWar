@@ -10,6 +10,7 @@ import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.EatFood;
 import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.InsectBody;
+import fr.utbm.vi51.environment.InsectBodyType;
 import fr.utbm.vi51.environment.KillEnemy;
 import fr.utbm.vi51.environment.Message;
 import fr.utbm.vi51.environment.Move;
@@ -75,6 +76,12 @@ public class Warrior extends Ant {
         //If their is no body, the agent is waiting to die
         if (body == null) {
             return null;
+        }
+        
+        // If the side is defeated
+        if(body.getSide().isDefeated()) {
+        	// Stop all
+        	return null;
         }
 
         // If an action is already planned, wait for it to be resolved
@@ -231,8 +238,12 @@ public class Warrior extends Ant {
                 return;
             }
             // A object on the current square is the queen
-            if(wo.getTexturePath().equals(this.getBody().getSide().getQueenTexture())) {
-            	isOnQueenSquare = true;
+            if( wo instanceof InsectBody) {
+            	InsectBody insectBody = (InsectBody) wo;
+            	if(	this.getBody().getSide().equals(insectBody.getSide()) 
+            		&& insectBody.getType() == InsectBodyType.QUEEN) {
+            		isOnQueenSquare = true;
+            	}
             }
         }
         
@@ -278,6 +289,14 @@ public class Warrior extends Ant {
                         this.movementPath = PathFinder.findPath(currentPerception.getPositionInPerceivedMap(),
                                 								new Point3D(i, j, 0), 
                                 								perceivedMap);
+                     // If a good path has been generated
+                    	if(this.movementPath != null) {
+                    		if(!this.movementPath.isEmpty()) {
+                    			// Go out
+                    			return;
+                    		}
+                    	}
+                    	System.out.println("Error in goHome() for Warrior l.299 reached"); //$NON-NLS-1$
                         return;
                     }
                 }            
@@ -288,9 +307,15 @@ public class Warrior extends Ant {
             this.movementPath = PathFinder.findPath(currentPerception.getPositionInPerceivedMap(),
                     								currentBestPheromonePositionInPerceivedMap, 
                     								perceivedMap);
-            return;
+            // If a good path has been generated
+        	if(this.movementPath != null) {
+        		if(!this.movementPath.isEmpty()) {
+        			// Go out
+        			return;
+        		}
+        	}
         }
-        // In case of no pheromone of no food or no queen, do wander
+        // In case of no pheromone or no food or no queen, do wander
         generateWanderMovement();
     }
 

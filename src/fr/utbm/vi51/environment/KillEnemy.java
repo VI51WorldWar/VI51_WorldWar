@@ -9,25 +9,25 @@ import fr.utbm.vi51.util.Point3D;
  *
  */
 public class KillEnemy extends Action {
-    private InsectBody body;
+    private InsectBody attackingBody;
     private Direction direction;
 
     public KillEnemy(InsectBody body, Direction direction) {
         super();
-        this.body = body;
+        this.attackingBody = body;
         this.direction = direction;
     }
 
     @Override
 	protected void doAction() {
-        Point3D pos = this.body.getPosition();
+        Point3D pos = this.attackingBody.getPosition();
         for (WorldObject wo : Environment.getInstance().getMap()[pos.x+this.direction.dx][pos.y+this.direction.dy][pos.z].getObjects()) {
             if (wo instanceof InsectBody) {
                 InsectBody ib = (InsectBody) wo;
                 // If the sides are different
-                if(!ib.getSide().equals(this.body.getSide())) {
+                if(!ib.getSide().equals(this.attackingBody.getSide())) {
                 	// Hit the enemy
-                    ib.hit(this.body.generateHitAmount());
+                    ib.hit(this.attackingBody.generateHitAmount());
                     return;
                 }
             }
@@ -37,11 +37,11 @@ public class KillEnemy extends Action {
 	@Override
 	protected boolean testAction() {
         if(new Random().nextFloat() <= 0.3){
-    		Point3D pos = this.body.getPosition();
+    		Point3D pos = this.attackingBody.getPosition();
     		for (WorldObject wo : Environment.getInstance().getMap()[pos.x+this.direction.dx][pos.y+this.direction.dy][pos.z].getObjects()) {
     			if (wo instanceof InsectBody) {
     			    InsectBody ib = (InsectBody) wo;
-    			    if(!ib.getSide().equals(this.body.getSide())) {
+    			    if(!ib.getSide().equals(this.attackingBody.getSide())) {
     			        return true;
     			    }
     			}

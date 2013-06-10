@@ -25,8 +25,8 @@ public class Lay extends Action {
     @Override
     protected void doAction() {
         Worker w = new Worker(new Point3D(this.pos), 10, this.side);
-        k.launchLightAgent(w);
-        List<WorldObject> objects = Environment.getInstance().getMap()[pos.x][pos.y][pos.z]
+        this.k.launchLightAgent(w);
+        List<WorldObject> objects = Environment.getInstance().getMap()[this.pos.x][this.pos.y][this.pos.z]
                 .getObjects();
         WorldObject[] toRemove = new WorldObject[10];
         int i = 0;
@@ -43,7 +43,6 @@ public class Lay extends Action {
             objects.remove(toRemove[j]);
             Environment.getInstance().getObjects().remove(toRemove[j]);
         }
-        this.side.setFoodAmount(this.side.getFoodAmount() - 10);
     }
 
     @Override

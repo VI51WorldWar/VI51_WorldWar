@@ -35,12 +35,14 @@ public class InsectTracker  extends JPanel{
 	private static final Point3D	COORD_POSITION   	= new Point3D(60,40,0);
 	private static final Point3D	CARRIED_POSITION   	= new Point3D(60,60,0);
 	private static final Point3D	LIFE_POSITION   	= new Point3D(0,50,0);
+	private static final Point3D	HUNGER_POSITION   	= new Point3D(150,25,0);
 	//private final Window	rParent;
 	private JButton			buttonStopTrack = null;
     private Rectangle 		rView = null;
 	
     private InsectBody		rInsect = null;
 	private JProgressBar	lifeBar = null;
+	private JProgressBar	hungerBar = null;
 	private InsectBodyType	insectType = null;
     private List<Point3D>	listOldPosition = null;
 	private Point3D			insectLastPos = null;
@@ -54,6 +56,7 @@ public class InsectTracker  extends JPanel{
 		this.setLayout(null);
 		addButton();
 		addLifeBar();
+		addHungerBar();
 	}
 	
 	// Set the insect to track
@@ -67,6 +70,7 @@ public class InsectTracker  extends JPanel{
 		this.buttonStopTrack.setVisible(true);
 		this.lifeBar.setMaximum(this.rInsect.getMaxHealth());
 		this.lifeBar.setVisible(true);
+		this.hungerBar.setVisible(true);
 	}
 	
 	@Override
@@ -110,9 +114,8 @@ public class InsectTracker  extends JPanel{
                     CARRIED_POSITION.x + 60, CARRIED_POSITION.y - 12, 25, 25,
                     this);
         }
-        
-        // Update lifeBar value
-        this.lifeBar.setValue(this.rInsect.getCurrentHealth());
+        // Update bars
+        updatebars();
         // Update button position
 		this.buttonStopTrack.setBounds(this.getWidth() - 60, this.getHeight() - 20 , 60, 20);
 	}
@@ -183,6 +186,7 @@ public class InsectTracker  extends JPanel{
 		this.insectLastPos = null;
 		this.buttonStopTrack.setVisible(false);
 		this.lifeBar.setVisible(false);
+		this.hungerBar.setVisible(false);
 		this.insectType = null;
 	}
 	/**
@@ -212,6 +216,44 @@ public class InsectTracker  extends JPanel{
 		this.lifeBar.setVisible(false);
 		this.lifeBar.setBackground(new Color(255,0,0));
 		this.lifeBar.setForeground(new Color(0,255,0));
+		this.lifeBar.setStringPainted(true);
 		this.add(this.lifeBar);
+	}
+	
+	/**
+	 * Function to initialize the hunger bar
+	 */
+	private void addHungerBar() {
+		this.hungerBar = new JProgressBar();
+		this.hungerBar.setBounds(HUNGER_POSITION.x, HUNGER_POSITION.y, this.getWidth() - HUNGER_POSITION.x, 20);
+		this.hungerBar.setVisible(false);
+		this.hungerBar.setBackground(new Color(156,90,60));
+		this.hungerBar.setForeground(new Color(255,0,0));
+		this.hungerBar.setMaximum(Consts.MAXHUNGER);
+		this.hungerBar.setStringPainted(true);
+		this.add(this.hungerBar);
+	}
+	
+	/**
+	 * Function to update bars at each draw
+	 */
+	private void updatebars() {
+		// Update lifeBar value
+        this.lifeBar.setValue(this.rInsect.getCurrentHealth());
+        this.lifeBar.setString(this.rInsect.getCurrentHealth() + "/" + this.lifeBar.getMaximum()); //$NON-NLS-1$
+        
+        
+        // Update hunger value
+        this.hungerBar.setValue(this.rInsect.getHunger());
+        // Update hunger bar bounds
+        this.hungerBar.setBounds(HUNGER_POSITION.x, HUNGER_POSITION.y, this.getWidth() - HUNGER_POSITION.x, 15);
+        
+        String hungerString = new String();
+        if(this.hungerBar.getWidth() > 200) {
+        	hungerString += "Hunger:"; //$NON-NLS-1$
+        }
+        // Add Values
+        hungerString += +this.rInsect.getHunger()/10 + "/" + this.hungerBar.getMaximum()/10; //$NON-NLS-1$
+        this.hungerBar.setString(hungerString);
 	}
 }

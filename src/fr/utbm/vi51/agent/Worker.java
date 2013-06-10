@@ -73,6 +73,12 @@ public class Worker extends Ant {
         if (body == null) {
             return null;
         }
+        
+        // If the side is defeated
+        if(body.getSide().isDefeated()) {
+        	// Stop all
+        	return null;
+        }
 
         // If an action is already planned, wait for it to be resolved
         if (body.getAction() != null) {
@@ -443,7 +449,6 @@ public class Worker extends Ant {
         if (currentBestPheromone != null
                 && currentBestPheromonePositionInPerceivedMap != null) {
             this.movementPath = PathFinder.findPath(
-                    //TODO c'était ici que currentBestPheromoneblbla était null
                     currentPerception.getPositionInPerceivedMap(),
                     currentBestPheromonePositionInPerceivedMap, perceivedMap);
         }

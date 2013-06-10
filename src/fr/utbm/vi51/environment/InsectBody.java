@@ -60,6 +60,9 @@ public class InsectBody extends Body {
     }
 
     protected void die() {
+    	if(this.isAlive == false) {
+    		return;
+    	}
         this.isAlive = false;
         this.side.removeMember(this.type);
     }
