@@ -10,6 +10,7 @@ import org.janusproject.kernel.status.Status;
 import org.janusproject.kernel.status.StatusFactory;
 
 import fr.utbm.vi51.configs.Consts;
+import fr.utbm.vi51.util.Point3D;
 
 /**
  * @author Top-K
@@ -39,7 +40,7 @@ public final class Environment extends Agent {
         this.mapWidth = 40;
         this.mapDepth = 5;
         this.map = new Square[this.mapWidth][this.mapHeight][this.mapDepth];
-        this.objects = new CopyOnWriteArrayList<>();
+        this.objects = new CopyOnWriteArrayList<WorldObject>();
     }
 
     public static Environment getInstance() {
@@ -78,6 +79,23 @@ public final class Environment extends Agent {
     public Square[][][] getMap() {
         return this.map;
     }
+    
+    public Square getSquare(int x, int y, int z) {
+    	if(	x >= this.mapWidth || x < 0) {
+    		return null;
+    	}
+    	if(y >= this.mapHeight || y < 0) {
+    		return null;
+    	}
+    	if(z >= this.mapDepth || z < 0 ) {
+    		return null;
+    	}
+    	return this.map[x][y][z];
+    }
+    
+    public Square getSquare(Point3D pt) {
+    	return this.getSquare(pt.x,pt.y,pt.z);
+    }
 
     public void setMap(Square[][][] map) {
         this.map = map;
@@ -96,7 +114,7 @@ public final class Environment extends Agent {
         if (diffTime > 100000) {
             diffTime = 30;
         }
-        LinkedList<WorldObject> toRemove = new LinkedList<>();
+        LinkedList<WorldObject> toRemove = new LinkedList<WorldObject>();
         synchronized (this.objects) {
             for (WorldObject o : this.objects) {
                 if (o instanceof Body) {

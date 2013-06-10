@@ -9,6 +9,7 @@ import org.janusproject.kernel.status.StatusFactory;
 import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.DropFood;
+import fr.utbm.vi51.environment.DropPheromone;
 import fr.utbm.vi51.environment.EatFood;
 import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.InsectBody;
@@ -214,27 +215,24 @@ public class Worker extends Ant {
             default:
                 m = null;
         }
-        assert m != null;
-
+        // If no close and valid pheromone has been found, create one
+        // No target defined
+        if(targetPosition == null && this.relativeStartingPointPosition == null) {
+        	// Cannot drop pheromone
+        	return false;
+        }
+        
         // If the target position is visible, place a pheromone pointing to it.
         // Else, point the pheromone to the position of the insect a few moves
         // ago.
-        if (targetPosition != null) {
-            new Pheromone(this.getBody().getPosition(),
-                    m, Direction.toDirection(this.getBody().getPosition(), targetPosition),
-                    (int) Consts.STARTINGPHEROMONEVALUE,
-                    this.getBody().getSide());
-            return true;
-        } else if (this.relativeStartingPointPosition != null) {
-            new Pheromone(this.getBody().getPosition(), m,
-                    Direction.toDirection(new Point3D(0, 0, 0),
-                            this.relativeStartingPointPosition),
-                    (int) Consts.STARTINGPHEROMONEVALUE, this.getBody()
-                            .getSide());
-            return true;
-        }
-        return false;
-
+        getBody().setAction(new DropPheromone(	this.getBody().getSide(),
+        										this.getBody().getPosition(),
+        										m,
+        										(targetPosition != null) ?
+        												Direction.toDirection(this.getBody().getPosition(),targetPosition) :
+        												Direction.toDirection(new Point3D(0, 0, 0),this.relativeStartingPointPosition)
+            										));
+       return true;
     }
 
     private void searchFood() {

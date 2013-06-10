@@ -1,5 +1,6 @@
 package fr.utbm.vi51.environment;
 
+import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.util.Point3D;
 
 /**
@@ -19,6 +20,27 @@ public class Pheromone extends WorldObject {
         this.direction = direction;
         this.strength = strength;
         this.side = side;
+    }
+    
+    public boolean isEqual(Pheromone pheromone) {
+    	return this.isEqual(pheromone.message, pheromone.direction, pheromone.side);
+    }
+    
+    public boolean isEqual(Message message,Direction direction,Side side) {
+    	if(message != this.message) {
+    		return false;
+    	}
+    	if(direction != this.direction) {
+    		return false;
+    	}
+    	if(side != this.side) {
+    		return false;
+    	}
+    	return true;
+    }
+    
+    public void refresh() {
+    	this.strength = (int) Consts.STARTINGPHEROMONEVALUE;
     }
 
     public Side getSide() {
