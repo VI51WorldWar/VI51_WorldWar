@@ -35,7 +35,7 @@ public class DropPheromone extends Action {
 		new Pheromone(	this.position,
 						this.message,
 						this.direction,
-						(int) Consts.STARTINGPHEROMONEVALUE, 
+						(int) ((this.message == Message.DANGER) ? Consts.STARTINGDANGERPHEROMONEVALUE : Consts.STARTINGPHEROMONEVALUE), 
         				this.side);
 	}
 

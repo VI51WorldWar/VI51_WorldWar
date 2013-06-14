@@ -2,7 +2,6 @@ package fr.utbm.vi51.gui;
 
 import javax.swing.JProgressBar;
 
-import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.Pheromone;
 
 /**
@@ -47,8 +46,8 @@ public class PheromoneBar extends JProgressBar {
         }
         // Compute a value between 0 and 100
         double percentRemaining = 1
-                - (Consts.STARTINGPHEROMONEVALUE - (double) this.rPheromone
-                        .getStrength()) / Consts.STARTINGPHEROMONEVALUE;
+                - (this.rPheromone.getStartingStrength() - (double) this.rPheromone
+                        .getStrength()) / this.rPheromone.getStartingStrength();
         int value = (int) Math.round(percentRemaining * 100);
         // Set value of the progress
         setValue(value);

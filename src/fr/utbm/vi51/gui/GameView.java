@@ -345,7 +345,7 @@ public class GameView extends JPanel {
         Pheromone p = (Pheromone) obj;
         ((Graphics2D) g).setComposite(AlphaComposite.getInstance(
                 AlphaComposite.SRC_OVER,
-                Math.max(p.getStrength() / Consts.STARTINGPHEROMONEVALUE, 0)));
+                Math.max(p.getStrength() / (float)p.getStartingStrength(), 0)));
         int imagePositionX;
         switch (p.getDirection().dx) {
             case -1:

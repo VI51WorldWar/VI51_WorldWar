@@ -1,6 +1,5 @@
 package fr.utbm.vi51.environment;
 
-import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.util.Point3D;
 
 /**
@@ -12,6 +11,7 @@ public class Pheromone extends WorldObject {
     private Message message;
     private Direction direction;
     private Side side;
+    private final int startingStrength;
 
     public Pheromone(Point3D position, Message mess, Direction direction,
             int strength, Side side) {
@@ -19,6 +19,7 @@ public class Pheromone extends WorldObject {
         this.message = mess;
         this.direction = direction;
         this.strength = strength;
+        this.startingStrength = strength;
         this.side = side;
     }
     
@@ -40,7 +41,7 @@ public class Pheromone extends WorldObject {
     }
     
     public void refresh() {
-    	this.strength = (int) Consts.STARTINGPHEROMONEVALUE;
+    	this.strength = startingStrength;
     }
 
     public Side getSide() {
@@ -61,6 +62,10 @@ public class Pheromone extends WorldObject {
 
     public int getStrength() {
         return strength;
+    }
+    
+    public float getStartingStrength() {
+        return startingStrength;
     }
 
     public static Pheromone closestToSubject(Pheromone a, Pheromone b) {
