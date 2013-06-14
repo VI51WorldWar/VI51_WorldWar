@@ -16,7 +16,6 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.vecmath.Point3d;
 
-import fr.utbm.vi51.configs.Consts;
 import fr.utbm.vi51.environment.Environment;
 import fr.utbm.vi51.environment.Food;
 import fr.utbm.vi51.environment.Pheromone;
