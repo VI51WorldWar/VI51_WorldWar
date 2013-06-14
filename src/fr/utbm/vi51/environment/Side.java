@@ -3,7 +3,7 @@ package fr.utbm.vi51.environment;
 import java.awt.Color;
 
 /**
- * @author Top-K
+ * @author Theo
  *
  */
 public class Side {

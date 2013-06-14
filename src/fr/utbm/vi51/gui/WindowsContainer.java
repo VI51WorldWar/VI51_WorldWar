@@ -8,7 +8,7 @@ import org.janusproject.kernel.status.StatusFactory;
 import fr.utbm.vi51.environment.Environment;
 
 /**
- * @author Top-K
+ * @author Theo
  *
  */
 public class WindowsContainer extends Agent {

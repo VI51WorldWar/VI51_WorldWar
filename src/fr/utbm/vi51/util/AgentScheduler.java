@@ -42,7 +42,7 @@ public class AgentScheduler extends AgentActivator {
     }
 
     /**
-     * @author Top-K
+     * @author Theo
      *
      */
     private class MyIterator extends SafeIterator<Agent> {

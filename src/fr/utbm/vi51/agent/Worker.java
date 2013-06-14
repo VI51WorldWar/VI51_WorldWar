@@ -28,7 +28,7 @@ import fr.utbm.vi51.util.PathFinder;
 import fr.utbm.vi51.util.Point3D;
 
 /**
- * @author Top-K
+ * @author Theo
  * 
  */
 enum WorkerBehaviour {
@@ -36,7 +36,7 @@ enum WorkerBehaviour {
 }
 
 /**
- * @author Top-K
+ * @author Theo
  * 
  */
 public class Worker extends Ant {

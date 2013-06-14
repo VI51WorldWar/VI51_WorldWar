@@ -2,7 +2,7 @@ package fr.utbm.vi51.environment;
 
 
 /**
- * @author Top-K
+ * @author Theo
  *
  */
 public enum LandType {

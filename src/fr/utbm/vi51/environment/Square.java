@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * @author Top-K
+ * @author Theo
  *
  */
 public class Square {

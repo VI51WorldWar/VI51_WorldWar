@@ -11,7 +11,7 @@ import fr.utbm.vi51.environment.Direction;
 import fr.utbm.vi51.environment.Square;
 
 /**
- * @author Top-K Static class using A* to find paths
+ * @author Theo Static class using A* to find paths
  */
 public final class PathFinder {
     private PathFinder() {
@@ -19,7 +19,7 @@ public final class PathFinder {
     }
 
     /**
-     * @author Top-K Defines a node as used in A*
+     * @author Theo Defines a node as used in A*
      */
     private static class Node {
         private Point3D position;
@@ -68,7 +68,7 @@ public final class PathFinder {
     }
 
     /**
-     * @author Top-K Used to sort nodes using their total estimated cost
+     * @author Theo Used to sort nodes using their total estimated cost
      */
     private static class NodeComparator implements Comparator<Node> {
 

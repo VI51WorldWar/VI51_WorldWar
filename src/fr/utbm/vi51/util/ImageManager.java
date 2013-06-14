@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 /**
- * @author Top-K
+ * @author Theo
  * Ensure that images are loaded only once.
  * All objects using images must request it to the image manager and not load it themselves.
  * Singleton class.

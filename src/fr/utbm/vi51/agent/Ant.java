@@ -4,7 +4,7 @@ import fr.utbm.vi51.environment.Side;
 import fr.utbm.vi51.util.Point3D;
 
 /**
- * @author Top-K
+ * @author Theo
  *
  */
 public abstract class Ant extends Insect {

@@ -24,7 +24,7 @@ import fr.utbm.vi51.util.PathFinder;
 import fr.utbm.vi51.util.Point3D;
 
 /**
- * @author Top-K
+ * @author Theo
  * 
  */
 enum WarriorBehaviour {
@@ -32,7 +32,7 @@ enum WarriorBehaviour {
 }
 
 /**
- * @author Top-K
+ * @author Theo
  * 
  */
 public class Warrior extends Ant {

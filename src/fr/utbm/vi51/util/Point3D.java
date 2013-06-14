@@ -3,7 +3,7 @@ package fr.utbm.vi51.util;
 import javax.vecmath.Point3d;
 
 /**
- * @author Top-K
+ * @author Theo
  *
  */
 public class Point3D {

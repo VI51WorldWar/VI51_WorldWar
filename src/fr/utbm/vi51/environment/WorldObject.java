@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import fr.utbm.vi51.util.Point3D;
 
 /**
- * @author Top-K
+ * @author Theo
  *
  */
 public abstract class WorldObject {

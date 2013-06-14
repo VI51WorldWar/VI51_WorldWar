@@ -19,7 +19,7 @@ import fr.utbm.vi51.environment.WorldObject;
 import fr.utbm.vi51.util.ImageManager;
 
 /**
- * @author Top-K
+ * @author Theo
  * This class represents the mini map in the user interface
  */
 public class MiniMap extends JPanel {

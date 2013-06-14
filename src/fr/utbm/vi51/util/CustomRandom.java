@@ -3,7 +3,7 @@ package fr.utbm.vi51.util;
 import java.util.Random;
 
 /**
- * @author Top-K
+ * @author Theo
  *
  */
 public final class CustomRandom {

@@ -5,7 +5,7 @@ import javax.swing.JProgressBar;
 import fr.utbm.vi51.environment.Pheromone;
 
 /**
- * @author Top-K
+ * @author Theo
  *
  */
 public class PheromoneBar extends JProgressBar {
