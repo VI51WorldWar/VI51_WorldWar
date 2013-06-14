@@ -19,20 +19,32 @@ public class KillEnemy extends Action {
     }
 
     @Override
-	protected void doAction() {
-        Point3D pos = this.attackingBody.getPosition();
-        for (WorldObject wo : Environment.getInstance().getMap()[pos.x+this.direction.dx][pos.y+this.direction.dy][pos.z].getObjects()) {
-            if (wo instanceof InsectBody) {
-                InsectBody ib = (InsectBody) wo;
-                // If the sides are different
-                if(!ib.getSide().equals(this.attackingBody.getSide())) {
-                	// Hit the enemy
-                    ib.hit(this.attackingBody.generateHitAmount());
-                    return;
+
+    protected void doAction() {
+            Point3D pos = this.attackingBody.getPosition();
+            for (WorldObject wo : Environment.getInstance().getMap()[pos.x+this.direction.dx][pos.y+this.direction.dy][pos.z].getObjects()) {
+                if (wo instanceof InsectBody) {
+                    InsectBody ib = (InsectBody) wo;
+                    // If the sides are different
+                    if(!ib.getSide().equals(this.attackingBody.getSide())) {
+                    
+    // Hit the enemy
+                        ib.hit(this.attackingBody.generateHitAmount());
+                        
+                        if(ib.getCurrentHealth() <= 0) {
+                            ib.die();
+                            for(int i = 0;i < 10;++i){
+                                new Food(ib.getPosition());
+                            }
+                        }
+                        
+                        return;
+                    }
+                    
+
                 }
             }
         }
-    }
 
 	@Override
 	protected boolean testAction() {
