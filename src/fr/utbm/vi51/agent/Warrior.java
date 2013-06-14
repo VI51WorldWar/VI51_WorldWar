@@ -133,13 +133,9 @@ public class Warrior extends Ant {
             return;
         }
         if (this.movementPath == null) {
-            System.out
-                    .println("Error in warrior algorithm 1." + this.currentBehaviour.toString()); //$NON-NLS-1$
             return;
         }
         if (this.movementPath.isEmpty()) {
-            System.out
-                    .println("Error in warrior algorithm 2." + this.currentBehaviour.toString()); //$NON-NLS-1$
             return;
         }
         // Do next movement in the pathfinding list
@@ -369,7 +365,8 @@ public class Warrior extends Ant {
 
         InsectBody closestEnemyBody = null;
         double closestEnemyDistance = Double.POSITIVE_INFINITY;
-        Point3D closestEnemyPositionInPerceivedMap = null;
+        Point3D targetPositionInPerceivedMap = null;
+        Pheromone bestDangerPheromone = null;
         // Search the closest enemy in perception field
         for (int i = 0; i < perceivedMap.length; ++i) {
             for (int j = 0; j < perceivedMap[0].length; ++j) {
@@ -385,8 +382,20 @@ public class Warrior extends Ant {
                             if (distance < closestEnemyDistance) {
                                 closestEnemyBody = ib;
                                 closestEnemyDistance = distance;
-                                closestEnemyPositionInPerceivedMap = new Point3D(
-                                        i, j, 0);
+                                targetPositionInPerceivedMap = new Point3D(i,
+                                        j, 0);
+                            }
+                        }
+                    } else if (closestEnemyBody == null
+                            && wo instanceof Pheromone) {
+                        Pheromone ph = (Pheromone) wo;
+                        if (ph.getSide().equals(this.getBody().getSide())
+                                && ph.getMessage() == Message.DANGER) {
+                            bestDangerPheromone = Pheromone.closestToSubject(
+                                    bestDangerPheromone, ph);
+                            if (bestDangerPheromone == ph) {
+                                targetPositionInPerceivedMap = new Point3D(i,
+                                        j, 0);
                             }
                         }
                     }
@@ -394,7 +403,7 @@ public class Warrior extends Ant {
             }
         }
         // If no enemy has been found in perceived field
-        if (closestEnemyBody == null) {
+        if (closestEnemyBody == null && bestDangerPheromone == null) {
             // If the warrior is too far from its queen 
             if (this.relativeStartingPointPosition != null
                     && Point3D.euclidianDistance(new Point3D(0, 0, 0),
@@ -407,28 +416,38 @@ public class Warrior extends Ant {
             return;
         }
 
-        // An enemy has been found -> generate the path to reach its position
-        this.movementPath = PathFinder.findPath(positionInPerceivedMap,
-                closestEnemyPositionInPerceivedMap, perceivedMap);
-        // No path to target are available
-        if (this.movementPath == null) {
-            // Generate a random movement
-            generateWanderMovement();
-            return;
+        if (closestEnemyBody != null) {
+            // An enemy has been found -> generate the path to reach its position
+            this.movementPath = PathFinder.findPath(positionInPerceivedMap,
+                    targetPositionInPerceivedMap, perceivedMap);
+            // No path to target are available
+            if (this.movementPath == null) {
+                // Generate a random movement
+                generateWanderMovement();
+                return;
+            }
+            // If the enemy is on the same square as the Warrior
+            if (this.movementPath.size() == 0) {
+                // Attack him
+                this.getBody().setAction(
+                        new KillEnemy(this.getBody(), Direction.NONE));
+                this.lastTime = this.getTimeManager().getCurrentDate()
+                        .getTime();
+                // Else if there is only 1 movement between the warrior and its target
+                return;
+            } else if (this.movementPath.size() == 1) {
+                this.getBody().setAction(
+                        new KillEnemy(this.getBody(), this.movementPath
+                                .getFirst()));
+                this.lastTime = this.getTimeManager().getCurrentDate()
+                        .getTime();
+                return;
+            }
         }
-        // If the enemy is on the same square as the Warrior
-        if (this.movementPath.size() == 0) {
-            // Attack him
-            this.getBody().setAction(
-                    new KillEnemy(this.getBody(), Direction.NONE));
-            this.lastTime = this.getTimeManager().getCurrentDate().getTime();
-            // Else if there is only 1 movement between the warrior and its target
-        } else if (this.movementPath.size() == 1) {
-            this.getBody()
-                    .setAction(
-                            new KillEnemy(this.getBody(), this.movementPath
-                                    .getFirst()));
-            this.lastTime = this.getTimeManager().getCurrentDate().getTime();
+
+        if (bestDangerPheromone != null) {
+            this.movementPath = PathFinder.findPath(positionInPerceivedMap,
+                    targetPositionInPerceivedMap, perceivedMap);
         }
     }
 
