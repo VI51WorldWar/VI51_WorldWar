@@ -1,5 +1,6 @@
 package fr.utbm.vi51.agent;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -250,7 +251,8 @@ public class Worker extends Ant {
         // If no close and valid pheromone has been found, create one
         // No target defined
         if (targetPosition == null
-                && this.relativeStartingPointPosition == null || validUtilityPheromoneFound) {
+                && this.relativeStartingPointPosition == null
+                || validUtilityPheromoneFound) {
             // Cannot drop pheromone
             return false;
         }
@@ -331,15 +333,26 @@ public class Worker extends Ant {
                                 currentBestPheromonePositionInPerceivedMap = new Point3D(
                                         i, j, 0);
                             }
-                            /*} else if (p.getMessage() == Message.HOME
-                                    && p.getSide().equals(this.getBody().getSide())) {
-                                currentBestHomePheromone = Pheromone
-                                        .closestToSubject(p,
-                                                currentBestFoodPheromone);
-                                if (currentBestHomePheromone == p) {
-                                    //currentBestPheromonePositionInPerceivedMap = new Point3D(
-                                            i, j, 0);
-                                }*/
+                        } else if (p.getMessage() == Message.DANGER
+                                && p.getSide().equals(this.getBody().getSide())) {
+                            //Trying to flee
+                            LinkedList<Direction> fleeDirections = new LinkedList<Direction>();
+                            fleeDirections.add(p.getDirection().opposite());
+                            fleeDirections.add(p.getDirection().opposite()
+                                    .east());
+                            fleeDirections.add(p.getDirection().opposite()
+                                    .west());
+                            while (!fleeDirections.isEmpty()) {
+                                if (perceivedMap[positionInPerceivedMap.x
+                                        + fleeDirections.getFirst().dx][positionInPerceivedMap.y
+                                        + fleeDirections.getFirst().dy][positionInPerceivedMap.z]
+                                        .getLandType().isCrossable()) {
+                                    movementPath = new LinkedList<>();
+                                    movementPath.add(fleeDirections.getFirst());
+                                    return;
+                                }
+                                fleeDirections.pollFirst();
+                            }
                         }
                     }
                 }
