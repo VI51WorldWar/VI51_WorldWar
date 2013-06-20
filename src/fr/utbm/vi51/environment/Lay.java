@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.janusproject.kernel.Kernel;
 
+import fr.utbm.vi51.agent.Warrior;
 import fr.utbm.vi51.agent.Worker;
+import fr.utbm.vi51.util.CustomRandom;
 import fr.utbm.vi51.util.Point3D;
 
 /**
@@ -24,8 +26,19 @@ public class Lay extends Action {
 
     @Override
     protected void doAction() {
-        Worker w = new Worker(new Point3D(this.pos), 10, this.side);
-        this.k.launchLightAgent(w);
+        Worker wor;
+        Warrior war;
+        float chanceofWarrior= (this.side.getFoodAmount()-100);
+        int rand = CustomRandom.getNextInt(100);
+        if(rand > chanceofWarrior){
+            wor = new Worker(new Point3D(this.pos), 10, this.side);
+            this.k.launchLightAgent(wor);
+        } else {
+            war = new Warrior(new Point3D(this.pos), 10, this.side);
+            this.k.launchLightAgent(war);
+
+        }
+        
         List<WorldObject> objects = Environment.getInstance().getMap()[this.pos.x][this.pos.y][this.pos.z]
                 .getObjects();
         WorldObject[] toRemove = new WorldObject[10];

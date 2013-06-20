@@ -21,6 +21,8 @@ public class Queen extends Ant {
     private static final long serialVersionUID = -6211112771194869755L;
 
     private Kernel k;
+    private long lastLay = 0;
+    
     public Queen(Point3D position, int speed, Side side, Kernel k) {
         super(side.getQueenTexture(), position, speed, side);
         this.k = k;
@@ -68,10 +70,11 @@ public class Queen extends Ant {
      * food of her Side is sufficient
      */
 	private void layIfCan() {
-		// If the amount of food is sufficient
-        if(this.getBody().getSide().getFoodAmount() > 100){
+		// If the amount of food is sufficient and time since old lay is correct
+        if(this.getBody().getSide().getFoodAmount() > 100 &&  this.getTimeManager().getCurrentDate().getTime() - lastLay > 3000){
         	// Lay an egg
             this.getBody().setAction(new Lay(this.getBody().getSide(), this.getBody().getPosition(), this.k));
+            lastLay = this.getTimeManager().getCurrentDate().getTime();
         }
 	}
 	
